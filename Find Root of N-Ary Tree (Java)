@@ -1,0 +1,70 @@
+/*.       
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    
+    public Node() {
+        children = new ArrayList<Node>();
+    }
+    
+    public Node(int _val) {
+        val = _val;
+        children = new ArrayList<Node>();
+    }
+    
+    public Node(int _val,ArrayList<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+class Solution {
+    /*
+    Each node in input list has children and node's children mean at a edge is pointing to that node. we find the node that has no incoming edge. the node that has no incoming edge is the root.
+    
+    */
+    public Node findRoot(List<Node> tree) {
+        
+        HashMap<Node,Integer> nodeToIncomingEdges=new HashMap<Node,Integer>();
+        
+        
+          for(int i=0;i<tree.size();i++){
+            Node currentNode=tree.get(i);
+                 nodeToIncomingEdges.put(currentNode,0);
+               List<Node> childrenOfCurrentNode=currentNode.children;
+               for(int j=0;j<childrenOfCurrentNode.size();j++){
+                   
+                    nodeToIncomingEdges.put(childrenOfCurrentNode.get(j),0);
+               }
+              
+          }
+        for(int i=0;i<tree.size();i++){
+            Node currentNode=tree.get(i);
+            
+            List<Node> childrenOfCurrentNode=currentNode.children;
+            
+            for(int j=0;j<childrenOfCurrentNode.size();j++){
+                
+                System.out.println("current:"+currentNode.val+" child:"+childrenOfCurrentNode.get(j).val);
+                
+                int incomingEdgesCount=nodeToIncomingEdges.get(childrenOfCurrentNode.get(j));
+                nodeToIncomingEdges.put(childrenOfCurrentNode.get(j),incomingEdgesCount+1);
+            }
+        }
+        
+            for (Map.Entry<Node,Integer> entry : nodeToIncomingEdges.entrySet()){
+
+              //  System.out.println("count:"+entry.getValue());
+                if(entry.getValue()==0){
+                    return entry.getKey();
+                }
+            }
+        return null;
+          
+    } 
+        
+    
+}
