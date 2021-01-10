@@ -1,0 +1,38 @@
+class Solution {
+    
+    /**
+    Permutation of array and backtrack with a condition to stop unnessary recursion.
+    
+    **/
+     
+             int count = 0;
+
+        public int countArrangement(int n) {
+            int[] nums = new int[n];
+            for (int i = 0; i < n; i++)
+                nums[i] = i + 1;
+            permute(nums, 0);
+            return count;
+        }
+
+        private void permute(int[] nums, int k) {
+            if (k == nums.length)
+                count++;
+            for (int i = k; i < nums.length; i++) {
+                swap(nums, i, k);
+                    /*
+            this condition helpes to check the after the swap is made at start position, the arrangement still beautiful and if it is not then this will not lead to further beautiful arangement at this position will be fixed in the future
+            */
+                if (nums[k] % (k + 1) == 0 || (k + 1) % nums[k] == 0)
+                    permute(nums, k + 1);
+                swap(nums, i, k);
+            }
+        }
+
+        private void swap(int[] nums, int i, int j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+    
+}
