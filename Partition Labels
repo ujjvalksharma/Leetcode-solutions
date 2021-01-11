@@ -1,0 +1,66 @@
+class Solution {
+    /*
+    In this question, we get intervals(start and end) of all character, and then we merge those intervals.
+    
+    */
+    public List<Integer> partitionLabels(String S) {
+        
+        
+        int[] startOfCharacter=new int[26];
+        int[] endOfCharacter=new int[26];
+        List<Integer> answer=new ArrayList<Integer>();
+        Arrays.fill(startOfCharacter,-1);
+             Arrays.fill(endOfCharacter,-1);
+        
+        for(int i=0;i<S.length();i++){
+            int index=S.charAt(i)-'a';
+            if(startOfCharacter[index]==-1){
+               startOfCharacter[index]=i; 
+                endOfCharacter[index]=i;
+            }else{
+                  endOfCharacter[index]=i;
+            }
+        }
+        
+        
+        List<int[]> listOfIntervals=new ArrayList<>();
+        
+        for(int i=0;i<=25;i++){
+            if(startOfCharacter[i]!=-1){
+                listOfIntervals.add(new int[]{startOfCharacter[i],endOfCharacter[i]});
+            }
+        }
+        
+        Collections.sort(listOfIntervals,(int[] a,int[] b)-> a[0]-b[0]);
+       
+        
+       Stack<int[]> stkMergeInterval=new Stack<int[]>();
+        
+        for(int i=0;i<listOfIntervals.size();i++){
+            int[] currentInterval=listOfIntervals.get(i);
+            
+            if(stkMergeInterval.isEmpty()){
+                stkMergeInterval.push(currentInterval);
+            }else{
+                int[] prevInterval=stkMergeInterval.peek();
+
+                if(currentInterval[0]>=prevInterval[0]&&currentInterval[0]<=prevInterval[1]){
+                    int[] newInterval=new int[]{Math.min(prevInterval[0],currentInterval[0]),Math.max(currentInterval[1],prevInterval[1])};
+                    stkMergeInterval.pop();
+                    stkMergeInterval.push(newInterval);
+                }else{
+                        stkMergeInterval.push(currentInterval);
+                }
+            }
+        }
+        
+        int[][] allMergedIntervals=stkMergeInterval.toArray(new int[stkMergeInterval.size()][2]);
+        int prev=-1;
+        for(int i=0;i<allMergedIntervals.length;i++){
+            answer.add(allMergedIntervals[i][1]-prev);
+            prev=allMergedIntervals[i][1];
+        }
+        return answer;
+        
+    }
+}
