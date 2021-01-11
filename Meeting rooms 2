@@ -1,0 +1,30 @@
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        
+        if(intervals.length==0){
+            return 0;
+        }
+        Arrays.sort(intervals,(int[] a,int[] b)-> a[0]-b[0]);
+        
+            PriorityQueue<int[]> pQueue = new PriorityQueue<int[]>((int[] a,int[] b)->a[1]-b[1]);
+        pQueue.add(intervals[0]);
+        
+        for(int i=1;i<intervals.length;i++){
+            int[] currentInterval=intervals[i];
+            int[] earlyEndingInterval=pQueue.remove(); // removes the earlist interval
+            
+            if(currentInterval[0]>=earlyEndingInterval[1]){ // is th current start time is greater than earlist end time
+                earlyEndingInterval[1]=currentInterval[1];
+                pQueue.add(currentInterval); // this means we time period of earlist time is over we add the current interval
+            }else{ // this is the case where the interval clash and we need both interval
+                pQueue.add(currentInterval);
+                 pQueue.add(earlyEndingInterval);
+            }
+               
+        }
+        
+        return pQueue.size();
+        
+        
+    }
+}
