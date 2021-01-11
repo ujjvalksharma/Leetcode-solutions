@@ -1,0 +1,39 @@
+class Solution {
+    public int numPairsDivisibleBy60(int[] time) {
+        
+        HashMap<Integer,Integer> hm= new HashMap<Integer,Integer>();
+        int pair=0;
+        for(int i=0;i<60;i++)
+        {
+           hm.put(i,0);
+        }
+        
+        for(int i=0;i<time.length;i++)
+        {
+            int num=time[i]%60;
+            if(num==0)
+            {
+                int count=hm.get(0);
+
+                   pair=pair+count; 
+                
+             count++;
+                
+                hm.put(0,count);
+            }
+            else
+            {
+                int comp=60-num;
+                  pair=pair+hm.get(comp);
+                
+                int count=hm.get(num);
+                count++;
+                    hm.put(num,count);
+                
+            }
+        }
+        
+       return pair;
+        
+    }
+}
