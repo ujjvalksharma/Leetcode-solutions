@@ -1,0 +1,20 @@
+class Solution {
+    public int findPoisonedDuration(int[] timeSeries, int duration) {
+        
+        int totalDurationOfPosion=0;
+        int endTimeOfPosion=-1;
+        
+        for(int i=0;i<timeSeries.length;i++){
+                       
+            if(timeSeries[i]>endTimeOfPosion){
+                totalDurationOfPosion=totalDurationOfPosion+duration;
+            }else{
+                int  newEndTimeOfPosion=timeSeries[i]+duration-1;
+                 totalDurationOfPosion=totalDurationOfPosion+newEndTimeOfPosion-endTimeOfPosion;
+            }
+              endTimeOfPosion=timeSeries[i]+duration-1;
+        }
+        
+        return totalDurationOfPosion;
+    }
+}
