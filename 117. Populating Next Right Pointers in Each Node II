@@ -1,0 +1,64 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+    
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+*/
+
+class Solution {
+    /**
+    Simple level order transversal and keep the note of prevNode.
+    
+    */
+    public Node connect(Node root) {
+        
+        Queue<Node> queueForLevel=new LinkedList<Node>();
+        queueForLevel.add(root);
+        queueForLevel.add(null);
+        Node prevNode=null;
+        while(!queueForLevel.isEmpty()){
+            
+            Node currentNode=queueForLevel.poll();
+            
+            if(currentNode!=null){
+                if(prevNode==null){
+                    prevNode=currentNode;
+                }else{
+                    prevNode.next=currentNode;
+                    prevNode=currentNode;
+                }
+                
+                if(currentNode.left!=null){
+                    queueForLevel.add(currentNode.left);
+                }
+                
+                  if(currentNode.right!=null){
+                     queueForLevel.add(currentNode.right);
+                }
+                
+            }else{
+                if(queueForLevel.peek()!=null){
+                    queueForLevel.add(null);
+                    prevNode=null;
+                }
+            }
+        }
+        return root;
+    }
+}
