@@ -1,0 +1,56 @@
+class Solution {
+    
+    class Arr{
+      public  int num;
+       public int freq;
+        
+        Arr(int num,int freq){
+            this.num=num;
+            this.freq=freq;
+        }
+        
+        @Override
+       public String toString(){
+            return "num:"+num+"freq:"+freq;
+        }
+    }
+    public int[] frequencySort(int[] nums) {
+        
+        HashMap<Integer,Integer> numToFreq=new HashMap<Integer,Integer>();
+        List<Arr> list=new ArrayList<Arr>();
+        for(int num: nums){
+            if(!numToFreq.containsKey(num)){
+                numToFreq.put(num,0);
+            }
+            numToFreq.put(num,numToFreq.get(num)+1);
+        }
+        
+        for(Map.Entry<Integer, Integer> map : numToFreq.entrySet())
+        {
+            list.add(new Arr(map.getKey(),map.getValue()));
+        }
+        
+
+Collections.sort(list,(Arr a1,Arr a2)->
+                 {
+                     if(a1.freq!=a2.freq)
+                    return a1.freq-a2.freq;
+                         else
+                          return    a2.num-a1.num;
+                     });
+        
+        System.out.println(list);
+        int index=0;
+        for(int i=0;i<list.size();i++){
+            int freq1=list.get(i).freq;
+            while(freq1>0){
+               nums[index]=list.get(i).num;
+                freq1--;
+                index++;
+            }
+           
+        }
+        
+        return  nums;
+    }
+}
