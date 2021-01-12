@@ -1,0 +1,39 @@
+class Solution {
+    /**
+    In this question we make a string form of each array in pieces matrix and we keep checking the string form in hashset that is formed from array and if we find it we remove it from hashset. and is the hashset is empty then we can make the sequence.
+    
+    **/
+    public boolean canFormArray(int[] arr, int[][] pieces) {
+        
+Set<String> setOfArr=new HashSet<String>();
+        
+        for(int i=0;i<pieces.length;i++){
+            String str="";
+            for(int j=0;j<pieces[i].length;j++){
+                str=str+pieces[i][j]+",";
+            }
+            setOfArr.add(str);
+        }
+        
+        List<Integer> listOfNumbers=new ArrayList<>();
+        
+        for(int i=0;i<arr.length;i++){
+            listOfNumbers.add(arr[i]);
+            
+            String str="";
+            for(int j=0;j<listOfNumbers.size();j++){
+           str=str+listOfNumbers.get(j)+",";
+            }
+            
+            if(setOfArr.contains(str)){
+                setOfArr.remove(str);
+                listOfNumbers=new ArrayList<>();
+                
+            }
+        }
+        
+        
+        return setOfArr.isEmpty();
+        
+    }
+}
