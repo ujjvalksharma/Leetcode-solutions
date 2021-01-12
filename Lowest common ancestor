@@ -1,0 +1,70 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+the question is same as 1123. Lowest Common Ancestor of Deepest Leaves. same to same code is present here
+*/
+class Solution {
+    
+    /**
+    We return the string "d" when we know we have found the depth node and not all parents will get left and right node as "d" because not all will have left and right subtree with deepest node.
+    
+    **/
+      TreeNode answer;
+    int max_whole_depth=-1;
+    public void preorder(TreeNode root,int depth)
+    {
+        if(root==null)
+            return;
+        
+        max_whole_depth=Math.max(max_whole_depth,depth);
+        preorder(root.left,depth+1);
+        preorder(root.right,depth+1);
+   
+    }
+    public String postorder(TreeNode root,int depth)
+    {
+        if(root==null)
+            return " ";
+        
+        
+        String left_tree=postorder(root.left,depth+1);
+        String right_tree=postorder(root.right,depth+1);
+    //    System.out.println("root:"+root.val+"left_tree:"+left_tree+"right_tree:"+right_tree);
+        if(left_tree.equals(right_tree)&&right_tree.equals("d"))
+        {
+            answer=root;
+            //found=true;
+        }
+        if(depth==max_whole_depth)
+        {
+            answer=root; // edge case if there is only one deep node
+            return "d";
+        }   
+        
+        if(left_tree.equals("d")||right_tree.equals("d"))
+            return "d";
+        
+        return "n";
+            
+   
+    }
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+        
+        preorder(root,0);
+        postorder(root,0);
+        return answer;
+    }
+}
