@@ -1,0 +1,80 @@
+class Solution {
+    /*
+    In this question we keep 2 pointers one pointer at largest negative number and one at least positive number then we insert elements in ans by taking squares and comparing them.
+    
+    **/
+    public int[] sortedSquares(int[] nums) {
+        
+        int negNumIndex=-1;
+        int positiveNumIndex=-1;
+        int[] answer=new int[nums.length];
+        int indexOfAnswer=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]>=0){
+                if(positiveNumIndex==-1){
+                positiveNumIndex=i;
+                }
+            }else{
+                negNumIndex=i;
+            }
+        }
+        
+        
+        if(negNumIndex==-1){
+             for(int i=0;i<nums.length;i++){
+                 nums[i]=nums[i]*nums[i];
+                 
+             }
+            return nums;
+        }
+        
+             if(positiveNumIndex==-1){
+                 
+               for(int i=0; i<nums.length/2; i++){
+            int temp = nums[i];
+            nums[i] = nums[nums.length -i -1];
+            nums[nums.length -i -1] = temp;
+        }
+            
+                     for(int i=0;i<nums.length;i++){
+                 nums[i]=nums[i]*nums[i];
+                 
+             }
+            return nums;
+                 
+        }
+   //     System.out.println("negNumIndex:"+negNumIndex);
+     //    System.out.println("positiveNumIndex:"+positiveNumIndex);
+        while(negNumIndex>=0&&positiveNumIndex<nums.length){
+            
+            int numFromNegativeIndex=nums[negNumIndex]*nums[negNumIndex];
+             int numFromPositiveIndex=nums[positiveNumIndex]*nums[positiveNumIndex];
+            if(numFromNegativeIndex<=numFromPositiveIndex){
+                answer[indexOfAnswer]=numFromNegativeIndex;
+                negNumIndex--;
+            }else{
+                answer[indexOfAnswer]=numFromPositiveIndex;
+                positiveNumIndex++;
+            }
+            indexOfAnswer++;
+        }
+        
+        
+         while(negNumIndex>=0){
+             int numFromNegativeIndex=nums[negNumIndex]*nums[negNumIndex];
+              answer[indexOfAnswer]=numFromNegativeIndex;
+              negNumIndex--;
+             indexOfAnswer++;
+         }
+        
+         
+         while(positiveNumIndex<nums.length){
+             int numFromPositiveIndex=nums[positiveNumIndex]*nums[positiveNumIndex];
+              answer[indexOfAnswer]=numFromPositiveIndex;
+                positiveNumIndex++;
+              indexOfAnswer++;
+         }
+        
+        return answer;
+    }
+}
