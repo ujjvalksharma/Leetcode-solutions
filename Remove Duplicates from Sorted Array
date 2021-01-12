@@ -1,0 +1,38 @@
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        
+        if(nums.length==0){
+            return 0;
+        }
+        if(nums.length==1){
+            return 1;
+        }
+        int start=0;
+        int end=0;
+        Integer prev=null;
+        //This method is using hashset in which we keep track if element is not visited it is inserted initially
+     /*   Set<Integer> hs=new HashSet<Integer>();
+        while(end<nums.length){
+            
+            if(!hs.contains(nums[end])){
+            nums[start]=nums[end];
+            start++;
+                hs.add(nums[end]);
+            }
+            prev=nums[end];
+            end++;
+        }*/
+           /*In this method we have prev=null that means no previous element, then we add element if new element found that means it is not equal to previous
+           */
+         while(end<nums.length){
+            
+            if(prev==null||prev!=nums[end]){
+            nums[start]=nums[end];
+            start++;
+            }
+            prev=nums[end];
+            end++;
+        }
+        return start;
+    }
+}
