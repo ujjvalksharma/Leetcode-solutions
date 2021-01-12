@@ -1,0 +1,83 @@
+class Solution {
+    /*
+    In this question we use dynamic programming to store the distance of right,down,right/left bottom diagonal.
+    if we see 1 then we do submission on previous down/right/diagnol and if prev is 0 that means current sum would be 1 and that was anyways 1 only.
+    
+    
+    
+    */
+    class ConsecutiveOnes{
+    public  int rightDistance;
+    public  int downDistance;
+    public  int rightDiagnalDistance;
+   public  int leftDiagnalDistance;
+        
+        ConsecutiveOnes(int rightDistance,int downDistance,int rightDiagnalDistance,int leftDiagnalDistance){
+            this.rightDiagnalDistance=rightDiagnalDistance;
+            this.downDistance=downDistance;
+            this.rightDistance=rightDistance;
+            this.leftDiagnalDistance=leftDiagnalDistance;
+        }
+    }
+    public int longestLine(int[][] M) {
+        
+        if(M.length==0){
+            return 0;
+        }
+        int longestConsecutiveOnes=0;
+        ConsecutiveOnes[][] obj=new ConsecutiveOnes[M.length+1][M[0].length];
+         for(int i=0;i<M.length;i++){
+           
+             for(int j=0;j<M[i].length;j++){
+                 
+                 obj[i][j]=new ConsecutiveOnes(M[i][j],M[i][j],M[i][j],M[i][j]);
+             }
+             
+             
+         }
+   //     System.out.println("I am here2");
+        for(int i=0;i<M.length;i++){
+           
+             for(int j=0;j<M[i].length;j++){
+                 if(M[i][j]>0){
+                  longestConsecutiveOnes=Math.max(longestConsecutiveOnes,obj[i][j].rightDistance);   
+                  longestConsecutiveOnes=Math.max(longestConsecutiveOnes,obj[i][j].downDistance);   
+                  longestConsecutiveOnes=Math.max(longestConsecutiveOnes,obj[i][j].rightDiagnalDistance);   
+                  longestConsecutiveOnes=Math.max(longestConsecutiveOnes,obj[i][j].leftDiagnalDistance);   
+                     int x=i;
+                     int y=j;
+                     //right
+                     y++;
+                         if(y<M[0].length&&M[x][y]>0){
+                             obj[x][y].rightDistance=obj[i][j].rightDistance+1;
+                         }
+                     //down
+                     y=j;
+                     x++;
+                     if(x<M.length&&M[x][y]>0){
+                             obj[x][y].downDistance=obj[i][j].downDistance+1;
+                         }
+                     
+                     // right diagnol
+                     x=i+1;
+                     y=j+1;
+                     
+                       if(x<M.length&&y<M[0].length&&M[x][y]>0){
+                           obj[x][y].rightDiagnalDistance=obj[i][j].rightDiagnalDistance+1;
+                         }
+                     
+                        // left diagnol
+                     x=i+1;
+                     y=j-1;
+                     
+                       if(x<M.length&&y>=0&&M[x][y]>0){
+                           obj[x][y].leftDiagnalDistance=obj[i][j].leftDiagnalDistance+1;
+                         }
+                 }
+            
+        }
+        }
+
+        return longestConsecutiveOnes;
+    }
+}
