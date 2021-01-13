@@ -1,0 +1,24 @@
+class Solution {
+    public int maxOperations(int[] nums, int k) {
+        int totalNumberOfOperations=0;
+        
+        int start=0;
+        int end=nums.length-1;
+        Arrays.sort(nums);
+        
+        while(start<end){
+            int sum=nums[start]+nums[end];
+            if(sum>k){
+                end--;
+            }else if(sum<k){
+                start++;
+            }else{
+                totalNumberOfOperations++;
+                    start++;
+                end--;
+            }
+                
+        }
+        return totalNumberOfOperations;
+    }
+}
