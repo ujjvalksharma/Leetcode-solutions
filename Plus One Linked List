@@ -1,0 +1,64 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    ListNode newHead=null;
+    public ListNode reverseLinkList(ListNode head){
+        
+       // System.out.println(hea)
+       if(head.next==null){
+           newHead=head;
+           return head;
+       }
+        
+        ListNode nextNode=reverseLinkList(head.next);
+        nextNode.next=head;
+        return head;
+        
+    }
+    public ListNode plusOne(ListNode head) {
+        
+     ListNode originalHead=reverseLinkList(head);
+         originalHead.next=null;
+        ListNode tempHead=newHead;
+    /*    while(tempHead!=null){
+            System.out.println(tempHead.val);
+            tempHead=tempHead.next;
+        }*/
+        
+        int carry=1;
+      //  int numberToAdd=1;
+        while(true){
+            int newSum=tempHead.val+carry;
+
+            if(newSum<10){
+                tempHead.val=newSum;
+                            carry=0;
+            }else{
+                int rem=newSum%10;
+                 tempHead.val=rem;
+                carry=1;
+            }
+            
+            if(tempHead.next==null){
+                break;
+            }
+            tempHead=tempHead.next;
+        }
+        
+        if(carry>0){
+            tempHead.next=new ListNode(carry);
+        }
+          originalHead=reverseLinkList(newHead);
+         originalHead.next=null;
+     
+        return newHead;
+    }
+}
