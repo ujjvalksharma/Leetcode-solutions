@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    /*
+    Do a post order traversal and keep note of min and max element from left and right subtree and current node value should be less right subtree min and max element and greater and min and max value of left subtree and then it will pass its its min and max to above tree.
+    
+    **/
+    boolean validBst=true;
+   public int[] isValidBSTHelper(TreeNode root){
+       if(root==null){
+           return new int[]{};
+       }
+       if(root.left==null&&root.right==null){
+           return new int[]{root.val,root.val};
+       }
+       int[] arrfromLeftSubtree=isValidBSTHelper(root.left);
+       int[] arrfromRightSubtree=isValidBSTHelper(root.right);
+              
+       if(arrfromRightSubtree.length==2&&(root.val>=arrfromRightSubtree[0]||root.val>=arrfromRightSubtree[1])){
+           validBst=false;
+       }  
+         if(arrfromLeftSubtree.length==2&&(root.val<=arrfromLeftSubtree[0]||root.val<=arrfromLeftSubtree[1])){
+           validBst=false;
+       }
+       int minimumElement=Integer.MAX_VALUE;
+        int maxElement=Integer.MIN_VALUE;
+       if(arrfromLeftSubtree.length==2){
+           minimumElement=Math.min(root.val,arrfromLeftSubtree[0]);
+           maxElement=Math.max(root.val,arrfromLeftSubtree[1]);
+       }              
+       if(arrfromRightSubtree.length==2){
+          minimumElement=Math.min(minimumElement,arrfromRightSubtree[0]);
+           maxElement=Math.max(root.val,arrfromRightSubtree[1]);
+       }
+       return new int[]{minimumElement,maxElement};
+        
+    }
+    public boolean isValidBST(TreeNode root) {
+        
+        if(root.left==null&&root.right==null){
+            return true;
+        }
+        int arr[]=isValidBSTHelper(root);
+
+        return validBst;
+    }
+
+}
