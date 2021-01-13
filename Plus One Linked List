@@ -10,6 +10,10 @@
  */
 class Solution {
     ListNode newHead=null;
+    /*
+    Reverse the linklist then add 1 to it and then reverse it again
+    
+    */
     public ListNode reverseLinkList(ListNode head){
         
        // System.out.println(hea)
