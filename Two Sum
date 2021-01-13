@@ -1,0 +1,21 @@
+ HashMap<Integer,List<Integer>> numToListOfIndex=new HashMap<Integer,List<Integer>>();
+        
+        for(int i=0;i<nums.length;i++){
+            int num=nums[i];
+           if(!numToListOfIndex.containsKey(num)){
+               numToListOfIndex.put(num,new ArrayList<Integer>());
+           }
+            List<Integer> listOfIndex=numToListOfIndex.get(num);
+            listOfIndex.add(i);
+            numToListOfIndex.put(num,listOfIndex);
+        }
+        
+        for(int num:nums){
+            if(num!=target-num&&numToListOfIndex.containsKey(target-num)){
+             return new int[]{numToListOfIndex.get(num).get(0),numToListOfIndex.get(target-num).get(0)};
+                
+            }else if(num==target-num&&numToListOfIndex.containsKey(num)&&numToListOfIndex.get(num).size()==2){
+                 return new int[]{numToListOfIndex.get(num).get(0),numToListOfIndex.get(num).get(1)};
+            }
+        }
+        return new int[]{};
