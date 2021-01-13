@@ -1,0 +1,33 @@
+class Solution {
+    /*
+    We sort them by wieght and keep 2 pointer, one pointer at lighter person and other person at heavy person. we try to bind them together else the heavy person sits 
+    
+    */
+    public int numRescueBoats(int[] people, int limit) {
+        
+        Arrays.sort(people);
+        
+        int start=0;
+        int end=people.length-1;
+        int totalNumberOfBoats=0;
+        while(start<=end){
+            
+            int ligherPersonWeight=people[start];
+            int heavyPersonWeight=people[end];
+            int totalWeight=ligherPersonWeight+heavyPersonWeight;
+            if(start!=end){
+            if(totalWeight<=limit){
+                start++;
+                end--;
+            } else if(heavyPersonWeight<=limit){
+                end--;
+            }
+                
+            }else{
+                start++;
+            }
+                            totalNumberOfBoats++;
+        }
+        return totalNumberOfBoats;
+    }
+}
