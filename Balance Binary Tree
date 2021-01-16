@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    /*
+    Do post order and return max of left or right tree size as you move up and add 1 to size for the current to pass to the parent
+    
+    */
+    boolean bIsBalanced=true;
+    private int isBalancedHelper(TreeNode root){
+        if(root==null){
+            return 0;
+        }
+        
+        int leftTreeHeight=isBalancedHelper(root.left);
+          int rightTreeHeight=isBalancedHelper(root.right);
+        if(Math.abs(leftTreeHeight-rightTreeHeight)>1){
+            bIsBalanced=false;
+        }
+        
+        return Math.max(leftTreeHeight,rightTreeHeight)+1;
+    }
+    public boolean isBalanced(TreeNode root) {
+         isBalancedHelper(root);
+        return bIsBalanced;
+    }
+}
