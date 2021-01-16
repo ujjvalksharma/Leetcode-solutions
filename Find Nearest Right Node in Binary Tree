@@ -1,0 +1,70 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    /*
+    Do a level order transversal.
+    */
+    public TreeNode findNearestRightNode(TreeNode root, TreeNode u) {
+        
+        
+        Queue<TreeNode> queue  = new LinkedList<>();
+        queue.add(root);
+        queue.add(null);
+        TreeNode answer=null;
+        boolean found=false;
+        int level=1;
+        int foundLevel=0;
+        while(queue.isEmpty()==false)
+        {
+            TreeNode temp=queue.poll();
+            if(temp!=null){
+                
+                if(found&&level==foundLevel)
+                    return temp;
+                else if(found)
+                    return null;
+                if(temp==u)
+                {
+                       found=true;
+                    foundLevel=level;
+                }
+                 
+            if(temp.left!=null)
+            {
+                queue.add(temp.left);
+            }
+            
+            
+            if(temp.right!=null)
+            {
+                queue.add(temp.right);
+            }
+            
+            }
+            else
+            {
+               if(queue.peek()!=null)
+               {
+                    queue.add(null);
+                   level++;
+               }
+                  
+            }
+        }
+        
+        return answer;
+    }
+}
