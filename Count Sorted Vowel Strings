@@ -1,0 +1,46 @@
+class Solution {
+    /*
+      1 2 3     
+    a 1 1 1 
+    e 2 3 (1+3) 
+    
+    
+    0 1 2 3
+  a 1 1 1  1 -- base  case
+  e 1 2 3  
+  i 1 3 6
+  o 1 4 10 
+  u 1 5 15
+    |
+    |
+    Base case
+  
+    
+  length 2 using a,e:  aa ee ae 
+  length 3 using a,e : aaa (from top), ae + e,aa + e,ee + e,
+    
+    The intitution foe this problem is that lets say we have letter a and it forms 1 words for length 2 and a,e forms 2 words for length 1 then obviously we can get 2 words from a,e for length 2 and append another e to make for length 3 as letters should be descending and and we get the word of length 3 that was from a, so we can just add the total words from left and top.
+    */
+    public int countVowelStrings(int n) {
+        
+        int dpColumnSize=n+1;
+        int dpRowSize=5;
+        int[][] dp=new int[dpRowSize][dpColumnSize];
+        
+      for(int i=0;i<dpColumnSize;i++){
+          dp[0][i]=1;
+      }
+        for(int i=0;i<dpRowSize;i++){
+              dp[i][0]=1;
+        }
+        
+        for(int i=1;i<dpRowSize;i++){
+            
+            for(int j=1;j<dpColumnSize;j++){
+                dp[i][j]=dp[i-1][j]+dp[i][j-1];
+            }
+        }
+        
+        return dp[dpRowSize-1][dpColumnSize-1];
+    }
+}
