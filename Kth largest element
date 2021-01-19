@@ -1,0 +1,24 @@
+class Solution {
+    /*
+    Use heap/priority queue and put max heap comparator in priority and poll till you find kth element
+    
+    */
+    public int findKthLargest(int[] nums, int k) {
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>((Integer a,Integer b)-> b-a);
+        
+        for(int num:nums){
+            pq.add(num);
+        }
+        
+        while(!pq.isEmpty()){
+            int currentLargest=pq.poll();
+            k--;
+            if(k==0){
+                return currentLargest;
+            }
+        }
+        
+        return -1;
+    }
+}
