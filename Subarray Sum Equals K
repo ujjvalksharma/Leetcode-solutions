@@ -1,0 +1,31 @@
+class Solution {
+    /*
+    [a,b,c,d,e,f,g]
+         |t1     |t2
+         
+         So, t2 (prefix sum)-t1 (prefix sum) =k
+         t1=t2-sum;
+         if I can find number of t1 that happened before t2 then I can know different (t2,ti) where the sum can be k and I can just add them total subarray.
+    
+    
+    */
+    public int subarraySum(int[] nums, int k) {
+        
+        HashMap<Integer,Integer> hmPrefixSumToCount=new HashMap<>();
+        
+        hmPrefixSumToCount.put(0,1);
+        int sum=0;
+        int totalSubarrays=0;
+        for(int num:nums){
+            sum=sum+num;
+            if(hmPrefixSumToCount.containsKey(sum-k)){
+                totalSubarrays=totalSubarrays+hmPrefixSumToCount.get(sum-k);
+            }
+            if(!hmPrefixSumToCount.containsKey(sum)){
+                hmPrefixSumToCount.put(sum,0);
+            }
+            hmPrefixSumToCount.put(sum,hmPrefixSumToCount.get(sum)+1);
+        }
+        return totalSubarrays;
+    }
+}
