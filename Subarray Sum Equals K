@@ -13,7 +13,7 @@ class Solution {
         
         HashMap<Integer,Integer> hmPrefixSumToCount=new HashMap<>();
         
-        hmPrefixSumToCount.put(0,1);
+        hmPrefixSumToCount.put(0,1); // we insert zero intital lets our current prefix sum is k then we have atleast 1 sum-k=0 and we can have atleast one subarray, so this acts as a base case.
         int sum=0;
         int totalSubarrays=0;
         for(int num:nums){
