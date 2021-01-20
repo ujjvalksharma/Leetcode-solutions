@@ -1,0 +1,41 @@
+class Solution {
+    /*
+    This is same as subarray with sum k.
+    [a,b,c,d,e,f,g,h]
+         |t1   |t2
+      a+b+h=x
+      so total sum= rest_sum +x
+      rest_sum=k=total_sum-x// this leads to problem of longest subarray with sum=rest_sum and longest means least operations to remove the numbers
+    
+    */
+    public int minOperations(int[] nums, int x) {
+        
+          int n = nums.length;
+        int sum = 0;
+HashMap<Integer,Integer> hmNumToIndex=new HashMap<>();
+        for(int i=0;i<n;++i)
+        {
+            sum+=nums[i];
+            hmNumToIndex.put(sum,i);
+        }
+        if(x>sum)   //Sum out of range
+            return -1;
+        hmNumToIndex.put(0,0);
+        
+        int longest = 0;
+        sum-=x;
+        int val = 0;
+        for(int i=0;i<n;++i)
+        {
+            val += nums[i];
+            if(hmNumToIndex.containsKey(val-sum))
+            {
+                if(val-sum==0)
+                    longest = Math.max(longest,i-hmNumToIndex.get(val-sum)+1);
+                else
+                    longest = Math.max(longest,i-hmNumToIndex.get(val-sum));
+            }
+        }
+        return longest==0?(sum==0?n:-1):n-longest;
+    }
+}
