@@ -1,0 +1,25 @@
+class Solution {
+    /*
+    We can do this question same as valid paratheis expect we need to check if we 'c' then we check whether the latest element in stack are ab. We use stack when we need to check most recent element in sequence and want to perform operations on them as it would help us in time complexity.
+    */
+    public boolean isValid(String s) {
+        Stack<Character> stk=new Stack<>();
+        
+        for(int i=0;i<s.length();i++){
+            if(stk.size()<2||s.charAt(i)!='c'){
+                stk.push(s.charAt(i));
+            }else{
+                if(s.charAt(i)=='c'){
+                   char latestCharacter=stk.pop();
+                   if(stk.peek()=='a'&&latestCharacter=='b'){
+                       stk.pop();
+                   }else{
+                       stk.push(latestCharacter);
+                   }
+                }
+            }
+        }
+        
+        return stk.isEmpty();
+    }
+}
