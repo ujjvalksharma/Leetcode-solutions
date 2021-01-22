@@ -1,0 +1,33 @@
+class Solution {
+    List<String> listOfParatheses=new ArrayList<String>();
+    
+    /*
+    We perform a simple recursion in which we count try to insert open bracket always unless it exceeding maximum limit of pairs, and we insert closed bracket if we know there is an open bracket present by checking the count of 
+    openParenthesis>0 and closedParenthesis doesn't exceed the limit and we keep decrementing  pairTotalPairs when we insert a closed bracket as we know we have formed a pair.
+    */
+    public void generateParenthesisHelper(int openParenthesis,int totalOpenParenthesis, int closedParenthesis,int pairTotalPairs,String currentPair,int maxParenthesis){
+        
+        if(pairTotalPairs<=0){
+            listOfParatheses.add(currentPair);
+            return;
+        }
+        
+        if(totalOpenParenthesis<maxParenthesis){
+          generateParenthesisHelper(openParenthesis+1,totalOpenParenthesis+1,closedParenthesis,pairTotalPairs,currentPair+"(",maxParenthesis);  
+        }
+        
+
+            
+                if(closedParenthesis<=maxParenthesis&&openParenthesis>0){
+        generateParenthesisHelper(openParenthesis-1,totalOpenParenthesis,closedParenthesis+1,pairTotalPairs-1,currentPair+")",maxParenthesis);  
+            }
+            
+        
+    }
+    public List<String> generateParenthesis(int n) {
+        
+        generateParenthesisHelper(0,0,0,n,"",n);
+        
+        return listOfParatheses;
+    }
+}
