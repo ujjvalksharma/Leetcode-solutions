@@ -1,0 +1,83 @@
+class Solution {
+/*
+Simple recursion in which each digit is mapped to 3 or 4 character, and then we form the string using a recursive tree.
+
+*/
+    HashMap<Character,List<Character>> hm;
+    List<String> answer= new ArrayList<String>();
+    
+    public void FindAllCombinations(String str,int start,String mydigit)
+    {
+        if(start>=str.length())
+        {
+            answer.add(mydigit);
+            return;
+        }
+        
+       
+            char temp_digit=str.charAt(start);
+            List<Character> list=hm.get(temp_digit);
+            
+            for(int j=0;j<list.size();j++)
+            {
+              FindAllCombinations(str,start+1,mydigit+Character.toString(list.get(j)));  
+            }
+        
+        
+    }
+    
+    public List<String> letterCombinations(String digits) {
+        
+        if(digits.equals(""))
+            return answer;
+        
+      hm  = new HashMap<Character,List<Character>>();
+        List<Character> list= new ArrayList<Character>();
+        list.add('a');
+        list.add('b');
+        list.add('c');
+      hm.put('2',list);
+        list= new ArrayList<Character>();
+         list.add('d');
+        list.add('e');
+        list.add('f');
+      hm.put('3',list);
+          list= new ArrayList<Character>();
+         list.add('g');
+        list.add('h');
+        list.add('i');
+      hm.put('4',list);
+           list= new ArrayList<Character>();
+         list.add('j');
+        list.add('k');
+        list.add('l');
+      hm.put('5',list);
+              list= new ArrayList<Character>();
+         list.add('m');
+        list.add('n');
+        list.add('o');
+      hm.put('6',list);
+           list= new ArrayList<Character>();
+         list.add('p');
+        list.add('q');
+        list.add('r');
+         list.add('s');
+      hm.put('7',list);
+           list= new ArrayList<Character>();
+         list.add('t');
+        list.add('u');
+        list.add('v');
+      hm.put('8',list);
+           list= new ArrayList<Character>();
+         list.add('w');
+        list.add('x');
+        list.add('y');
+        list.add('z');
+      hm.put('9',list);
+        
+        FindAllCombinations(digits,0,"");
+        
+        return answer;
+        
+    }
+}
