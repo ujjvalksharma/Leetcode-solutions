@@ -1,0 +1,29 @@
+class Solution {
+/*
+Keep inserting element in stack unless you find a pair match then we can pop an element.
+
+*/
+    public boolean isValid(String s) {
+        Stack<Character> stkOfChar=new Stack<>();
+        for(int i=0;i<s.length();i++){
+            char currentChar=s.charAt(i);
+            if(stkOfChar.isEmpty()){
+                stkOfChar.push(currentChar);
+            }else{
+                if(currentChar==')'&&stkOfChar.peek()=='('){
+                   stkOfChar.pop(); 
+                }else if(currentChar=='}'&&stkOfChar.peek()=='{'){
+                        stkOfChar.pop(); 
+                }else if(currentChar==']'&&stkOfChar.peek()=='['){
+                        stkOfChar.pop(); 
+                }else{
+                        stkOfChar.push(currentChar); 
+                }
+
+            }
+        }
+        
+        return stkOfChar.isEmpty();
+    }
+}
+
