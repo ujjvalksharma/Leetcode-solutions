@@ -1,0 +1,47 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    /*
+    In this question we have a priority queue in which we insert all the nodes and comparator in priority gets the node which has least value. after we get the value we insert it into a templinklist and insert the next element of node who had least value. this would help us to get nodes in ascending manner.
+    
+    */
+    public ListNode mergeKLists(ListNode[] lists) {
+        
+        if(lists.length==0){
+            return null;
+        }
+        
+        PriorityQueue<ListNode> pq = new PriorityQueue<ListNode>((ListNode node1,ListNode node2)->{
+            return node1.val-node2.val;
+        });
+        ListNode head=new ListNode(0);
+        ListNode tempHead=head;
+        
+        for(int i=0;i<lists.length;i++){
+            if(lists[i]!=null){
+             pq.add(lists[i]);
+            }
+        }
+        
+     while(!pq.isEmpty()){
+         ListNode currentLinkListHead=pq.poll();
+             tempHead.next=currentLinkListHead;
+             tempHead=tempHead.next;
+             if(currentLinkListHead.next!=null){
+                 pq.add(currentLinkListHead.next);
+             }
+             
+         }
+     
+        
+        return head.next;
+    }
+}
