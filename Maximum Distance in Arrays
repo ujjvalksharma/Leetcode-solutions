@@ -1,0 +1,34 @@
+class Solution {
+    /*
+    Since elements in each sub array are sorted, we know that minimum elment of each sub array is at 0th index and max at last index. we keep track of changing minimum and maximum element keep finding the maximum possible distance when we reach a new subarray.
+    
+    
+    */
+    public int maxDistance(List<List<Integer>> arrays) {
+        
+        int overAllMin=arrays.get(0).get(0);
+        int overAllMax=arrays.get(0).get(arrays.get(0).size()-1);
+        int maxDistance=0;
+        for(int i=1;i<arrays.size();i++){
+            List<Integer> array=arrays.get(i);
+            int currentMin=array.get(0);
+            int currentMax=array.get(array.size()-1);
+            
+            maxDistance=Math.max(maxDistance,Math.abs(currentMin-overAllMin));
+            maxDistance=Math.max(maxDistance,Math.abs(currentMin-overAllMax));
+            
+            maxDistance=Math.max(maxDistance,Math.abs(currentMax-overAllMax));
+            maxDistance=Math.max(maxDistance,Math.abs(currentMax-overAllMin));
+            
+            
+            
+              overAllMin=Math.min(overAllMin,currentMin);
+              overAllMin=Math.min(overAllMin,currentMax);
+            
+              overAllMax=Math.max(overAllMax,currentMin);
+              overAllMax=Math.max(overAllMax,currentMax);
+        }
+        
+        return maxDistance;
+    }
+}
