@@ -1,0 +1,73 @@
+class Solution {
+    
+    class Bracket{
+        public int index;
+        public char type;
+        Bracket(int index,char type){
+            this.index=index;
+            this.type=type;
+        }
+        
+        @Override
+        public String toString(){
+            return "index:"+index+"type:"+type;
+        }
+    }
+    /*
+    In this question we remove parenthis as we would remove normally in remove parathesis question. However, we store the index of parathesis using an class object 'Bracket' then we need to know the consecutive valid parathesis for that if we find the difference between adjacent index in left over in stack/list would be consecutive parathesis.
+    
+    
+    */
+    public int longestValidParentheses(String s) {
+        if(s.length()==0){
+            return 0;
+        }
+ 
+        
+        int totalConsecutivePairs=0;
+        List<Bracket> listOfBracket=new ArrayList<Bracket>();
+        int totalSize=s.length();
+        
+        for(int i=0;i<totalSize;i++){
+            if(listOfBracket.isEmpty()||s.charAt(i)=='('){
+                 listOfBracket.add(new Bracket(i,s.charAt(i)) );
+                
+            }      else if(s.charAt(i)==')'&&
+                           listOfBracket.size()>0&&
+                           listOfBracket.get(listOfBracket.size()-1).type=='('){
+                listOfBracket.remove(listOfBracket.size()-1);
+                
+            }else{
+                 listOfBracket.add(new Bracket(i,s.charAt(i)) );
+            }
+        }
+      //  System.out.println("size:"+listOfBracket.size());
+    //    System.out.println("elements:"+listOfBracket);
+        
+        if(listOfBracket.size()==0){
+            return totalSize;
+        }
+        for(int i=0;i<listOfBracket.size();i++){
+            int currentIndex=listOfBracket.get(i).index;
+            if(i==0){
+               totalConsecutivePairs= Math.max(totalConsecutivePairs,currentIndex);
+            //         System.out.println("start:"+currentIndex);
+            }
+            if(i==listOfBracket.size()-1){
+                 totalConsecutivePairs= Math.max(totalConsecutivePairs,totalSize-1-currentIndex);
+           //      System.out.println("end:"+(totalSize-1-currentIndex));
+            }
+            
+            if(i+1<=listOfBracket.size()-1){
+                int nextIndex=listOfBracket.get(i+1).index;
+                totalConsecutivePairs= Math.max(totalConsecutivePairs,nextIndex-currentIndex-1);
+             //   System.out.println("between:"+(nextIndex-currentIndex-1));
+            }
+        }
+        
+        
+        return totalConsecutivePairs;
+        
+        
+    }
+}
