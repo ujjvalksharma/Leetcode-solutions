@@ -1,0 +1,94 @@
+//my solution to bfs on the string, we can also do dfs
+/*
+In this question, we remove every character in string we poll from queue then do bfs on it. we know the string got from queue is valid that means the it would found with minimum removal. Hence that is the answer. We also maintain a level so we know all removal times (like removal on 1 character or 2 character) stay in a level. we also avoid visited string.
+
+()()(
+/      \         \
+)()(    (()(    ()(( ...... -----level 1 removal of 1 character
+*/
+class Solution {
+    
+    public boolean validateString(StringBuilder sb)
+    {
+        Stack<Character> stk= new Stack<>();
+        
+        for(int i=0;i<sb.length();i++)
+        {
+            if(sb.charAt(i)=='(')
+                stk.push('(');
+            else if(stk.isEmpty()==false&&sb.charAt(i)==')')
+                stk.pop();
+            else if(stk.isEmpty()==true&&sb.charAt(i)==')')
+                return false;            
+        }
+        if(stk.isEmpty()==false)
+            return false;
+        
+        return true;
+    }
+    public List<String> removeInvalidParentheses(String s) {
+
+        Queue<String> q= new LinkedList<>(); // bsf queue
+        HashSet<String> answer= new HashSet<>();
+        HashMap<String,Boolean> hm=new HashMap<String,Boolean>(); //visited
+        hm.put(s,true);
+        q.add(s);
+        q.add(null);
+        
+        int min_level=Integer.MAX_VALUE;
+        int level=0;
+        while(q.isEmpty()==false)
+        {
+            StringBuilder str=null;
+            String str_temp=q.poll();
+                if(str_temp!=null)
+            str=new StringBuilder(str_temp);
+            
+            if(str!=null)
+            {
+              //  System.out.println(str);
+                if(validateString(str))
+                {
+                   // System.out.println("i am here");
+                    // no need to clear the answer list as we would break out of at the end of the level
+                    //answer.clear();
+                       min_level=level; 
+                    answer.add(str.toString());
+                }
+                
+                for(int i=0;i<str.length();i++)
+                {
+                    
+                    if(str.charAt(i)=='('||str.charAt(i)==')'){
+                      char temp=str.charAt(i);  
+                     String sb_temp=str.deleteCharAt(i).toString();
+                    str.insert(i,temp);
+                    if(hm.containsKey(sb_temp)==false)
+                    {
+                       q.add(sb_temp);
+                       hm.put(sb_temp,true);
+                    }
+                 
+                    }
+                  
+                }
+              //  break;
+               
+            }
+            else
+            {
+                level++;
+                if(min_level<level)
+                    break;
+                if(q.peek()!=null)
+                    q.add(null);
+                
+            }
+        }
+        
+         List<String> list = new ArrayList<String>(answer);
+        
+    return list;
+        
+    }
+}
