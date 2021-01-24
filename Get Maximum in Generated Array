@@ -1,0 +1,35 @@
+class Solution {
+/*
+Insert all elements in an array accoring to the rule given and find the maximum number
+
+*/
+    public int getMaximumGenerated(int n) {
+        
+        int nums[]=new int[n+1];
+        
+        int maxNumber=Integer.MIN_VALUE;
+        
+        for(int i=0;i<=n;i++){
+            
+            if(i==0){
+                nums[0]=0;
+                maxNumber=Math.max(maxNumber,0);
+            } 
+            if(i==1){
+                    nums[1]=1;
+                maxNumber=Math.max(maxNumber,1);
+            } 
+            if (2 <= 2 * i&&2 * i <= n){
+                nums[2 * i] = nums[i];
+                  maxNumber=Math.max(maxNumber,nums[i]);
+            } 
+            if(2 <= 2 * i + 1&& 2 * i + 1 <= n){
+                nums[2 * i + 1] = nums[i] + nums[i + 1];
+                 maxNumber=Math.max(maxNumber,nums[i] + nums[i + 1]);
+            }
+        }
+        
+        return maxNumber;
+        
+    }
+}
