@@ -1,0 +1,45 @@
+class Solution {
+    
+    int[][] mem;
+    int maxRow;
+    int maxCol;
+    /*
+    Use recursion+ memory and keep note of the steps at row and column to avoid recursive tarvel at that node again and then return the final sum. At any position we know to we have to calcuate the paths from it would be paths from left + paths from right.
+    
+    */
+    public int postOrder(int row, int column){
+        if(row>=maxRow||column>=maxCol){
+            return 0;
+        }
+        if(row==(maxRow-1)&&column==(maxCol-1)){
+            return 1;
+        }
+        if(mem[row][column]!=-1){
+            return mem[row][column];
+        }
+        
+        int pathsFromDown=postOrder(row+1,column);
+        int pathsFromRight=postOrder(row,column+1);
+        mem[row][column]=pathsFromDown+pathsFromRight;
+        return  mem[row][column];
+    }
+    public int uniquePaths(int m, int n) {
+        
+        if(m==1&&n==1){
+            return 1;
+        }
+        mem=new int[m][n];
+        
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+              mem[i][j]=-1;  
+            }
+        }
+        maxRow=m;
+        maxCol=n;
+        postOrder(0,0);
+        
+  
+        return mem[0][0];
+    }
+}
