@@ -1,0 +1,49 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node prev;
+    public Node next;
+    public Node child;
+};
+*/
+
+class Solution {
+    /*
+    In this question recursiely traverse the linklist. We first check if there is a child node then next node. we keep elements in a list and then iterate the list to produce the new list. the new list child should always refer to null.
+    
+    */
+    List<Node> allFlattenNodes=new ArrayList<Node>();
+    public void flattenLinkListHelper(Node head){
+        if(head==null){
+            return;
+        }
+        allFlattenNodes.add(head);
+        flattenLinkListHelper(head.child);
+        flattenLinkListHelper(head.next);
+        
+    }
+    public Node flatten(Node head) {
+        if(head==null){
+            return null;
+        }
+        flattenLinkListHelper(head);
+        
+            Node newLinklistHead=allFlattenNodes.get(0);
+            newLinklistHead.next=null;
+            newLinklistHead.prev=null;
+            newLinklistHead.child=null;
+            Node tempHead=newLinklistHead;
+        
+       for(int i=1;i<allFlattenNodes.size();i++){
+           allFlattenNodes.get(i).child=null;
+           tempHead.next=allFlattenNodes.get(i);
+           allFlattenNodes.get(i).prev=tempHead;
+           tempHead=tempHead.next;
+           
+       }
+        
+        return newLinklistHead;
+        
+    }
+}
