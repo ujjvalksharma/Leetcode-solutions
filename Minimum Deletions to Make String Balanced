@@ -1,0 +1,101 @@
+/* 1st solution:
+We can try question using BFS too. we remove every character at a level and then find the minimum level at which string is balanced.
+aabab
+/     \     \
+ababb  abab  aaab ----level 1 remove character at all index
+2nd Solution:
+at every index of b we can check how many 'a' are after it that we need to remove and how many 'b' are before it that we need to remove as we consider each index of 'b' will be first index of b, and then we find the minimum  sum of it.
+*/
+/* Sol:ution 1
+class Solution {
+    
+    private boolean verifyBalanced(StringBuilder sb){
+        boolean foundB=false;
+        
+        for(int i=0;i<sb.length();i++){
+            if(sb.charAt(i)=='b'){
+                foundB=true;
+            }else{
+                if(foundB){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public int minimumDeletions(String s) {
+        
+        Queue<StringBuilder> queue=new LinkedList<>();
+        
+        queue.add(new StringBuilder(s));
+        queue.add(null);
+        int level=0;
+        Set<String> visitedStr=new  HashSet<String>();
+        while(!queue.isEmpty()){
+            StringBuilder currentSb=queue.poll();
+           System.out.println(currentSb);
+            if(currentSb!=null){
+                
+                visitedStr.add(currentSb.toString());
+                if(verifyBalanced(currentSb)){
+                    System.out.println("middle answer:"+currentSb);
+                    return level;
+                }
+                
+              //  System.out.println("length:"+currentSb.length());
+                int currentSize=currentSb.length();
+                for(int i=0;i<currentSize;i++){
+                    char currentChar=currentSb.charAt(i);
+                     currentSb.deleteCharAt(i);
+
+                    if(!visitedStr.contains(currentSb.toString())){
+                        visitedStr.add(currentSb.toString());
+                           queue.add(new StringBuilder(currentSb.toString()));
+                       //      System.out.println("currentSb:"+currentSb);
+                    }
+                 
+                      currentSb.insert(i,currentChar);
+                }
+           //     break;
+            }else{
+                level++;
+                if(queue.peek()!=null){
+                    queue.add(null);
+                }
+            }
+        }
+        
+    System.out.println("end answer:");
+        return level;
+        
+    }
+}
+
+*/
+/* Solution 2: */
+class Solution {
+
+        public int minimumDeletions(String s) {
+
+                   int n = s.length();
+            int A[] = new int[n];
+            A[n - 1] = s.charAt(n - 1) == 'a' ? 1 : 0;
+            for (int i = n - 2; i >= 0; i--)
+                A[i] = A[i + 1] + (s.charAt(i) == 'a' ? 1 : 0);
+
+            int result = Integer.MAX_VALUE;
+            int bCount = 0;
+            for (int i = 0; i < n; i++) {
+                if (s.charAt(i) == 'b') {
+                    result = Math.min(result, bCount + A[i]);
+                    bCount++;
+                }
+            }
+
+            result = Math.min(result, bCount);
+
+            return result == Integer.MAX_VALUE ? 0 : result;
+            
+        }
+    
+}
