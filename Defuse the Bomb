@@ -1,0 +1,42 @@
+class Solution {
+    /*
+    Simulate a circular array +prefix sum
+    
+    */
+    public int[] decrypt(int[] code, int k) {
+             int[] decode = new int[code.length];
+        if(k == 0){
+            Arrays.fill(decode, 0);
+        } else if(k > 0){
+            int nextK = 0;
+            int i=1;
+            while(i <= k){ // get the starting sum val
+                nextK += code[i++];
+            }
+            decode[0] = nextK;
+            
+            for(i=1; i<code.length; i++){
+                nextK -= code[i];
+                nextK += code[(i+k)%code.length]; // we can simulate the circular array by using %
+                decode[i] = nextK;
+                
+            }
+        } else {
+            k = -k;
+            int nextK = 0;
+            int i=code.length-2;
+            while(i >= code.length-k-1){
+                nextK += code[i--];
+            }
+            decode[code.length-1] = nextK;
+            
+            for(i=decode.length-2; i>= 0; i--){
+                nextK -= code[i];
+                int nextInd = i-k < 0? code.length+(i-k) : i-k; // get next index, if it is negative, subtract from end
+                nextK += code[nextInd];
+                decode[i] = nextK;
+            }
+        }
+        return decode;
+    }
+}
