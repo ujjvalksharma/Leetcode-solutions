@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    /*
+    Do a level order traversal on the tree find use map<Node,Node> childToParent and the map is cleared at each level. if the child is found, then we check the parent and now we know that is node is poining to a node which is at same level. then we do a preorder traversal at the tree and if the node is found at head.left or head.right we make lead.left or head.right null and that node is deleted.
+    
+    */
+    public TreeNode correctBinaryTree(TreeNode root) {
+        
+        Map<Integer, TreeNode> reverseLookup = new HashMap<>(); // K = a node's val, V = the node's parent node
+        
+        // BFS search
+        Queue<TreeNode> queue = new LinkedList<>(); // LinkedList is more performant than ArrayDeque for this use case
+        queue.add(root);
+        
+        while (true) { // we'll exit from inside the while block
+            TreeNode curNode = queue.poll();
+            if (curNode.left != null) {
+                reverseLookup.put(curNode.left.val, curNode);
+                queue.add(curNode.left);
+            }
+            if (curNode.right != null) {
+                if (reverseLookup.containsKey(curNode.right.val)) { // if we've already seen this child before
+                    TreeNode parentNode = reverseLookup.get(curNode.val);
+                    if (parentNode.left != null && parentNode.left.val == curNode.val) {
+                        parentNode.left = null;
+                    } else {
+                        parentNode.right = null;
+                    }
+                    return root;
+                } else {
+                    reverseLookup.put(curNode.right.val, curNode);
+                }
+                queue.add(curNode.right);
+            }
+        }
+        // we return from inside while block
+    }
+}
