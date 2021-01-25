@@ -1,0 +1,34 @@
+class Solution {
+    /*
+    We keep a loop unitil the number of full bottles that can be attained from empty are not zero. and initially all drank bottles are numBottles and we calculate number of drank bottles from empty one
+    
+    */
+    public int numWaterBottles(int numBottles, int numExchange) {
+        
+        int numberOfFullBottles=0;
+        int totalBottlesDrank=numBottles;
+        int countBottles=0;
+        int i=1;
+        while(i<=numBottles){
+            countBottles++;
+            if(countBottles==numExchange){ // found numExchange empty bottles
+                
+                countBottles=0;
+                numberOfFullBottles++;
+            }
+            if(i==numBottles){ // to make a new iteration for new full bottles (numberOfFullBottles)
+               // System.out.println("numberOfFullBottles:"+numberOfFullBottles+"numBottles:"+numBottles);
+                totalBottlesDrank=totalBottlesDrank+numberOfFullBottles;
+                i=0;
+                numBottles=numberOfFullBottles;
+                numberOfFullBottles=0;
+                
+            }
+            i++;
+            
+        }
+        
+        return totalBottlesDrank;
+        
+    }
+}
