@@ -1,0 +1,29 @@
+class OrderedStream{
+    /*
+    We return value from start index and start index is always 0 then we move it till we find null and out is never set to 0 again. It remains the same. we add not null elements in list and the. return the list.
+    
+    */
+private String[] allValues;
+private int startIndex;
+
+public OrderedStream(int n) {
+    allValues = new String[n];
+    startIndex = 0;
+}
+
+public List<String> insert(int id, String value) {
+    allValues[id - 1] = value;
+
+    List<String> answer = new ArrayList();
+    while (startIndex < allValues.length && allValues[startIndex] != null) {
+        answer.add(allValues[startIndex++]);
+    }
+
+    return answer;
+}
+}
+/**
+ * Your OrderedStream object will be instantiated and called as such:
+ * OrderedStream obj = new OrderedStream(n);
+ * List<String> param_1 = obj.insert(id,value);
+ */
