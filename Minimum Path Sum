@@ -1,0 +1,36 @@
+class Solution {
+    int[][] mem;
+    /*
+    Do a post order traversal and at a particular index/ node store the min of its down and right child node + current sum in memory. so next time we see a particular node we know the minimum path from that node.
+    */
+    public int minPathSumHelper(int[][] grid,int row,int column){
+        if(row>=grid.length||column>=grid[0].length){
+            return Integer.MAX_VALUE;
+        }
+        if(mem[row][column]!=-1){
+            return mem[row][column];
+        }
+        if(row==grid.length-1&&column==grid[0].length-1){
+            return grid[row][column];
+        }
+        int sumFromDown=minPathSumHelper(grid,row+1,column); //down
+        int sumFromRight=minPathSumHelper(grid,row,column+1);//right
+        mem[row][column]=Math.min(sumFromDown,sumFromRight)+grid[row][column];
+        
+        return  mem[row][column];
+    }
+    public int minPathSum(int[][] grid) {
+        mem=new int[grid.length][grid[0].length];
+        
+        
+        for(int i=0;i<grid.length;i++){
+          
+          Arrays.fill(mem[i],-1);
+            
+        }
+        return minPathSumHelper(grid,0,0);
+        
+        
+        
+    }
+}
