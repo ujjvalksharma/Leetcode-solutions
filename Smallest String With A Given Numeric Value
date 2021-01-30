@@ -33,7 +33,7 @@ class Solution {
     */
     public String getSmallestString(int n, int k) {
         
-        String answer="";
+        StringBuilder answer=new StringBuilder("");
         while(n>0){
             int nextMaxScore=(n-1)*26;  // max score from next of current location
             int currentScore=1;  // suppose we are placing 'a' minimum character
@@ -43,13 +43,13 @@ class Solution {
            
                char c= (char) ('a'+currentScore-1); //current character
             k=k-currentScore;
-            answer=answer+c;
+            answer.append(c);
          //    System.out.println("k:"+k+"currentScore:"+currentScore);
             n--;
         }
         
         
-        return answer;
+        return answer.toString();
         
           
     }
