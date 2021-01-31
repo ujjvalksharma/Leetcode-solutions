@@ -1,0 +1,67 @@
+  /*
+    Simple BFS as nearest/minimum/shortest means BFS (level order traversal)add * index to the queue and then find all adjacent valid (0,#) and then find ajacant to the ones that we have put in queue. we keep a track of visited, so we don't iterate a row,column. when we find '#' we return it
+    */
+class Solution {
+    class ScoreOfCell{
+        int row;
+        int column;
+        int score;
+        ScoreOfCell(int row, int column,int score){
+            this.row=row;
+            this.column=column;
+            this.score=score;
+        }
+        
+    }
+    public int getFood(char[][] grid) {
+        
+        
+            Set<String> visitedIndex=new HashSet<String>();
+        Queue<ScoreOfCell> queue=new LinkedList<ScoreOfCell>();
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[0].length;j++){
+                if(grid[i][j]=='*'){
+                    queue.add(new ScoreOfCell(i,j,0));
+                    visitedIndex.add(i+","+j);
+                    break;
+                }
+            }
+        }
+        
+        
+             while(!queue.isEmpty()){
+            
+            ScoreOfCell currentCell=queue.poll();
+            if(currentCell!=null){
+                
+                    int[] row=new int[]{1,-1,0,0};
+                    int[] column=new int[]{0,0,-1,1};
+                                       
+                                        for(int i=0;i<row.length;i++){
+                    
+                    int newRow=row[i]+currentCell.row;
+                    int newColumn=column[i]+currentCell.column;
+                    int newScore=currentCell.score+1;
+                                if(newRow>=0&&newColumn>=0
+                       &&newColumn<grid[0].length&&newRow<grid.length
+                       &&!visitedIndex.contains(newRow+","+newColumn)
+                       &&grid[newRow][newColumn]!='X')
+                       {          
+                                    if(grid[newRow][newColumn]=='#'){
+                                        return newScore;
+                                    }
+                                            
+                           queue.add(new ScoreOfCell(newRow,newColumn,newScore));
+                           visitedIndex.add(newRow+","+newColumn);
+                                        }
+        }
+            
+        }
+                   }
+        
+        return -1;
+        
+        
+        
+    }
+}
