@@ -1,0 +1,42 @@
+class Solution {
+    /*
+    Iterative over each index in  matrix and if we find 'B' we check that row and column for another 'B'
+    
+    */
+    public int findLonelyPixel(char[][] picture) {
+        
+        
+        int loneyBlackPixel=0;
+        
+        for(int i=0;i<picture.length;i++){
+            for(int j=0;j<picture[0].length;j++){
+                if(picture[i][j]=='B'){
+                    boolean found=false;
+                  //  System.out.println("row:"+i+"column:"+j);
+                    for(int row=0;row<picture.length;row++){
+                        if(picture[row][j]=='B'&&row!=i){
+                            found=true;
+                        break;
+                        }
+                    }
+                    
+                    
+                     for(int column=0;column<picture[0].length&&!found;column++){
+                        if(picture[i][column]=='B'&&column!=j){
+                            found=true;
+                            break;
+                        }
+                    }
+                    
+                    if(!found){
+                        loneyBlackPixel++;
+                    }
+                    
+                }
+            }
+        }
+        
+        return loneyBlackPixel;
+        
+    }
+}
