@@ -1,9 +1,9 @@
-class Solution {
-    /*
+    /*class Solution {
+
     Iterative over each index in  matrix and if we find 'B' we check that row and column for another 'B'
     
-    */
-    public int findLonelyPixel(char[][] picture) {
+    
+   /* public int findLonelyPixel(char[][] picture) {
         
         
         int loneyBlackPixel=0;
@@ -40,3 +40,36 @@ class Solution {
         
     }
 }
+*/
+    /*
+    The maximum number of b which can be loney is length of column as there can one b at each column. we find the sum of b at a row and then then add it two a sumofBForColumnAndRow. if sumofBForColumnAndRow[i]==1 that means that column either 1 B or row had 1 B, but they were not in the same row or column. 
+    
+    */
+    class Solution {
+     public int findLonelyPixel(char[][] picture) {
+        int[] rows = new int[picture.length];
+        int[] sumofBForColumnAndRow = new int[picture[0].length];
+        
+        for(int i = 0; i < picture.length; i++) {
+            for(int j = 0; j < picture[i].length; j++) { 
+                if(picture[i][j] == 'B') {
+                    rows[i]++;
+                } 
+            }
+            for(int j = 0; j < picture[i].length; j++) {
+                if(picture[i][j] == 'B') {
+                    sumofBForColumnAndRow[j] += rows[i];
+                }
+            }
+        }
+        
+        int loneyBlackPixel = 0;
+        
+        for(int j = 0 ; j < sumofBForColumnAndRow.length; j++) {
+            if(sumofBForColumnAndRow[j] == 1)  {
+                loneyBlackPixel++;
+            }
+        }
+        return loneyBlackPixel;
+    }
+    }
