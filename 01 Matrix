@@ -1,0 +1,64 @@
+class Solution {
+    
+    class ScoreOfCell{
+        int score;
+        int row;
+        int column;
+      public  ScoreOfCell(int row,int column,int score){
+            
+        
+            this.row=row;
+            this.column=column;
+              this.score=score;
+        }
+        
+    }
+    /*
+    Simple BFS as nearest/minimum means BFS (level order traversal)add all 0 to the queue and then find all adjacent ones and then find ajacant to the ones that we have put in queue. we keep a track of visited, so we don't iterate a row,column.
+    */
+        
+        
+        
+    public int[][] updateMatrix(int[][] matrix) {
+       Set<String> visitedIndex=new HashSet<String>();
+        Queue<ScoreOfCell> queue=new LinkedList<ScoreOfCell>();
+        for(int i=0;i<matrix.length;i++){
+            for(int j=0;j<matrix[0].length;j++){
+                if(matrix[i][j]==0){
+                    queue.add(new ScoreOfCell(i,j,0));
+                    visitedIndex.add(i+","+j);
+                }
+            }
+        }
+        
+        while(!queue.isEmpty()){
+            
+            ScoreOfCell currentCell=queue.poll();
+            if(currentCell!=null){
+                
+                    int[] row=new int[]{1,-1,0,0};
+                    int[] column=new int[]{0,0,-1,1};
+                                       
+                                        for(int i=0;i<row.length;i++){
+                    
+                    int newRow=row[i]+currentCell.row;
+                    int newColumn=column[i]+currentCell.column;
+                    int newScore=currentCell.score+1;
+                                if(newRow>=0&&newColumn>=0
+                       &&newColumn<matrix[0].length&&newRow<matrix.length
+                       &&!visitedIndex.contains(newRow+","+newColumn))
+                       {               
+                                            
+                           queue.add(new ScoreOfCell(newRow,newColumn,newScore));
+                           matrix[newRow][newColumn]=newScore;
+                           visitedIndex.add(newRow+","+newColumn);
+                                        }
+        }
+            
+        }
+                   }
+        
+        return matrix;
+     
+    }
+}
