@@ -1,0 +1,108 @@
+//Simple solution
+/*class Solution {
+ public boolean divisorGame(int N) {
+        if(N%2==0){
+            return true;
+        }
+        return false;
+    }
+
+
+}
+*/
+/*
+Memory+ recursion
+In this question, we always check who is the coming participant and the value of N. if we see a participant and N together we know we will traverse the same sub-tree. Moreover we try that bob wins as if we get false from any sub-branch we make bob. for alice to win true should come from all sub-branch.
+'A' - alice
+'B' -bob
+*/
+class Solution {
+    HashMap<String,Boolean> hmNumberToIsAliceWinner=new HashMap<>();
+    public boolean divisorGameHelper(int N,char participant){
+        if(N<=1){
+           if(participant=='B'){
+            return true;
+           }
+            return false;
+        }
+        boolean isAliceWinner=true;
+        
+        if(participant=='A'){ // change particpant for next turn
+            
+            participant='B';
+            
+        }else{
+                 participant='A';
+        }
+        if(hmNumberToIsAliceWinner.containsKey(N+"-"+participant)){
+            return hmNumberToIsAliceWinner.get(N+"-"+participant);
+        }
+        
+        for(int x=1;x<N;x++){
+            
+            if(N % x == 0){
+            isAliceWinner=isAliceWinner|divisorGameHelper(N-x,participant); //try that bob wins
+            }
+        }
+        
+         if(participant=='A'){ // switch participant for hashmap/memory
+            
+            participant='B';
+            
+        }else{
+                 participant='A';
+        }
+        
+        hmNumberToIsAliceWinner.put(N+"-"+participant,isAliceWinner);
+        return isAliceWinner;
+        
+    }
+    public boolean divisorGame(int N) {
+        if(N%2==0){
+            return true;
+        }
+        return false;
+    }
+}
+/*
+// recursion
+class Solution {
+    public boolean divisorGameHelper(int N,char participant){
+        if(N<=1){
+           if(participant=='B'){
+            return true;
+           }
+            return false;
+        }
+        boolean isAliceWinner=true; 
+        
+        if(participant=='A'){ 
+            
+            participant='B';
+            
+        }else{
+                 participant='A';
+        }
+        
+        for(int x=1;x<N;x++){
+            
+            if(N % x == 0){
+            isAliceWinner=isAliceWinner|divisorGameHelper(N-x,participant); 
+            }
+        }
+        
+        
+        hmNumberToIsAliceWinner.put(N+"-"+participant,isAliceWinner);
+        return isAliceWinner;
+        
+    }
+    public boolean divisorGame(int N) {
+        if(N%2==0){
+            return true;
+        }
+        return false;
+    }
+}
+
+
+*/
