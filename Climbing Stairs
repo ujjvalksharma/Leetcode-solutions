@@ -1,0 +1,55 @@
+// Using recursion + memorization
+class Solution {
+    HashMap<Integer,Integer> positionToSteps=new HashMap<Integer,Integer>();
+    /*
+    We can memorizate a position because we know that we are going to see a position again and we will call the same recursive tree to find steps by taking 1 step and 2 step at a time.
+    
+    */
+    public int climbStairsHelper(int position,int maxPosition){
+        if(position==maxPosition){
+            return 1;
+        }
+        if(position>maxPosition){
+            return 0;
+        }
+        if(positionToSteps.containsKey(position)){
+            return positionToSteps.get(position);
+        }
+        
+        int totalStepsByTaking1Step= climbStairsHelper(position+1,maxPosition);
+         int totalStepsByTaking2Step= climbStairsHelper(position+2,maxPosition);
+        int totalSteps=totalStepsByTaking1Step+totalStepsByTaking2Step;
+        positionToSteps.put(position,totalSteps);
+        return totalSteps;
+    }
+    public int climbStairs(int n) {
+        
+        return climbStairsHelper(0,n);
+        
+    }
+}
+// recursion
+class Solution {
+    /*
+    We can memorizate a position because we know that we are going to see a position again and we will call the same recursive tree to find steps by taking 1 step and 2 step at a time.
+    
+    */
+    public int climbStairsHelper(int position,int maxPosition){
+        if(position==maxPosition){
+            return 1;
+        }
+        if(position>maxPosition){
+            return 0;
+        }
+        
+        int totalStepsByTaking1Step= climbStairsHelper(position+1,maxPosition);
+         int totalStepsByTaking2Step= climbStairsHelper(position+2,maxPosition);
+        int totalSteps=totalStepsByTaking1Step+totalStepsByTaking2Step;
+        return totalSteps;
+    }
+    public int climbStairs(int n) {
+        
+        return climbStairsHelper(0,n);
+        
+    }
+}
