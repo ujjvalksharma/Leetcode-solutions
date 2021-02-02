@@ -1,0 +1,46 @@
+class Solution {
+    HashMap<Integer,Integer> hmPositionToMinCost=new HashMap<>();
+    /*
+    We find the minimum steps by taking 1 step and 2 step and add current cost and we will visit the same sub-tree with the same position/index in array so we will memroize it.
+    recurisve+ memorization
+    */
+    public int minCostClimbingStairsHelper(int position,int[] cost){
+        if(position>=cost.length){
+            return 0;
+        }
+        if(hmPositionToMinCost.containsKey(position)){
+            return hmPositionToMinCost.get(position);
+        }
+        int totalMinCost= Math.min(minCostClimbingStairsHelper(position+1,cost),
+                        minCostClimbingStairsHelper(position+2,cost))+cost[position];
+        hmPositionToMinCost.put(position,totalMinCost);
+        return totalMinCost;
+    }
+    public int minCostClimbingStairs(int[] cost) {
+        
+        return Math.min(minCostClimbingStairsHelper(0,cost),
+                        minCostClimbingStairsHelper(1,cost));
+        
+    }
+}
+/*
+// recurisve
+class Solution {
+    public int minCostClimbingStairsHelper(int position,int[] cost){
+        if(position>=cost.length){
+            return 0;
+        }
+ 
+        int totalMinCost= Math.min(minCostClimbingStairsHelper(position+1,cost),
+                        minCostClimbingStairsHelper(position+2,cost))+cost[position];
+        return totalMinCost;
+    }
+    public int minCostClimbingStairs(int[] cost) {
+        
+        return Math.min(minCostClimbingStairsHelper(0,cost),
+                        minCostClimbingStairsHelper(1,cost));
+        
+    }
+}
+
+*/
