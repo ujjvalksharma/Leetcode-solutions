@@ -1,0 +1,41 @@
+/*
+In this question, do a dfs till number total count of digit is not equal to maxDigit and we also keep a visited Digit set, so we don't visit a digit again.
+
+*/
+class Solution {
+    Set<Integer> visitedDigits=new HashSet<>();
+    public int countNumbersWithUniqueDigitsHelper(int currentNumberOfDigit,int maxNumberOfDigit){
+        if(currentNumberOfDigit==maxNumberOfDigit){
+            return 1;
+        }
+        int totalNumbers=0;
+        for(int digit=0;digit<=9;digit++){
+            if(digit==0&&currentNumberOfDigit==0){
+                continue;
+            }
+            if(visitedDigits.contains(digit)){
+                 continue;
+            }
+            visitedDigits.add(digit);
+            totalNumbers+=countNumbersWithUniqueDigitsHelper(currentNumberOfDigit+1,maxNumberOfDigit);
+            visitedDigits.remove(digit);
+            
+        }
+       return totalNumbers;
+        
+    }
+    public int countNumbersWithUniqueDigits(int n) {
+        
+        if(n==0){
+            return 1;
+        }
+        int minNumbersFrom0To9=10;
+        int totalNumbers=0;
+        
+        for(int i=2;i<=n;i++){
+            totalNumbers+=countNumbersWithUniqueDigitsHelper(0,i);
+        }
+        
+        return minNumbersFrom0To9+totalNumbers;
+    }
+}
