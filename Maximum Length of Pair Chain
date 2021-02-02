@@ -1,0 +1,105 @@
+/*
+In this question, we find all subsequence and follow a pattern then (a,b)-(c,d) where c>b. on the basis of condition we find valid subsequence, and then we store index in memory to avoid over iteration over the same sub-tree. we are always going to find the same maximum pair chain from a index
+*/
+/*
+class Solution {
+    HashMap<Integer,Integer> hmIndexTolongestPair=new HashMap<Integer,Integer>();
+    public int findLongestChainHelper(int index,int[][] pairs){
+      
+        int longestPair=0;
+        if(index>=pairs.length){
+            return 0;
+        }
+        if(hmIndexTolongestPair.containsKey(index)){
+            return hmIndexTolongestPair.get(index);
+        }
+        for(int i=index+1;i<pairs.length;i++){
+            
+           
+                if(pairs[i][0]>pairs[index][0]){
+                continue;
+            }
+           longestPair=Math.max(longestPair,findLongestChainHelper(i+1,pairs)+1); 
+            
+        }
+        hmIndexTolongestPair.put(index,longestPair);
+        return longestPair;
+    }
+    public int findLongestChain(int[][] pairs) {
+        
+        Arrays.sort(pairs,(int[] a,int[] b)-> a[0]-b[0]);
+        
+        for(int i=0;i<pairs.length;i++){
+            System.out.println(pairs[i][0]+","+pairs[i][1]);
+        }
+        int longestPair=0;
+        for(int i=0;i<pairs.length;i++){
+             longestPair=Math.max(longestPair,findLongestChainHelper(i,pairs));
+        }
+       
+        return longestPair+1;
+    }
+}
+*/
+/* // recurion
+class Solution {
+    public int findLongestChainHelper(int index,int[][] pairs){
+      
+        int longestPair=0;
+        if(index>=pairs.length){
+            return 0;
+        }
+        for(int i=index+1;i<pairs.length;i++){
+            
+            if(pairs[i][0]<=pairs[index][0]){
+                continue;
+            }
+
+           longestPair=Math.max(longestPair,findLongestChainHelper(i+1,pairs)+1); 
+            
+        }
+        return longestPair;
+    }
+    public int findLongestChain(int[][] pairs) {
+        
+    //    Arrays.sort(pairs,(int[] a,int[] b)-> a[0]-b[0]);
+        
+        
+        int longestPair=0;
+        for(int i=0;i<pairs.length;i++){
+             longestPair=Math.max(longestPair,findLongestChainHelper(i,pairs));
+        }
+       
+        return longestPair+1;
+    }
+}
+
+
+
+*/
+
+
+
+class Solution {
+    
+    // same as longest increasing subsequence
+    public int findLongestChain(int[][] pairs) {
+        
+             Arrays.sort(pairs, (a, b) -> a[0] - b[0]);
+        int N = pairs.length;
+        int[] dp = new int[N];
+        Arrays.fill(dp, 1);
+        int max_pair_len=0;
+        for (int j = 1; j < N; ++j) {
+            for (int i = 0; i < j; ++i) {
+                if (pairs[i][1] < pairs[j][0])
+                    dp[j] = Math.max(dp[j], dp[i] + 1);
+                
+                max_pair_len=Math.max(max_pair_len,dp[j]);
+            }
+        }
+        
+        return max_pair_len;
+        
+    }
+}
