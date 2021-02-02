@@ -1,0 +1,87 @@
+/*
+memory+ recursion
+In this question we first find all the perfect square from 1 to n then we we have a list of number and a sum. we choose a number anytime from that list and we have minimum count of numbers that we need from that list whose sum to be equal to n. this problem then becomes similar to minimum coins needed to make a sum.
+*/
+class Solution {
+    HashMap<Integer,Integer> hmSumToMinimumSquareNumberCount=new HashMap<>();
+    public int numSquaresHelper(List<Integer> listOfPerfectSquares,int currentSum){
+        if(currentSum==0){
+            return 0;
+        }
+        int minSquareNumbers=Integer.MAX_VALUE;
+        if(hmSumToMinimumSquareNumberCount.containsKey(currentSum)){
+            return hmSumToMinimumSquareNumberCount.get(currentSum);
+        }
+        for(int i=0;i<listOfPerfectSquares.size();i++){
+            if(currentSum-listOfPerfectSquares.get(i)<0){
+                continue;
+            }
+            int currentTotalSquareNumber=numSquaresHelper(listOfPerfectSquares,currentSum-listOfPerfectSquares.get(i))+1;
+            
+            if(currentTotalSquareNumber<minSquareNumbers){
+                minSquareNumbers=currentTotalSquareNumber;
+            }
+        }
+        hmSumToMinimumSquareNumberCount.put(currentSum,minSquareNumbers);
+        return minSquareNumbers;
+        
+    }
+    public int numSquares(int n) {
+        
+        List<Integer> listOfPerfectSquares=new ArrayList<>();
+        
+        int start=1;
+        
+        while(start<=n){
+            if(start*start>n){
+                break;
+            }
+            listOfPerfectSquares.add(start*start);
+            start++;
+        }
+        
+        
+        return numSquaresHelper(listOfPerfectSquares,n);
+    }
+}
+// RECURSION
+/*
+class Solution {
+    
+    public int numSquaresHelper(List<Integer> listOfPerfectSquares,int currentSum){
+        if(currentSum==0){
+            return 0;
+        }
+        int minSquareNumbers=Integer.MAX_VALUE;
+        for(int i=0;i<listOfPerfectSquares.size();i++){
+            if(currentSum-listOfPerfectSquares.get(i)<0){
+                continue;
+            }
+            int currentTotalSquareNumber=numSquaresHelper(listOfPerfectSquares,currentSum-listOfPerfectSquares.get(i))+1;
+            
+            if(currentTotalSquareNumber<minSquareNumbers){
+                minSquareNumbers=currentTotalSquareNumber;
+            }
+        }
+        return minSquareNumbers;
+        
+    }
+    public int numSquares(int n) {
+        
+        List<Integer> listOfPerfectSquares=new ArrayList<>();
+        
+        int start=1;
+        
+        while(start<=n){
+            if(start*start>n){
+                break;
+            }
+            listOfPerfectSquares.add(start*start);
+            start++;
+        }
+        
+        
+        return numSquaresHelper(listOfPerfectSquares,n);
+    }
+}
+*/
