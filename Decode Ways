@@ -1,0 +1,76 @@
+/*
+memory+ recursion
+In this question, we iterate the message string index wise and we check if first character is non zero and the we combine second character then it is under bounds then we combine the sum for combination formed on both of them by adding them, We know we have formed a combination when we have reached the message end and we also index in memory/hashmap, so we don't have to iterate over the sub-tree.
+*/
+
+//recursion
+class Solution {
+    HashMap<Integer,Integer> hmIndexTotalDecode=new HashMap<>();
+    public int numDecodingsHelper(int index,String message,int messageLength){
+        if(index>=messageLength){
+            return 1;
+        }
+        
+        int decode1CharCount=0;
+        int decode2CharCount=0;
+        if(hmIndexTotalDecode.containsKey(index)){
+            return hmIndexTotalDecode.get(index);
+        }
+        if(message.charAt(index)!='0'){
+            
+        decode1CharCount=numDecodingsHelper(index+1,message,messageLength);
+            
+        if(index+1<messageLength){
+            String numStr=message.charAt(index)+""+message.charAt(index+1);
+            if(Integer.parseInt(numStr)<=26){
+            decode2CharCount=numDecodingsHelper(index+2,message,messageLength);
+            }
+        }
+            
+        }
+        hmIndexTotalDecode.put(index,decode1CharCount+decode2CharCount);
+        return decode1CharCount+decode2CharCount;
+        
+    }
+        
+    
+    
+    public int numDecodings(String s) {
+        return numDecodingsHelper(0,s,s.length());
+        
+    }
+}
+
+/*//recursion
+class Solution {
+    public int numDecodingsHelper(int index,String message,int messageLength){
+        if(index>=messageLength){
+            return 1;
+        }
+        
+        int decode1Char=0;
+        int decode2Char=0;
+        if(message.charAt(index)!='0'){
+            
+        decode1Char=numDecodingsHelper(index+1,message,messageLength);
+            
+        if(index+1<messageLength){
+            String numStr=message.charAt(index)+""+message.charAt(index+1);
+            if(Integer.parseInt(numStr)<=26){
+            decode2Char=numDecodingsHelper(index+2,message,messageLength);
+            }
+        }
+            
+        }
+        return decode1Char+decode2Char;
+        
+    }
+        
+    
+    
+    public int numDecodings(String s) {
+        return numDecodingsHelper(0,s,s.length());
+        
+    }
+}
+*/
