@@ -1,0 +1,24 @@
+class Solution {
+    /*
+    We know that the sold stock index is greater than bought stock and price is also greater. so we keep checking if we can find a cheaper stock.
+    
+    */
+    public int maxProfit(int[] prices) {
+        
+        if(prices.length<=1){
+            return 0;
+        }
+        int currentBoughtStock=prices[0];
+        int maxProfit=0;
+        for(int price: prices){
+            
+            if(price<currentBoughtStock){
+                currentBoughtStock=price;
+            }else{
+                maxProfit=Math.max(maxProfit,price-currentBoughtStock);
+            }
+        }
+        return maxProfit;
+        
+    }
+}
