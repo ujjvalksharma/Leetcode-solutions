@@ -1,0 +1,70 @@
+/*
+memory+ recursion,
+This question is similar to the question in which we have list of coins and we have find minimum coins to make a sum. Execpt count of coins we have product of integers. we don't need a array/list of number to iterate because we know all numbers from from 1.....n.
+
+*/
+class Solution {
+    HashMap<Integer,Integer> hmSumToProduct=new HashMap<>();
+    public int integerBreakHelper(int currentSum,int n){
+        if(currentSum==0){
+           
+            return 1;
+        }
+        if(hmSumToProduct.containsKey(currentSum)){
+            return hmSumToProduct.get(currentSum);
+        }
+        int maxProduct=0;
+        for(int i=1;i<n;i++){
+            int newSum=currentSum-i;
+            if(newSum<0){
+                continue;
+            }
+            
+           int currentProduct= integerBreakHelper(newSum,n)*i;
+            if(currentProduct>maxProduct){
+                maxProduct=currentProduct;
+            }
+        }
+        hmSumToProduct.put(currentSum,maxProduct);
+        return maxProduct;
+        
+    }
+    public int integerBreak(int n) {
+        
+        return integerBreakHelper(n,n);
+        
+    }
+}
+
+// RECURSION
+/*
+class Solution {
+    
+    public int integerBreakHelper(int currentSum,int n){
+        if(currentSum==0){
+           
+            return 1;
+        }
+        int maxProduct=0;
+        for(int i=1;i<n;i++){
+            int newSum=currentSum-i;
+            if(newSum<0){
+                continue;
+            }
+            
+           int currentProduct= integerBreakHelper(newSum,n)*i;
+            if(currentProduct>maxProduct){
+                maxProduct=currentProduct;
+            }
+        }
+        
+        return maxProduct;
+        
+    }
+    public int integerBreak(int n) {
+        
+        return integerBreakHelper(n,n);
+        
+    }
+}
+*/
