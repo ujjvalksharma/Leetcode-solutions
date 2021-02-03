@@ -1,0 +1,60 @@
+class Solution {
+    
+    Set<Integer> removedIndex=new HashSet<Integer>();
+    
+    /* recursion+memory
+    I could not complete the whole question. not all test cases passing, but the basic approach that we have a set of removedIndex where we insert elements as soon as they are removed, and then we iterate over the list. we find the number is not removed we take it is number and remove number+1 or number-1. to not iterate over a sub-tree we store index and score generate from that index in memory.
+    
+    
+    */
+    HashMap<Integer,Integer> hmIndexToScore=new HashMap<Integer,Integer>();
+    
+    public int deleteAndEarnHelper(int index ,int[] nums,String path){
+        
+      int prevNumDeleted=nums[index];
+       int currentMaxScore=0;
+        if(hmIndexToScore.containsKey(index)){
+
+            return hmIndexToScore.get(index);
+        }
+        boolean undoDelection=false;
+        for(int i=0;i<nums.length;i++){
+           if((nums[i]-1==prevNumDeleted||nums[i]+1==prevNumDeleted)&&!removedIndex.contains(i)){
+              removedIndex.add(i);
+               undoDelection=true;
+           }
+            
+        }
+        
+          for(int i=0;i<nums.length;i++){
+          if(!removedIndex.contains(i)){
+                 removedIndex.add(i);
+             currentMaxScore= Math.max(currentMaxScore,deleteAndEarnHelper(i,nums,path+","+nums[i]));
+                 removedIndex.remove(i);
+          }
+            
+        }
+        
+          for(int i=0;i<nums.length;i++){
+           if((nums[i]-1==prevNumDeleted||nums[i]+1==prevNumDeleted)&&undoDelection){
+              removedIndex.remove(i);
+           }
+            
+        }
+        currentMaxScore+=prevNumDeleted;
+        hmIndexToScore.put(index,currentMaxScore);
+          System.out.println(path+"score:"+currentMaxScore);
+    return currentMaxScore;
+      
+    }
+    public int deleteAndEarn(int[] nums) {
+            int maxScore=0;
+    int maxPoints=0;
+        for(int i=0;i<nums.length;i++){
+            removedIndex.add(i);
+      maxScore=Math.max(maxScore, deleteAndEarnHelper(i,nums,""+nums[i]));     
+             removedIndex=new HashSet<Integer>();
+            }
+        return maxScore;
+    }
+}
