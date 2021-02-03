@@ -1,0 +1,104 @@
+class Solution {
+    HashMap<Integer,Integer> hmIndexToMaxSubsequence=new HashMap<>();
+ /*
+ In this question, we know that a number will be part of one arthemitic sequence if difference is fixed, so we if we know a number we can find the prev number and we know keep length of sequence a number is forming in hashmap. finally, we find the maxlength present in hashmap.
+ 
+ */
+    public int longestSubsequence(int[] arr, int difference) {
+        
+        int longestSubsequenceLength=0;
+
+        
+        for(int i=0;i<arr.length;i++){
+           
+            int prevNum=arr[i]-difference;
+               /*this means that a number is part of sequence*/
+           if(hmIndexToMaxSubsequence.containsKey(prevNum)){
+               hmIndexToMaxSubsequence.put(arr[i],hmIndexToMaxSubsequence.get(prevNum)+1);
+           }
+            /*this means that that number is not part of any sequence and it forms a sequence with itself*/
+             if(!hmIndexToMaxSubsequence.containsKey(arr[i])){ 
+                hmIndexToMaxSubsequence.put(arr[i],1);
+            }
+        }
+        
+        for (Map.Entry mapElement : hmIndexToMaxSubsequence.entrySet()) { 
+
+             longestSubsequenceLength = Math.max(longestSubsequenceLength,
+                                                 (int)mapElement.getValue()); 
+  
+        } 
+        
+        
+       return longestSubsequenceLength;
+        
+    }
+}
+
+/*
+recursion + memorization
+In this question we iterate over each index whose diffrence is valid and then we use memory is store that index and longest subsequence we can find from that index
+*/
+/*
+class Solution {
+    HashMap<Integer,Integer> hmIndexToMaxSubsequence=new HashMap<>();
+    public int longestSubsequenceHelper(int index,int diff,int[] arr){
+        if(index>=arr.length){
+            return 0;
+        }
+        int maxLength=0;
+        if(hmIndexToMaxSubsequence.containsKey(index)){
+            return hmIndexToMaxSubsequence.get(index);
+        }
+        for(int i=index+1;i<arr.length;i++){
+            if(arr[i]-arr[index]==diff){
+            maxLength=Math.max(maxLength,longestSubsequenceHelper(i,diff,arr)+1);
+            }
+        }
+        hmIndexToMaxSubsequence.put(index,maxLength);
+        return maxLength;
+    }
+    public int longestSubsequence(int[] arr, int difference) {
+        
+        int longestSubsequenceLength=0;
+        for(int i=0;i<arr.length;i++){
+            
+            longestSubsequenceLength=Math.max(longestSubsequenceLength,
+                                              longestSubsequenceHelper(i,difference,arr)) ;
+        }
+       return longestSubsequenceLength+1;
+        
+    }
+}
+*/
+/*
+// recursion
+class Solution {
+    
+    public int longestSubsequenceHelper(int index,int diff,int[] arr){
+        if(index>=arr.length){
+            return 0;
+        }
+        int maxLength=0;
+        for(int i=index+1;i<arr.length;i++){
+            if(arr[i]-arr[index]==diff){
+            maxLength=Math.max(maxLength,longestSubsequenceHelper(i,diff,arr)+1);
+            }
+        }
+        return maxLength;
+    }
+    public int longestSubsequence(int[] arr, int difference) {
+        
+        int longestSubsequenceLength=0;
+        for(int i=0;i<arr.length;i++){
+            
+            longestSubsequenceLength=Math.max(longestSubsequenceLength,
+                                              longestSubsequenceHelper(i,difference,arr)) ;
+        }
+       return longestSubsequenceLength+1;
+        
+    }
+}
+
+
+*/
