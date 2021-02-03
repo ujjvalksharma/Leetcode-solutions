@@ -1,0 +1,121 @@
+/*
+This question is same as divisor game.
+
+*/
+class Solution {
+    private Map<Integer, Boolean> cache; 
+    public boolean winnerSquareGame(int n) {
+        cache = new HashMap<>();
+        return winnerSquareGameHelper(n);
+    }
+    private boolean winnerSquareGameHelper(int n){
+        if(n == 0) return false;
+        if(n == 1) return true;
+        if(n == 2) return false;
+        if(cache.containsKey(n)){
+            return cache.get(n);
+        } 
+        for(int i=1;i<=n;i++){
+            if((long)i * i > n){
+                break;
+            }
+            else {
+                int rest = n - i * i;
+                if(!winnerSquareGameHelper(rest)){
+                    cache.put(n, true);
+                    return true;
+                }
+            }
+        }
+        cache.put(n, false);
+        return false;
+    }
+}
+// recusion + memo
+/*class Solution {
+    
+    
+      HashMap<String,Boolean> hmNumberToIsAliceWinner=new HashMap<>();
+    public boolean winnerSquareGameHelper(int N,char participant){
+        
+        if(N==1){
+               if(participant=='A'){
+              
+            return true;
+           }
+            return false;
+        }
+        
+        if(N<1){
+        
+           if(participant=='B'){
+      //  System.out.println("Bob can't pickUp");
+            return true;
+           }
+            return false;
+        }
+        
+          int squareRootOFn=(int) Math.sqrt(N);
+        if(squareRootOFn*squareRootOFn==N){
+             if(participant=='A'){
+              
+            return true;
+           }
+            return false;
+        }
+
+        
+        boolean isAliceWinner=true;
+        
+ if(hmNumberToIsAliceWinner.containsKey(N+"-"+participant)){
+            return hmNumberToIsAliceWinner.get(N+"-"+participant);
+        }
+      
+        
+                if(participant=='A'){ // change particpant for next turn
+            
+            participant='B';
+            
+        }else{
+                 participant='A';
+        }
+        
+         
+        
+        
+        int maxStonesWecanRemove=(int)Math.sqrt(N);
+      //    System.out.println("maxStonesWecanRemove:"+maxStonesWecanRemove);
+        for(int x=1;x<=maxStonesWecanRemove;x++){
+           
+            int leftOverStones=N-x;
+      //       System.out.println("x"+x+"leftOverStones:"+leftOverStones);
+            isAliceWinner=isAliceWinner&winnerSquareGameHelper(leftOverStones,participant); //try that bob wins
+            
+        }
+        
+         if(participant=='A'){ // switch participant for hashmap/memory
+            
+            participant='B';
+            
+        }else{
+                 participant='A';
+        }
+        
+        hmNumberToIsAliceWinner.put(N+"-"+participant,isAliceWinner);
+        return isAliceWinner;
+        
+    }
+    
+    public boolean winnerSquareGame(int n) {
+        
+        int squareRootOFn=(int) Math.sqrt(n);
+        if(squareRootOFn*squareRootOFn==n){
+            return true;
+        }
+
+      return winnerSquareGameHelper(n,'A');
+    }
+}
+
+*/
+
