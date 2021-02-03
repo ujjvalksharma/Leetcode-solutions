@@ -1,0 +1,121 @@
+class Solution {
+    public int checkRecord(int n) {
+        if(n==0)
+        return 0;
+
+        Integer[][][] cache=new Integer[2][3][n+1];
+        return checkRecord(n, 1, 2, cache);  
+    }
+    
+    private int checkRecord(int n, int aLeft, int lLeft, Integer[][][] cache) {
+        int m = 1000000007;
+        
+        if(aLeft<0 || lLeft<0)
+        return 0;
+        
+        if(n==0)
+        return 1;
+        
+        if(cache[aLeft][lLeft][n]!=null)
+        return cache[aLeft][lLeft][n];
+        
+        int count=0;
+        count=(count+checkRecord(n-1, aLeft, 2, cache))%m; //attendence=P, carry aLeft, reset lLeft
+        count=(count+checkRecord(n-1, aLeft-1, 2, cache))%m; //attendence=A, reduce aLeft, reset lLeft
+        count=(count+checkRecord(n-1, aLeft, lLeft-1, cache))%m; //attendence=L, carry aLeft, reduce pLeft
+        cache[aLeft][lLeft][n]=count;
+        
+        return cache[aLeft][lLeft][n];
+    }
+}
+
+
+/*
+    recursion+memory
+    In this question, we iterate over possibilites  such that  more than one 'A' (absent) or more than two continuous 'L' (late).and store ispresent of A and length we formed yet and prev record in memory to avoid re iteration.
+    
+    
+    */
+/*class Solution {
+  
+    HashMap<String,Integer> hmAttendanceRecordToCount=new HashMap<>();
+      int MOD = 1_000_000_007;
+    public int checkRecordHelper(int count,boolean isAPresent,String prevRecord,int totalLength){
+       
+        if(count==totalLength){
+            return 1;
+        }
+        
+        int attendanceByA=0;
+        int attendanceByL=0;
+        int attendanceByP=0;
+        if(hmAttendanceRecordToCount.containsKey(count+"-"+isAPresent+"-"+prevRecord)){
+           return (int)hmAttendanceRecordToCount.get(count+"-"+isAPresent+"-"+prevRecord)%MOD;
+        }
+        
+        if(!isAPresent){
+            attendanceByA=checkRecordHelper(count+1,true,"A",totalLength)%MOD;
+        }
+        if(!prevRecord.equals("2L")){
+           if(prevRecord.equals("L")){
+               attendanceByL=checkRecordHelper(count+1,isAPresent,"2L",totalLength);
+           } else {
+                attendanceByL=checkRecordHelper(count+1,isAPresent,"L",totalLength);
+           }
+            
+        }
+        
+          attendanceByP=checkRecordHelper(count+1,isAPresent,"P",totalLength);
+        int totalAttendance=attendanceByP+attendanceByL+attendanceByA;
+        totalAttendance=totalAttendance%MOD;
+        hmAttendanceRecordToCount.put(count+"-"+isAPresent+"-"+prevRecord,totalAttendance);
+        
+        return totalAttendance;
+        
+    }
+    public int checkRecord(int n) {
+     
+        return checkRecordHelper(0,false,"X",n);
+    }
+}
+*/
+/*
+// recursion
+class Solution {
+    
+    public int checkRecordHelper(int count,boolean isAPresent,String prevRecord,int totalLength){
+       
+        if(count==totalLength){
+            return 1;
+        }
+        
+        int attendanceByA=0;
+        int attendanceByL=0;
+        int attendanceByP=0;
+        
+        if(!isAPresent){
+            attendanceByA=checkRecordHelper(count+1,true,"A",totalLength);
+        }
+        if(!prevRecord.equals("2L")){
+           if(prevRecord.equals("L")){
+               attendanceByL=checkRecordHelper(count+1,isAPresent,"2L",totalLength);
+           } else {
+                attendanceByL=checkRecordHelper(count+1,isAPresent,"L",totalLength);
+           }
+            
+        }
+        
+          attendanceByP=checkRecordHelper(count+1,isAPresent,"P",totalLength);
+        
+        return attendanceByP+attendanceByL+attendanceByA;
+        
+    }
+    public int checkRecord(int n) {
+     
+        return checkRecordHelper(0,false,"X",n);
+    }
+}
+
+
+
+*/
