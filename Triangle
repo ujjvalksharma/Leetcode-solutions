@@ -1,0 +1,66 @@
+/*
+In this question we go from top to bottom to triangle and a index left and rigth would be index,index+1 we will values in memory that are changing in function paramter which are triangle index and triangle innner length index as they would lead to different mini values that we will get from bottom of tree.
+
+*/
+class Solution {
+    HashMap<String,Integer> hmIndexToMinCost=new HashMap<>();
+    public int minimumTotalHelper(int triangleNumber,int triangleInnerIndex,List<List<Integer>> triangle,int triangleSize){
+        if(triangleNumber>=triangleSize){
+            return 0;
+        }
+        
+        if(triangleInnerIndex>=triangle.get(triangleNumber).size()||triangleInnerIndex<0){
+            return 0;
+        }
+        if(hmIndexToMinCost.containsKey(triangleNumber+"-"+triangleInnerIndex)){
+            return hmIndexToMinCost.get(triangleNumber+"-"+triangleInnerIndex);
+        }
+        int leftChild=minimumTotalHelper(triangleNumber+1,triangleInnerIndex,triangle,triangleSize)+triangle.get(triangleNumber).get(triangleInnerIndex);
+        
+                int rightChild=minimumTotalHelper(triangleNumber+1,triangleInnerIndex+1,triangle,triangleSize)+triangle.get(triangleNumber).get(triangleInnerIndex);
+        
+        int minCost=Math.min(leftChild,rightChild);
+        hmIndexToMinCost.put(triangleNumber+"-"+triangleInnerIndex,minCost);
+        return minCost;
+        
+        
+    }
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int triangleSize=triangle.size();
+        return minimumTotalHelper(0,0, triangle,triangleSize);
+    }
+}
+
+/* // recursion
+class Solution {
+    HashMap<String,Integer> hmIndexToMinCost=new HashMap<>();
+    public int minimumTotalHelper(int triangleNumber,int triangleInnerIndex,List<List<Integer>> triangle,int triangleSize){
+        if(triangleNumber>=triangleSize){
+            return 0;
+        }
+        
+        if(triangleInnerIndex>=triangle.get(triangleNumber).size()||triangleInnerIndex<0){
+            return 0;
+        }
+        if(hmIndexToMinCost.containsKey(triangleNumber+"-"+triangleInnerIndex)){
+            return hmIndexToMinCost.get(triangleNumber+"-"+triangleInnerIndex);
+        }
+        int leftChild=minimumTotalHelper(triangleNumber+1,triangleInnerIndex,triangle,triangleSize)+triangle.get(triangleNumber).get(triangleInnerIndex);
+        
+                int rightChild=minimumTotalHelper(triangleNumber+1,triangleInnerIndex+1,triangle,triangleSize)+triangle.get(triangleNumber).get(triangleInnerIndex);
+        
+        int minCost=Math.min(leftChild,rightChild);
+        hmIndexToMinCost.put(triangleNumber+"-"+triangleInnerIndex,minCost);
+        return minCost;
+        
+        
+    }
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int triangleSize=triangle.size();
+        return minimumTotalHelper(0,0, triangle,triangleSize);
+    }
+}
+
+
+
+*/
