@@ -1,0 +1,68 @@
+class Solution {
+    public int longestArithSeqLength(int[] A) {
+        
+        List<HashMap<Integer,Integer>> list= new ArrayList<HashMap<Integer,Integer>>();
+        int max_sequence=1;
+       // Arrays.sort(A);
+        HashMap<Integer,Integer> hm1= new HashMap<Integer,Integer>();
+        list.add(hm1);
+        for(int i=1;i<A.length;i++)
+        {
+            HashMap<Integer,Integer> hm= new HashMap<Integer,Integer>();
+            list.add(hm);
+            int index=i;
+            for(int j=0;j<i;j++)
+            {
+                HashMap<Integer,Integer> map=list.get(j);
+                if(map.containsKey((A[index]-A[j]))==false)
+                {
+                    HashMap<Integer,Integer> map_temp=list.get(index);
+                    int diff=A[index]-A[j];
+                      if(map_temp.containsKey(diff)&&map_temp.get(diff)<2)
+                    {
+                      map_temp.put(diff,2);  
+                    }
+                    
+                    if(map_temp.containsKey(diff)==false)
+                        map_temp.put(diff,2); 
+                    
+                    list.set(index,map_temp);
+                    max_sequence=Math.max(max_sequence,2);
+                }
+                else
+                {
+                   // System.out.println(A[index]+"->"+A[j]);
+                     HashMap<Integer,Integer> map_temp=list.get(index);
+                     int diff=A[index]-A[j];
+                    int count=map.get(diff);
+                    count++;
+                    if(map_temp.containsKey(diff)&&map_temp.get(diff)<count)
+                    {
+                      map_temp.put(diff,count);  
+                    }
+                    
+                    if(map_temp.containsKey(diff)==false)
+                        map_temp.put(diff,count); 
+                        
+                    
+                    list.set(index,map_temp);
+                    max_sequence=Math.max(max_sequence,count);
+                }
+                
+                
+            }
+            
+            
+        }
+        
+         HashMap<Integer,Integer> map=list.get(1);
+        
+        for(Map.Entry<Integer,Integer> h1: map.entrySet())
+        {
+            System.out.println(h1.getKey()+"->"+h1.getValue());
+        }
+        
+        return max_sequence;
+        
+    }
+}
