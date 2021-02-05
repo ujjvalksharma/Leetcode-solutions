@@ -1,0 +1,58 @@
+class Solution {
+    /*
+    memory+recursion
+    In this question, we do a top down arrpoach, if we row or column is out of range we return 1 but if we reach total allowed moves we return 0 as we know we can't make more moves so there is no point of continuing we iterate over left/right/top/down andstore rowindex,columnindex, and total current moves in hashmap memory as they are changing in function we being at a row and column with different number possible moves can affect our recursion.
+    
+    */
+    HashMap<String,Integer> hmIndexAndTotalMovesToTotalPairs=new HashMap<>();
+    int MOD=1000000007;
+    public int findPathsHelper(int rowIndex,int colIndex,int currentTotalMoves,int rowSize,int colSize,int maxMoves){
+        if(rowIndex<0||rowIndex>=rowSize||colIndex<0||colIndex>=colSize){
+            return 1;
+        }
+        if(currentTotalMoves>=maxMoves){
+            return 0;
+        }
+        if(hmIndexAndTotalMovesToTotalPairs.containsKey(rowIndex+"-"+colIndex+"-"+currentTotalMoves)){
+            return hmIndexAndTotalMovesToTotalPairs.get(rowIndex+"-"+colIndex+"-"+currentTotalMoves);
+        }
+        int movesFromLeft=findPathsHelper(rowIndex,colIndex-1,currentTotalMoves+1,rowSize,colSize,maxMoves)%MOD;
+          int movesFromRight=findPathsHelper(rowIndex,colIndex+1,currentTotalMoves+1,rowSize,colSize,maxMoves)%MOD;
+          int movesFromTop=findPathsHelper(rowIndex-1,colIndex,currentTotalMoves+1,rowSize,colSize,maxMoves)%MOD;
+          int movesFromBottom=findPathsHelper(rowIndex+1,colIndex,currentTotalMoves+1,rowSize,colSize,maxMoves)%MOD;
+        
+        int totalMoves=(movesFromLeft+movesFromRight)%MOD+(movesFromTop+movesFromBottom)%MOD;
+        hmIndexAndTotalMovesToTotalPairs.put(rowIndex+"-"+colIndex+"-"+currentTotalMoves,totalMoves%MOD);
+        return totalMoves%MOD;
+    }
+    public int findPaths(int m, int n, int N, int i, int j) {
+        return findPathsHelper(i,j,0,m,n,N);
+    }
+}
+
+/*
+// recursion
+class Solution {
+    public int findPathsHelper(int rowIndex,int colIndex,int currentTotalMoves,int rowSize,int colSize,int maxMoves){
+        if(rowIndex<0||rowIndex>=rowSize||colIndex<0||colIndex>=colSize){
+            return 1;
+        }
+        if(currentTotalMoves>=maxMoves){
+            return 0;
+        }
+        
+        int movesFromLeft=findPathsHelper(rowIndex,colIndex-1,currentTotalMoves+1,rowSize,colSize,maxMoves);
+          int movesFromRight=findPathsHelper(rowIndex,colIndex+1,currentTotalMoves+1,rowSize,colSize,maxMoves);
+          int movesFromTop=findPathsHelper(rowIndex-1,colIndex,currentTotalMoves+1,rowSize,colSize,maxMoves);
+          int movesFromBottom=findPathsHelper(rowIndex+1,colIndex,currentTotalMoves+1,rowSize,colSize,maxMoves);
+        
+        int totalMoves=movesFromLeft+movesFromRight+movesFromTop+movesFromBottom;
+        
+        return totalMoves;
+    }
+    public int findPaths(int m, int n, int N, int i, int j) {
+        return findPathsHelper(i,j,0,m,n,N);
+    }
+}
+
+*/
