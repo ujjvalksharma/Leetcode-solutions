@@ -1,0 +1,72 @@
+class Solution {
+    // recursion + meorization
+    /*
+    In this question, we will iterate from top to bottom of matrix and store matrix index in memory/hashmap and then keep the minimum path in it as from a particula index we will always get same path sum. we can avoid reiteration over the sub-tree.
+    
+    */
+    HashMap<String,Integer> hmMatrixIndexToMinPathSum=new HashMap<>();
+    public int minFallingPathSumHelper(int rowIndex,int columnIndex,int[][] matrix){
+        if(rowIndex>=matrix.length){
+            return Integer.MAX_VALUE;
+        }
+        
+        if(columnIndex>=matrix[rowIndex].length||columnIndex<0){
+            return Integer.MAX_VALUE;
+        }
+     if(hmMatrixIndexToMinPathSum.containsKey(rowIndex+"-"+columnIndex)){
+         return hmMatrixIndexToMinPathSum.get(rowIndex+"-"+columnIndex);
+     }
+        int SumOfPathFromBelow=minFallingPathSumHelper(rowIndex+1,columnIndex,matrix);
+         int SumOfPathFromLeft=minFallingPathSumHelper(rowIndex+1,columnIndex-1,matrix);
+         int SumOfPathFromRight=minFallingPathSumHelper(rowIndex+1,columnIndex+1,matrix);
+        
+        int minPathSum= Math.min(SumOfPathFromBelow,Math.min(SumOfPathFromLeft,SumOfPathFromRight));
+      minPathSum=  minPathSum==Integer.MAX_VALUE?0:minPathSum;
+     minPathSum=minPathSum+   matrix[rowIndex][columnIndex];
+        hmMatrixIndexToMinPathSum.put(rowIndex+"-"+columnIndex,minPathSum);
+        return minPathSum;
+    }
+    public int minFallingPathSum(int[][] matrix) {
+        
+        int minPathSum=Integer.MAX_VALUE;
+        
+        for(int column=0;column<matrix[0].length;column++){
+           minPathSum=Math.min(minPathSum,minFallingPathSumHelper(0,column,matrix));  
+        }
+        return minPathSum;
+        
+    }
+}
+/*class Solution {
+    // recursion
+    public int minFallingPathSumHelper(int rowIndex,int columnIndex,int[][] matrix){
+        if(rowIndex>=matrix.length){
+            return Integer.MAX_VALUE;
+        }
+        
+        if(columnIndex>=matrix[rowIndex].length||columnIndex<0){
+            return Integer.MAX_VALUE;
+        }
+     
+        int SumOfPathFromBelow=minFallingPathSumHelper(rowIndex+1,columnIndex,matrix);
+         int SumOfPathFromLeft=minFallingPathSumHelper(rowIndex+1,columnIndex-1,matrix);
+         int SumOfPathFromRight=minFallingPathSumHelper(rowIndex+1,columnIndex+1,matrix);
+        
+        int minPathSum= Math.min(SumOfPathFromBelow,Math.min(SumOfPathFromLeft,SumOfPathFromRight));
+      minPathSum=  minPathSum==Integer.MAX_VALUE?0:minPathSum;
+     minPathSum=minPathSum+   matrix[rowIndex][columnIndex];
+        return minPathSum;
+    }
+    public int minFallingPathSum(int[][] matrix) {
+        
+        int minPathSum=Integer.MAX_VALUE;
+        
+        for(int column=0;column<matrix[0].length;column++){
+           minPathSum=Math.min(minPathSum,minFallingPathSumHelper(0,column,matrix));  
+        }
+        return minPathSum;
+        
+    }
+}
+
+*/
