@@ -1,0 +1,104 @@
+/*
+memory+ recursion
+In this question, we will iterate over the clips and we will take two cases in which we choose a clip and not choose a clip. we return 0 if we reach the limit of clip time or index as we cannot choose more. Moreover, we will current clip formed and index we are at in memory as it will affect the future clips we take and we don't have to reiterate over a sub-tree.
+
+*/
+class Solution {
+    HashMap<String,Integer> hmIndexAndCurrentClipToClipsCount=new HashMap<>();
+    public int videoStitchingHelper(int index,int[] currentClip,int[][] clips,int clipStartTime,int clipEndTime){
+        
+   
+        if(currentClip[0]<=clipStartTime&&currentClip[1]>=clipEndTime){
+           
+            return 0;
+        }
+        
+         if(index>=clips.length){
+            return Integer.MAX_VALUE;
+        }
+        
+        if(hmIndexAndCurrentClipToClipsCount.containsKey(index+"-"+currentClip[0]+"-"+currentClip[1])){
+            return hmIndexAndCurrentClipToClipsCount.get(index+"-"+currentClip[0]+"-"+currentClip[1]);
+        }
+        int lengthByTakingIndex=Integer.MAX_VALUE;
+        
+        if(clips[index][0]<=currentClip[1]){
+            lengthByTakingIndex= videoStitchingHelper(index+1, new int[]      {Math.min(clips[index][0],currentClip[0]),Math.max(clips[index][1],currentClip[1]) },clips,clipStartTime,clipEndTime);
+        }
+        
+        
+        int lengthByNotTakingIndex=videoStitchingHelper(index+1,
+                      new int[] {currentClip[0],currentClip[1]},
+                                                        clips,
+                                                        clipStartTime,
+                                                        clipEndTime);
+        int minClipsNeeded=Integer.MAX_VALUE;
+        
+        if(lengthByTakingIndex<minClipsNeeded){   
+            minClipsNeeded=lengthByTakingIndex+1;
+        }
+        
+           if(lengthByNotTakingIndex<minClipsNeeded){
+            minClipsNeeded=lengthByNotTakingIndex;
+        }
+        
+        hmIndexAndCurrentClipToClipsCount.put(index+"-"+currentClip[0]+"-"+currentClip[1],minClipsNeeded);
+       return minClipsNeeded;
+    }
+    public int videoStitching(int[][] clips, int T) {
+        
+        Arrays.sort(clips,(int[] a, int[] b)-> a[0]-b[0]);
+        int minClipsNeeded=videoStitchingHelper(0,new int[]{0,0},clips,0,T);
+        return minClipsNeeded==Integer.MAX_VALUE?-1:minClipsNeeded;
+        
+    }
+}
+
+/*
+class Solution {
+    
+    public int videoStitchingHelper(int index,int[] currentClip,int[][] clips,int clipStartTime,int clipEndTime){
+        
+   
+        if(currentClip[0]<=clipStartTime&&currentClip[1]>=clipEndTime){
+           
+            return 0;
+        }
+        
+         if(index>=clips.length){
+            return Integer.MAX_VALUE;
+        }
+        
+        int lengthByTakingIndex=Integer.MAX_VALUE;
+        
+        if(clips[index][0]<=currentClip[1]){
+            lengthByTakingIndex= videoStitchingHelper(index+1, new int[]      {Math.min(clips[index][0],currentClip[0]),Math.max(clips[index][1],currentClip[1]) },clips,clipStartTime,clipEndTime);
+        }
+        
+        
+        int lengthByNotTakingIndex=videoStitchingHelper(index+1,
+                      new int[] {currentClip[0],currentClip[1]},
+                                                        clips,
+                                                        clipStartTime,
+                                                        clipEndTime);
+        int minClipsNeeded=Integer.MAX_VALUE;
+        
+        if(lengthByTakingIndex<minClipsNeeded){   
+            minClipsNeeded=lengthByTakingIndex+1;
+        }
+        
+           if(lengthByNotTakingIndex<minClipsNeeded){
+            minClipsNeeded=lengthByNotTakingIndex;
+        }
+       return minClipsNeeded;
+    }
+    public int videoStitching(int[][] clips, int T) {
+        
+        Arrays.sort(clips,(int[] a, int[] b)-> a[0]-b[0]);
+        int minClipsNeeded=videoStitchingHelper(0,new int[]{0,0},clips,0,T);
+        return minClipsNeeded==Integer.MAX_VALUE?-1:minClipsNeeded;
+        
+    }
+}
+
+*/
