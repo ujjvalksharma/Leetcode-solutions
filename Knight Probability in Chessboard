@@ -1,0 +1,32 @@
+class Solution {
+    Map<String, Double> memo;
+    int[] xdir = new int[] {1,1,-1,-1,2,2,-2,-2};
+    int[] ydir = new int[] {2,-2,2,-2,1,-1,1,-1};
+    
+    public double knightProbability(int N, int K, int r, int c) {
+        memo = new HashMap<>();
+        
+        
+        return dfs(N,K,r,c);
+    }
+    private double dfs(int N, int k, int r, int c){
+        if(k==0)return 1.0;
+        String key = r + "_" + c + "_" + k;
+        if(memo.containsKey(key))return memo.get(key);
+        
+        double prob = 0.0;
+        
+        for(int i=0; i<8; i++) {
+            if(isValid(r+xdir[i], c+ydir[i], N)) {
+                //For the next level, probability will be multiplied by 1/8
+                prob = prob + (1.0/8) * dfs(N, k-1, r+xdir[i], c+ydir[i]);
+            }
+        }
+        memo.put(key,prob);
+        return prob;
+    }
+    private boolean isValid(int r, int c, int N){
+        if(r<0||r>=N||c<0||c>=N)return false;
+        return true;
+    }
+}
