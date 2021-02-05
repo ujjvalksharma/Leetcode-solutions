@@ -1,0 +1,62 @@
+class Solution {
+    /* recursion +memory
+    In this question we keep the current sum in memory, and we don't need to keep index in memory as we always iterating from 0 to n and moreover the only paramter changing in function is currentSum. Thus, this will help in avoid reiteration of a sub-tree.
+    
+    */
+    HashMap<Integer,Integer> hmSumToCount=new HashMap<Integer,Integer>();
+    public int combinationSum4Helper(int currentSum,int[] nums,int target){
+        if(currentSum==target){
+            return 1;
+        }
+        if(currentSum>target){
+            return 0;
+        }
+
+        int totalPairs=0;
+        if(hmSumToCount.containsKey(currentSum)){
+            return hmSumToCount.get(currentSum);
+        }
+        for(int i=0;i<nums.length;i++){
+            totalPairs+=combinationSum4Helper(currentSum+nums[i],nums,target);
+            
+           
+        }
+         hmSumToCount.put(currentSum,totalPairs);
+        return totalPairs;
+    }
+    public int combinationSum4(int[] nums, int target) {
+        return combinationSum4Helper(0,nums,target);
+    }
+}
+
+/*
+// recursion
+class Solution {
+ 
+    HashMap<Integer,Integer> hmSumToCount=new HashMap<Integer,Integer>();
+    public int combinationSum4Helper(int currentSum,int[] nums,int target){
+        if(currentSum==target){
+            return 1;
+        }
+        if(currentSum>target){
+            return 0;
+        }
+
+        int totalPairs=0;
+        if(hmSumToCount.containsKey(currentSum)){
+            return hmSumToCount.get(currentSum);
+        }
+        for(int i=0;i<nums.length;i++){
+            totalPairs+=combinationSum4Helper(currentSum+nums[i],nums,target);
+            
+           
+        }
+         hmSumToCount.put(currentSum,totalPairs);
+        return totalPairs;
+    }
+    public int combinationSum4(int[] nums, int target) {
+        return combinationSum4Helper(0,nums,target);
+    }
+}
+
+*/
