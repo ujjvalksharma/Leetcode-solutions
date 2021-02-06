@@ -1,0 +1,136 @@
+/*
+In this question, we keep going until we reach the maximum distance and we add stations to priority queue and then we find the max feul station and get its fuel. after that we keep going until we reach target.
+
+[100,101,102,2]
+lets say we reached till index 1 and got 101 more distance fuel, now we need more feul to go to index 2, we know that we pop from queue we will get 100, so we are supposing that we should have taken that station too for us to reach till index 2.
+
+*/
+class Solution {
+    public int minRefuelStops(int target, int startFuel, int[][] stations) {
+
+        int stops=0;
+        int station = 0;
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());// descending order of fuel stations
+        
+       while(startFuel < target)
+        {
+            
+            while(station<stations.length && startFuel >= stations[station][0])
+            {
+                pq.add(stations[station][1]);
+                station++;
+            }    
+            if(pq.size()<=0) // we weren't table to reach even one station
+                return -1;
+            
+           startFuel+=pq.remove(); // maximum fuel station is found
+         //  pq = new PriorityQueue<>(Collections.reverseOrder());
+            stops++;    
+        }
+        return stops;
+                
+    }
+}
+
+/*
+recursion+memory
+we recursive the stations and at every station we make a choice to pick or not pick the station gas which will be added to current distance. we store the stations index and current distance at memory/hashmap it can affect travelling to further stations.
+*/
+/*
+class Solution {
+    HashMap<String,Integer> hmDistanceAndIndexToMinStations=new HashMap<>();
+    public int minRefuelStopsHelper(int currentDistance,int index,int target,int[][] stations){
+        
+        if(currentDistance>=target){
+            return 0;
+        }
+        if(index>=stations.length){
+            return Integer.MAX_VALUE;
+        }
+        
+        int distanceOfStation=stations[index][0];
+        int  notTakeFuelToReachTarget=-1;
+        
+        if(distanceOfStation>currentDistance){
+            return Integer.MAX_VALUE;
+        }
+        
+        if(hmDistanceAndIndexToMinStations.containsKey(index+"-"+currentDistance)){
+        //    System.out.println("I am here");
+            return hmDistanceAndIndexToMinStations.get(index+"-"+currentDistance);
+        }
+        
+        int takeFuelToReachTarget=minRefuelStopsHelper(currentDistance+stations[index][1],index+1,target,stations);
+       //  if(distanceOfStation==currentDistance){
+         notTakeFuelToReachTarget=minRefuelStopsHelper(currentDistance,index+1,target,stations);
+         //}
+        
+        int minStationsNeeded=Integer.MAX_VALUE;
+        
+        if(takeFuelToReachTarget<minStationsNeeded){
+            minStationsNeeded=takeFuelToReachTarget+1;
+        }
+        
+         if(notTakeFuelToReachTarget<minStationsNeeded){
+            minStationsNeeded=notTakeFuelToReachTarget;
+        }
+        
+        hmDistanceAndIndexToMinStations.put(index+"-"+currentDistance,minStationsNeeded);
+        return minStationsNeeded;
+        
+    }
+    public int minRefuelStops(int target, int startFuel, int[][] stations) {
+                int minStationsNeeded= minRefuelStopsHelper(startFuel,0,target,stations);
+        Arrays.sort(stations,(int[] a,int[] b)->a[0]-b[0]);
+       return minStationsNeeded==Integer.MAX_VALUE?-1:minStationsNeeded;
+    }
+}
+*/
+/*
+// recursion
+class Solution {
+    
+    public int minRefuelStopsHelper(int currentDistance,int index,int target,int[][] stations){
+        
+        if(currentDistance>=target){
+            return 0;
+        }
+        if(index>=stations.length){
+            return Integer.MAX_VALUE;
+        }
+        
+        int distanceOfStation=stations[index][0];
+        int  notTakeFuelToReachTarget=-1;
+        if(distanceOfStation>currentDistance){
+            return Integer.MAX_VALUE;
+        }
+        
+        
+        int takeFuelToReachTarget=minRefuelStopsHelper(currentDistance+stations[index][1],index+1,target,stations);
+       //  if(distanceOfStation==currentDistance){
+         notTakeFuelToReachTarget=minRefuelStopsHelper(currentDistance,index+1,target,stations);
+         //}
+        
+        int minStationsNeeded=Integer.MAX_VALUE;
+        
+        if(takeFuelToReachTarget<minStationsNeeded){
+            minStationsNeeded=takeFuelToReachTarget+1;
+        }
+        
+         if(notTakeFuelToReachTarget<minStationsNeeded){
+            minStationsNeeded=notTakeFuelToReachTarget;
+        }
+        return minStationsNeeded;
+        
+    }
+    public int minRefuelStops(int target, int startFuel, int[][] stations) {
+                int minStationsNeeded= minRefuelStopsHelper(startFuel,0,target,stations);
+        
+       return minStationsNeeded==Integer.MAX_VALUE?-1:minStationsNeeded;
+    }
+}
+
+
+
+*/
