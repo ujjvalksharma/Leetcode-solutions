@@ -1,0 +1,76 @@
+/*
+recursion+memory
+In this question, we store rowIndex and precolumn index in memory as they will affect the next row and column for min path sum.Moreover memory would help us not re iterate over the sub-tree,  we iterate over the arr and we skip the the column value is equal to prev column value.
+
+*/
+class Solution {
+    //HashMap<String,Integer> hmRowIndexAndColumnIndexToSum=new HashMap<>();
+    Integer[][] memo;
+    public int minFallingPathSumHelper(int rowIndex,int prevColumnIndex,int[][] arr){
+        if(rowIndex>=arr.length){
+            return 0;
+        }
+        
+        int minPathSum=Integer.MAX_VALUE;
+        
+       if (prevColumnIndex != -1 && memo[prevColumnIndex][rowIndex] != null) {
+				return memo[prevColumnIndex][rowIndex];
+			}
+        
+        for(int i=0;i<arr.length;i++){
+            if(i==prevColumnIndex){
+                continue;
+            }
+            
+        int currentSum=minFallingPathSumHelper(rowIndex+1,i,arr)+arr[rowIndex][i];
+            
+            if(currentSum<minPathSum){
+                minPathSum=currentSum;
+            }
+        }
+        	if (prevColumnIndex == -1) {
+				memo[0][rowIndex] = minPathSum;
+			} else {
+				memo[prevColumnIndex][rowIndex] = minPathSum;
+			}
+        return minPathSum;
+        
+    }
+    public int minFallingPathSum(int[][] arr) {
+        memo = new Integer[arr[0].length + 1][arr.length + 1];
+        return minFallingPathSumHelper(0,-1,arr);
+    }
+}
+
+/*
+class Solution {
+    
+    public int minFallingPathSumHelper(int rowIndex,int prevColumnIndex,int[][] arr){
+        if(rowIndex>=arr.length){
+            return 0;
+        }
+        
+        int minPathSum=Integer.MAX_VALUE;
+        
+        for(int i=0;i<arr.length;i++){
+            if(i==prevColumnIndex){
+                continue;
+            }
+            
+        int currentSum=minFallingPathSumHelper(rowIndex+1,i,arr)+arr[rowIndex][i];
+            
+            if(currentSum<minPathSum){
+                minPathSum=currentSum;
+            }
+        }
+        
+        return minPathSum;
+        
+    }
+    public int minFallingPathSum(int[][] arr) {
+        return minFallingPathSumHelper(0,-1,arr);
+    }
+}
+
+
+*/
