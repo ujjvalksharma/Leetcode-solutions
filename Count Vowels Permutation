@@ -1,0 +1,128 @@
+class Solution {
+       private static final int MOD= 1_000_000_007;
+    private char[] chars= {'a','e','i','o','u'};
+    
+    private  int index(char c){
+        return c=='a'?0:c=='e'?1:c=='i'?2:c=='o'?3:4;
+    }
+     private int recWithMemo(char c, int n, Map<String, Integer> memo){
+        if (n==1) return 1;
+        int ic= index(c);
+        String key= c+"-"+n;
+        Integer cached= memo.get(key);
+        if (cached!=null) return cached;
+        
+        int count= 0;
+        for (char nc:next[ic]){
+            count+= recWithMemo(nc, n-1, memo);            
+            count%= MOD;
+        }
+        memo.put(key, count);
+        return count;
+    }
+    
+   
+    
+    private char[][] next = {
+        {'e'},
+        {'a','i'},
+        {'a','e','o','u'},
+        {'i','u'},
+        {'a'}
+    };
+    
+    public int countVowelPermutation(int n) {
+        
+        
+         Map<String, Integer> memo= new HashMap<>();
+        int count= 0;
+        for (char c:chars){
+            count+= recWithMemo(c, n, memo);
+            count%= MOD;
+        }
+        return count;
+        
+        
+    }
+}
+
+/* recursion + memroization
+In this question we keep note of next possible character and then we form the string but we return 1 when we know we can't reach no more length. in memory we store current character and length left as this will affect reaching the new character or increasing the length of the string. THis also helps in avoiding in reiteration over the subtree
+class Solution {
+    HashMap<Character,List<Character>> hmCharToListOfChar=new HashMap<>();
+    HashMap<String,Integer> hmCharAndLenToTotalCombination=new HashMap<>();
+  int MOD= 1_000_000_007;
+    public int countVowelPermutationHelper(char currentChar,int totalCharLeft){
+        
+        if(totalCharLeft==0){
+            return 1;
+        }
+        
+        if(hmCharAndLenToTotalCombination.containsKey(currentChar+"-"+totalCharLeft)){
+         //   System.out.println("I am here");
+            return hmCharAndLenToTotalCombination.get(currentChar+"-"+totalCharLeft);
+        }
+        int totalStrFormed=0;
+        
+        List<Character> listOfNextChar=hmCharToListOfChar.get(currentChar);
+        
+        for(int i=0;i<listOfNextChar.size();i++){
+           totalStrFormed+= countVowelPermutationHelper(listOfNextChar.get(i),totalCharLeft-1);
+          //  if(totalStrFormed>MOD)
+            //totalStrFormed=totalStrFormed%MOD;
+        }
+        
+        hmCharAndLenToTotalCombination.put(currentChar+"-"+totalCharLeft,totalStrFormed);
+        return totalStrFormed;
+    }
+    public int countVowelPermutation(int n) {
+       int totalFormedSt=0;
+        List<Character> listOfChar=new ArrayList<Character>();
+        
+        listOfChar.add('e');
+        hmCharToListOfChar.put('a',listOfChar);
+        listOfChar=new ArrayList<>();
+        
+        listOfChar.add('a');
+        listOfChar.add('i');
+        hmCharToListOfChar.put('e',listOfChar);
+        listOfChar=new ArrayList<>();
+        
+        listOfChar.add('a');
+        listOfChar.add('e');
+        listOfChar.add('o');
+        listOfChar.add('u');
+         hmCharToListOfChar.put('i',listOfChar);
+         listOfChar=new ArrayList<>();
+        
+        listOfChar.add('i');
+        listOfChar.add('u');
+        hmCharToListOfChar.put('o',listOfChar);
+        listOfChar=new ArrayList<>();
+        
+        listOfChar.add('a');
+        hmCharToListOfChar.put('u',listOfChar);
+        
+        
+      int totalCombinations=0;
+        // System.out.println("Key = " + entry.getKey() + 
+              //               ", Value = " + entry.getValue());
+        for (Map.Entry<Character,List<Character>> entry : hmCharToListOfChar.entrySet()){
+            totalCombinations+=countVowelPermutationHelper(entry.getKey(),n-1);
+        }  
+           return totalCombinations;
+        
+    }
+}
+
+*/
+/*
+a,e,i,o,u
+
+a-> e
+e->a/i
+i->a/e/o/u
+o->i/u
+u->a
+
+*/
