@@ -1,0 +1,25 @@
+class Solution {
+    /*
+    https://www.youtube.com/watch?v=hJ_Uy2DzE08
+    
+    Great explaination in the video. The product keeps changing as positive and negative numbers. we store max_sum so it can have positive sum, but if the sum becomes negative on future multiplication then it goes to min_sum
+    
+    */
+    public int maxProduct(int[] nums) {
+        
+        int max_sum=nums[0];
+        int min_sum=nums[0];
+        int max_over_all=nums[0];
+        
+        for(int i=1;i<nums.length;i++)
+        {
+            int temp=max_sum; //in the next line we lose max_sum so we store it in temp;
+            max_sum=Math.max(max_sum*nums[i],Math.max(min_sum*nums[i],nums[i]));
+            min_sum=Math.min(temp*nums[i],Math.min(min_sum*nums[i],nums[i]));
+            max_over_all=Math.max(max_sum,max_over_all);
+        }
+        
+        return max_over_all;
+        
+    }
+}
