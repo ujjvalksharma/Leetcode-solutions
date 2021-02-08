@@ -1,0 +1,76 @@
+/*
+memory+ recursion
+In this question, we first find all the 12 possibilities of color set of a row and then iterate over all the each row and verify if vertical colors don't match then we proceed. if we reach last index, then return 1. in memory/hashmap we store the current color scheme and index as it will afffect the possibility of next color scheme, and we avoid re-iteration over the same sub-tree. 
+
+*/
+class Solution {
+    //all color possibilities such that no horizontal colors match
+    int [][] colors = {{0,1,0}, {1,0,1}, {2,0,1}, {0,1,2}, {1,0,2}, {2,0,2}, {0,2,0}, {1,2,0}, {2,1,0}, {0,2,1},{1,2,1}, {2,1,2}}; // States for n = 1
+    public int numOfWays(int n) {
+        int[] currentColorSchemeArr = {-1, -1, -1};
+        return dfs(n, currentColorSchemeArr, 0);
+    }
+    int mod = 1000000007;
+    HashMap<String, Integer> hmCurrentColorSetAndIndexToCount = new HashMap<>();
+    public int dfs(int n, int[] currentColorSchemeArr, int index) {
+        if (index == n) {
+            return 1;
+        }
+        String key = currentColorSchemeArr.toString() + "," + index;
+        if (hmCurrentColorSetAndIndexToCount.containsKey(key)){
+            return hmCurrentColorSetAndIndexToCount.get(key);
+        } 
+        int totalCombinations = 0;
+        for (int i = 0; i < 12; i++) {
+            int []nextColorSchemeArr = colors[i];
+            
+            // if any vertical color match then skip
+            if (nextColorSchemeArr[0] == currentColorSchemeArr[0] ||
+                nextColorSchemeArr[1] == currentColorSchemeArr[1] || 
+                nextColorSchemeArr[2] == currentColorSchemeArr[2])
+            {
+                continue;
+            } 
+            totalCombinations = (totalCombinations%mod + dfs(n, nextColorSchemeArr, index+1)%mod)%mod;
+        }
+        hmCurrentColorSetAndIndexToCount.put(key, totalCombinations%mod);
+        return totalCombinations%mod;
+    }
+}
+
+/* recursion
+class Solution {
+    //all color possibilities such that no horizontal colors match
+    int [][] colors = {{0,1,0}, {1,0,1}, {2,0,1}, {0,1,2}, {1,0,2}, {2,0,2}, {0,2,0}, {1,2,0}, {2,1,0}, {0,2,1},{1,2,1}, {2,1,2}}; // States for n = 1
+    public int numOfWays(int n) {
+        int[] currentColorSchemeArr = {-1, -1, -1};
+        return dfs(n, currentColorSchemeArr, 0);
+    }
+    int mod = 1000000007;
+    HashMap<String, Integer> hmCurrentColorSetAndIndexToCount = new HashMap<>();
+    public int dfs(int n, int[] currentColorSchemeArr, int index) {
+        if (index == n) {
+            return 1;
+        }
+
+        int totalCombinations = 0;
+        for (int i = 0; i < 12; i++) {
+            int []nextColorSchemeArr = colors[i];
+            
+            // if any vertical color match then skip
+            if (nextColorSchemeArr[0] == currentColorSchemeArr[0] ||
+                nextColorSchemeArr[1] == currentColorSchemeArr[1] || 
+                nextColorSchemeArr[2] == currentColorSchemeArr[2])
+            {
+                continue;
+            } 
+            totalCombinations = (totalCombinations%mod + dfs(n, nextColorSchemeArr, index+1)%mod)%mod;
+        }
+        hmCurrentColorSetAndIndexToCount.put(key, totalCombinations%mod);
+        return totalCombinations%mod;
+    }
+}
+
+*/
+    
+    
