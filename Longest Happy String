@@ -1,0 +1,78 @@
+class Solution {
+    /*
+    Put each character and its count in priority queue and get element based on desecnding order of count, but we keep in mind that we need to finish the larger count first and smaller count later because then at the end larger count letter would remain and it won't be able to append to the string and we cannot form the longest string.
+    
+    */
+    class LetterCount{
+       public char letter;
+       public int count;
+        LetterCount(char letter,int count){
+            this.letter=letter;
+            this.count=count;
+        }
+        
+        @Override
+        public String toString(){
+            return "letter:"+letter+" count:"+count;
+        }
+    }
+    public String longestDiverseString(int a, int b, int c) {
+        
+        PriorityQueue<LetterCount> pq = new PriorityQueue<LetterCount>((LetterCount a1, LetterCount b1)-> b1.count-a1.count);
+        
+        if(a>0){
+        pq.add(new LetterCount('a',a));
+        }
+        if(b>0){
+        pq.add(new LetterCount('b',b));
+            
+        }
+        if(c>0){
+        pq.add(new LetterCount('c',c));
+        }
+        
+        StringBuilder longestHappyStr=new StringBuilder("");
+        while(!pq.isEmpty()){
+            LetterCount currentLetterCount=pq.poll();
+           if(currentLetterCount.count>=1){
+               longestHappyStr.append(currentLetterCount.letter);
+               currentLetterCount.count=currentLetterCount.count-1;
+           }
+            
+             if(currentLetterCount.count>=1){
+               longestHappyStr.append(currentLetterCount.letter);
+               currentLetterCount.count=currentLetterCount.count-1;
+           }
+            if(pq.isEmpty()){
+                break;
+            }
+            
+            
+            LetterCount currentLetterCount1=pq.poll();
+            /* we add 2 letters from 2nd poll if it the larger element after decreasing the first poll element count because we need to finish larger letter count for maximum possible length*/
+           if(currentLetterCount1.count>=1&&currentLetterCount1.count>=currentLetterCount.count){
+               longestHappyStr.append(currentLetterCount1.letter);
+               currentLetterCount1.count=currentLetterCount1.count-1;
+           }
+            
+             if(currentLetterCount1.count>=1){
+               longestHappyStr.append(currentLetterCount1.letter);
+               currentLetterCount1.count=currentLetterCount1.count-1;
+           }
+              
+            
+            if(currentLetterCount.count!=0){
+                pq.add(currentLetterCount);
+            }
+            
+             
+            if(currentLetterCount1.count!=0){
+                pq.add(currentLetterCount1);
+            }
+            
+          //  System.out.println(pq);
+        }
+        
+        return longestHappyStr.toString();
+    }
+}
