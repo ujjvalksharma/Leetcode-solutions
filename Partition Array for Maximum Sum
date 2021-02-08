@@ -1,0 +1,94 @@
+class Solution {
+    /* 
+    memory+ recursion
+    Note: we can create any number of partions.
+    In this question, we take starting index and make all partition from index,index+1..n, and check length of that partition less or equal to k and we find the max sum from that parition and, then multiply by partion length as it is equivalent to making all number equal to that number. After that we add that max number sum to the sum we got from possible partition sub tree and keep the final max value and store int memory or hashmap as we can avoid re iteration over an index.
+    
+    */
+    HashMap<Integer,Integer> hmIndexToSum=new HashMap<>();
+    public int maxSumAfterPartitioningHelper(int index,int[] arr,int k){
+        
+         if(index>=arr.length){
+             
+            return 0;
+        }
+        
+       if(hmIndexToSum.containsKey(index)){
+           return hmIndexToSum.get(index);
+       }
+        int maxSum=Integer.MIN_VALUE;
+        for(int i=index;i<arr.length;i++){ // making partions from index,index+1...n
+            
+            if(i-index+1>k){ // break if parition length is over k
+                break;
+            }
+            int maxNum=getMaxNum(index,i,arr); // find max number over the partition
+           int totalSum=maxNum*(i-index+1); // sum if all number were that max number
+            int nextPartitionSum=maxSumAfterPartitioningHelper(i+1,arr,k); // next possible parition
+             maxSum=Math.max(maxSum,totalSum+nextPartitionSum); // store the max value
+            
+        }
+        hmIndexToSum.put(index,maxSum); // store in memory
+        return maxSum;
+    }
+    
+    public int getMaxNum(int start,int end,int[] arr){
+        int maxNum=0;
+        
+
+        for(int i=start;i<=end;i++){
+            maxNum=Math.max(maxNum,arr[i]);
+        }
+      
+        
+        return maxNum;
+    }
+    public int maxSumAfterPartitioning(int[] arr, int k) {
+        
+        return maxSumAfterPartitioningHelper(0,arr,k);
+    }
+}
+
+/* // recurion
+class Solution {
+ 
+    public int maxSumAfterPartitioningHelper(int index,int[] arr,int k){
+        
+         if(index>=arr.length){
+             
+            return 0;
+        }
+        
+        int maxSum=Integer.MIN_VALUE;
+        for(int i=index;i<arr.length;i++){ // making partions from index,index+1...n
+            
+            if(i-index+1>k){ // break if parition length is over k
+                break;
+            }
+            int maxNum=getMaxNum(index,i,arr); // find max number over the partition
+           int totalSum=maxNum*(i-index+1); // sum if all number were that max number
+            int nextPartitionSum=maxSumAfterPartitioningHelper(i+1,arr,k); // next possible parition
+             maxSum=Math.max(maxSum,totalSum+nextPartitionSum); // store the max value
+            
+        }
+        return maxSum;
+    }
+    
+    public int getMaxNum(int start,int end,int[] arr){
+        int maxNum=0;
+        for(int i=start;i<=end;i++){
+            maxNum=Math.max(maxNum,arr[i]);
+        }
+        return maxNum;
+    }
+    public int maxSumAfterPartitioning(int[] arr, int k) {
+        
+        return maxSumAfterPartitioningHelper(0,arr,k);
+    }
+}
+
+
+
+
+
+*/
