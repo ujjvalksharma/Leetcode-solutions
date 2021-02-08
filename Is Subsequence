@@ -1,0 +1,30 @@
+/*
+recurisve soltuion we increment the index of s when there is match else we don't but we always increment the index of T and if we reach the end of S that means we found all previous character of T thus we return true.
+
+*/
+class Solution {  
+    public boolean isSubsequenceHelper(int indexOfS,int indexOfT,String s,String t,int sizeOfS,int sizeOfT){
+        
+    if(indexOfS>=sizeOfS){
+        return true;
+    }
+        
+    if(indexOfT>=sizeOfT){
+        return false;
+    }
+    boolean charMatch=false;
+    boolean charNotMatch=false;
+        
+    if(s.charAt(indexOfS)==t.charAt(indexOfT)){
+       charMatch= isSubsequenceHelper(indexOfS+1,indexOfT+1,s,t,sizeOfS,sizeOfT);
+    }
+        else{
+          charNotMatch= isSubsequenceHelper(indexOfS,indexOfT+1,s,t,sizeOfS,sizeOfT);
+    }
+    return charNotMatch|charMatch;
+    
+}
+    public boolean isSubsequence(String s, String t) {
+        return isSubsequenceHelper(0,0,s,t,s.length(),t.length());
+    }
+}
