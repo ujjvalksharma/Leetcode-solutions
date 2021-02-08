@@ -1,0 +1,91 @@
+class Solution {
+    int MOD=1000000007;
+    HashMap<String,Integer> hmPrevNumAndCountAndCostToArraysCount=new HashMap<>();
+    /* memory+recursion
+    In this question, we take any number from 1 to maxnumber and we decrease the search cost if we find a greater number and decrease the length always. we return 1 when we know a array is formed that means we have used all the search cost and length availble. if we exceed length we return 0, we don't return 0 if we exceed cost as there is a possibility that we may take smaller numbers too from current max number. The next choosen number is depedent on prevmaxnumber, total number left, and total search cost left therefore we store them in memory/hashmap to avoid over iteration over the same subtree in recursion.
+    
+    */
+    public int numOfArraysHelper(int prevMaxNumber,int totalNumbersLeft,int maxNumber,int searchCostLeft){
+        
+        if(totalNumbersLeft==0&&searchCostLeft==0){
+           
+            return 1;
+        }
+        
+        if(totalNumbersLeft<=0){
+            return 0;
+        }
+        String key=prevMaxNumber+"-"+totalNumbersLeft+"-"+searchCostLeft;
+if(hmPrevNumAndCountAndCostToArraysCount.containsKey(key)){
+    return hmPrevNumAndCountAndCostToArraysCount.get(key);
+}
+        int totalArrCount=0;
+        for(int i=1;i<=maxNumber;i++){
+            
+            int currentNumber=i;
+            int totalArrByTakingLargeNum=0;
+            int totalArrByNotTakingLargeNum=0;
+           
+            if(currentNumber>prevMaxNumber&&searchCostLeft>=0){
+           totalArrByTakingLargeNum=  numOfArraysHelper(currentNumber,totalNumbersLeft-1,maxNumber,searchCostLeft-1);
+            }
+            else{
+                totalArrByNotTakingLargeNum=numOfArraysHelper(prevMaxNumber,totalNumbersLeft-1,maxNumber,searchCostLeft);
+            }
+            totalArrCount=(totalArrCount+totalArrByNotTakingLargeNum+totalArrByTakingLargeNum)%MOD;
+            
+        }
+        hmPrevNumAndCountAndCostToArraysCount.put(key,totalArrCount);
+        return totalArrCount;
+
+    }
+    public int numOfArrays(int n, int m, int k) {
+        
+        return numOfArraysHelper(-1,n,m,k);
+        
+    }
+}
+
+/*
+class Solution {
+    int MOD=1000000007;
+    public int numOfArraysHelper(int prevMaxNumber,int totalNumbersLeft,int maxNumber,int searchCostLeft){
+        
+        if(totalNumbersLeft==0&&searchCostLeft==0){
+           
+            return 1;
+        }
+        
+        if(totalNumbersLeft<=0){
+            return 0;
+        }
+
+        int totalArrCount=0;
+        for(int i=1;i<=maxNumber;i++){
+            
+            int currentNumber=i;
+            int totalArrByTakingLargeNum=0;
+            int totalArrByNotTakingLargeNum=0;
+           
+            if(currentNumber>prevMaxNumber){
+           totalArrByTakingLargeNum=  numOfArraysHelper(currentNumber,totalNumbersLeft-1,maxNumber,searchCostLeft-1);
+            }
+            else{
+                totalArrByNotTakingLargeNum=numOfArraysHelper(prevMaxNumber,totalNumbersLeft-1,maxNumber,searchCostLeft);
+            }
+            totalArrCount=(totalArrCount+totalArrByNotTakingLargeNum+totalArrByTakingLargeNum)%MOD;
+            
+        }
+        
+        return totalArrCount;
+
+    }
+    public int numOfArrays(int n, int m, int k) {
+        
+        return numOfArraysHelper(-1,n,m,k);
+        
+    }
+}
+
+
+*/
