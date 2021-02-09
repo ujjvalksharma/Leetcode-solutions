@@ -1,0 +1,76 @@
+/* recursive+memorization
+    // we convert s1 to s2 and not s2 to s1
+Code inspiration from : https://www.youtube.com/watch?v=F469rXsQSP4
+In this question, we wwe 2 case when character match and when mismatch
+1) when char match: we increment in both str as we can move ahead without editing
+2) when mismatch: 3 cases deletion/subsisution/insertion
+2.1) subsitute: we change character of s1 to same as s2 hence we move ahead in both
+2.2) insertion: when we insert a char in s1 just before current index that means this current index will match with next index of s2
+2.3) deletion: when we delete current index that means this current index will move ahead to match with s2 current index
+
+In memory we store the indexs as this will help in over iteration over the same sub-tree and depending upon the index it we get the edit distance.
+*/
+class Solution {
+    // convert s1 to s2
+    HashMap<String,Integer> hmIndexW1AndW2ToEditDist=new HashMap<>();
+    public int minDistanceHelper(int indexOfW1,int indexOfW2,String word1,String word2,int word1Len,int word2Len){
+        if(indexOfW1>=word1Len){  // w2 is left, so we insert w2 charater in w1.
+            return word2Len-indexOfW2;
+        }
+        
+          if(indexOfW2>=word2Len){ // w2 is not left, so we delete that amount w2 characters in w1.
+            return word1Len-indexOfW1;
+        }
+       String key=indexOfW1+"-"+indexOfW2;
+        if(hmIndexW1AndW2ToEditDist.containsKey(key)){
+            return hmIndexW1AndW2ToEditDist.get(key);
+        }
+        if(word1.charAt(indexOfW1)==word2.charAt(indexOfW2)){
+                  int minDistance=minDistanceHelper(indexOfW1+1,indexOfW2+1,word1,word2,word1Len,word2Len);
+            
+            hmIndexW1AndW2ToEditDist.put(key,minDistance);
+            return minDistance;
+        }else{
+            int subsitute=minDistanceHelper(indexOfW1+1,indexOfW2+1,word1,word2,word1Len,word2Len);
+            int delete=minDistanceHelper(indexOfW1+1,indexOfW2,word1,word2,word1Len,word2Len);
+            int insert=minDistanceHelper(indexOfW1,indexOfW2+1,word1,word2,word1Len,word2Len);
+            int minDistance=Math.min(subsitute,Math.min(delete,insert))+1;
+            hmIndexW1AndW2ToEditDist.put(key,minDistance);
+            return minDistance;
+            
+        }
+    }
+    public int minDistance(String word1, String word2) {
+        return minDistanceHelper(0,0,word1,word2,word1.length(),word2.length());
+    }
+}
+/* // recursive
+class Solution {
+    public int minDistanceHelper(int indexOfW1,int indexOfW2,String word1,String word2,int word1Len,int word2Len){
+        if(indexOfW1>=word1Len){
+            return word2Len-indexOfW2;
+        }
+        
+          if(indexOfW2>=word2Len){
+            return word1Len-indexOfW1;
+        }
+       
+        if(word1.charAt(indexOfW1)==word2.charAt(indexOfW2)){
+            return minDistanceHelper(indexOfW1+1,indexOfW2+1,word1,word2,word1Len,word2Len);
+        }else{
+            int subsitute=minDistanceHelper(indexOfW1+1,indexOfW2+1,word1,word2,word1Len,word2Len);
+            int delete=minDistanceHelper(indexOfW1+1,indexOfW2,word1,word2,word1Len,word2Len);
+                        int insert=minDistanceHelper(indexOfW1,indexOfW2+1,word1,word2,word1Len,word2Len);
+            
+            return Math.min(subsitute,Math.min(delete,insert))+1;
+            
+        }
+    }
+    public int minDistance(String word1, String word2) {
+        return minDistanceHelper(0,0,word1,word2,word1.length(),word2.length());
+    }
+}
+
+
+
+*/
