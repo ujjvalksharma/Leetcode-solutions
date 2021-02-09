@@ -1,0 +1,44 @@
+class Solution {
+    
+    /*
+        ""  b  a  b  a  d
+  
+    ""  0   0  0  0  0  0
+    
+     d   0  0  0  0  0  1
+     
+     a   0  0  1  1  1  1
+      
+     b   0  1  1  2  2  2  
+     
+     a   0  1  2  2  2  2 
+     
+     b   0  1  2  3  3  3 
+    
+    
+    We will find max substring length between two string we reverse the strring s and compare it with s. Lets say we are comparing "ba" (s1) and "da" (s2) and we are at s1.charAt(i) and s2.charAt(j),  and they both are equal the. we need to check wether s1.charAt(i-1) and s2.charAt(j-1) are equal as substring are in sequene, and  to know the length of previous substring. if thy aren't equal we need to check the maz substring we found yet which would be s1.charAt(i-1) and s2.charAt(j) or s1.charAt(i) and s2.charAt(j-1) because we not include the current character as it is not equal from both string.
+    
+    */
+    public int longestPalindrome(String s) {
+        
+        int[][] dp=new int[s.length()+1][s.length()+1];
+        
+        int rowSize=s.length()+1;
+        int columnSize=s.length()+1;
+        int end=s.length();
+        for(int i=1;i<rowSize;i++){
+            for(int j=1;j<columnSize;j++){
+                if(s.charAt(i-1)==s.charAt(end-j)){
+                    dp[i][j]=dp[i-1][j-1]+1;
+                }else{
+                    dp[i][j]=Math.max(dp[i][j-1],dp[i-1][j]);
+                }
+            }
+        }
+   
+        
+         
+     
+       return dp[end][end]; 
+    }
+}
