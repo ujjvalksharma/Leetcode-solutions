@@ -1,0 +1,84 @@
+/*
+memorization+ recursion
+In this question, we increment both indexs if we see a match else we increment one by one and we store a global max length variable as for substring we need to have consecutive same characters in both arry/string.We add one when there is match we will return 0. In memory we will store index of A AND B as it will affect the sub arrays we are looking at and to avoid over iteration over the same sub-tree.
+
+hasmap is giving TLE, so use 2d matrix for memory
+*/
+class Solution {
+
+public int maxGlobalLength = 0;
+ int[][] memo;
+//HashMap<String,Integer> hmIndexOfAAndBToLen=new HashMap<>();
+    public int findLength(int[] A, int[] B) {
+
+          memo = new int[A.length][B.length];
+
+        for (int row = 0; row < memo.length; row++) {
+            Arrays.fill(memo[row], -1);
+        }
+        
+        findLength(0, 0, A, B);
+        return maxGlobalLength;
+    }
+
+    private int findLength(int i, int j, int[] A, int[] B) {
+        if (i >= A.length || j >= B.length)
+            return 0;
+
+        int maxLength = 0;
+    //    String key=i+"-"+j;
+/*if(hmIndexOfAAndBToLen.containsKey(key)){
+    System.out.println("I am here");
+    return hmIndexOfAAndBToLen.get(key);
+}*/
+         if (memo[i][j] != -1){
+             return memo[i][j];
+         } 
+        if (A[i] == B[j]) {
+            maxLength = findLength(i + 1, j + 1, A, B) + 1;
+            maxGlobalLength = Math.max(maxGlobalLength, maxLength);
+        }
+
+        findLength(i + 1, j, A, B);
+        findLength(i, j + 1, A, B);
+        memo[i][j] = maxLength;
+    //    hmIndexOfAAndBToLen.put(key,maxLength);
+        return maxLength;
+    }
+}
+/*
+// recursion
+class Solution {
+
+public int val = 0;
+
+HashMap<String,Integer> hmIndexOfAAndBToLen=new HashMap<>();
+    public int findLength(int[] A, int[] B) {
+
+        findLength(0, 0, A, B);
+        return val;
+    }
+
+    private int findLength(int i, int j, int[] A, int[] B) {
+        if (i >= A.length || j >= B.length)
+            return 0;
+
+        int maxLength = 0;
+        String key=i+"-"+j;
+if(hmIndexOfAAndBToLen.containsKey(key)){
+    return hmIndexOfAAndBToLen.get(key);
+}
+        
+        if (A[i] == B[j]) {
+            maxLength = findLength(i + 1, j + 1, A, B) + 1;
+            val = Math.max(val, maxLength);
+        }
+
+        findLength(i + 1, j, A, B);
+        findLength(i, j + 1, A, B);
+        hmIndexOfAAndBToLen.put(key,maxLength);
+        return maxLength;
+    }
+}
+
+*/
