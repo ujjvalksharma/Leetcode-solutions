@@ -1,0 +1,47 @@
+    /*
+    In this question, we use stack to keep note of prev greater element/ peak and we compare it with current character, and we pop till we know that all greater elements from current character are removed. if k is still greater 0, then we remove from elements from top as we know we are forming an ascending sequence.
+    
+    
+    */
+class Solution {
+
+    public String removeKdigits(String num, int k) {
+        
+        
+        int sizeOfNum = num.length();
+        Stack<Character> stk=new Stack<>();
+        for(int i=0;i<sizeOfNum;i++)
+        {
+            char c=num.charAt(i);
+            while(!stk.isEmpty() && k>0 && stk.peek()>c)
+            {   stk.pop(); 
+             k--;  
+            }
+            
+            if(!stk.isEmpty() || c!='0')
+                stk.push(c);
+        }
+        while(!stk.isEmpty() && k>0){
+              stk.pop();
+            k--;
+        }
+          
+        if(stk.isEmpty())
+            return "0";
+        
+        //Now retrieve the number from stack into a string (reusing num)
+           Stack<Character> tempStk=new Stack<>();
+        
+        while(!stk.isEmpty()){
+            tempStk.push(stk.pop());
+        }
+        
+        StringBuilder sb=new StringBuilder("");
+          while(!tempStk.isEmpty()){
+              sb.append(tempStk.pop());
+        }
+        
+        return sb.toString();
+        
+    }
+}
