@@ -1,0 +1,92 @@
+/*
+In this question we make substring to s3 and check wether that substring is present in s1 or s2 if yes then we remove that substring from s1 or s2 and use the left over string and pass it to recursion we do the same untill s1/s2/s3 are left with 0 size that measn we found s3 in s1 and s2 and nothing is left to s3 to search in s1 and s2; also nothing is left for s1 and s2 to share.
+
+prefix of s3 is found to be start of s1 and s2 as string change at recursions and since we move sequentially in reucrion we want to remove from 0th index of s1,s2,s3.
+
+*/
+class Solution {
+    HashMap<String,Boolean> mem=new HashMap<String,Boolean>();
+    
+    public boolean isInterleaveHelper(String s1, String s2, String s3){
+        
+        if(s3.length()==0&&s1.length()==0&&s2.length()==0){
+            return true;
+        }
+        String key=s1+"-"+s2+"-"+s3;
+        if(mem.containsKey(key)){
+            return mem.get(key);
+        }
+        boolean answer=false;
+        for(int i=0;i<s3.length();i++){
+            
+            String subStrOfS3=s3.substring(0,i+1); // prefix from 0th index
+            String leftOverS3=s3.substring(i+1,s3.length()); // left of s3 is match is found
+            boolean isS1Selected=false;
+            boolean isS2Selected=false;
+            if(s1.indexOf(subStrOfS3)==0){ // we verify if prefix is found from startng to remove substring from 0th index to length of s3 substring
+                String newS1=s1.substring(subStrOfS3.length(),s1.length());
+               isS1Selected= isInterleaveHelper(newS1,s2,leftOverS3);
+            }
+              if(s2.indexOf(subStrOfS3)==0){
+                 String newS2=s2.substring(subStrOfS3.length(),s2.length());
+              isS2Selected=  isInterleaveHelper(s1,newS2,leftOverS3);
+            }
+            
+            answer=answer|isS1Selected|isS2Selected;
+        }
+        mem.put(key,answer);
+        return answer;
+        
+        
+    }
+    public boolean isInterleave(String s1, String s2, String s3) {
+        
+     //   System.out.println("->"+s3.substring(0,0));
+        return isInterleaveHelper(s1,s2,s3);
+        
+        
+    }
+}
+
+/*
+class Solution {
+    
+    public boolean isInterleaveHelper(String s1, String s2, String s3){
+  //  System.out.println("s1:"+s1+"-s2:"+s2+"-s3:"+s3);
+        
+        if(s3.length()==0&&s1.length()==0&&s2.length()==0){
+            return true;
+        }
+        boolean answer=false;
+        for(int i=0;i<s3.length();i++){
+            
+            String subStrOfS3=s3.substring(0,i+1);
+            String leftOverS3=s3.substring(i+1,s3.length());
+            boolean isS1Selected=false;
+            boolean isS2Selected=false;
+            if(s1.indexOf(subStrOfS3)==0){
+                String newS1=s1.substring(subStrOfS3.length(),s1.length());
+               isS1Selected= isInterleaveHelper(newS1,s2,leftOverS3);
+            }
+              if(s2.indexOf(subStrOfS3)==0){
+                 String newS2=s2.substring(subStrOfS3.length(),s2.length());
+              isS2Selected=  isInterleaveHelper(s1,newS2,leftOverS3);
+            }
+            
+            answer=answer|isS1Selected|isS2Selected;
+        }
+        return answer;
+        
+        
+    }
+    public boolean isInterleave(String s1, String s2, String s3) {
+        
+     //   System.out.println("->"+s3.substring(0,0));
+        return isInterleaveHelper(s1,s2,s3);
+        
+        
+    }
+}
+
+
+*/
