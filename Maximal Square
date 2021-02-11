@@ -1,0 +1,70 @@
+/*
+recursion + memorization
+
+1 1
+1 0
+to form a square we need all ones in diagnal, left, and right, and if we don't get ones in all of them that meams square cannot be formed, that is why we take the minimum so that we can know if anywhere 0 is present. Also we return 0 if we see 0 because we cannot form a square then
+
+we avoid seeing a sub-tree we use memory/hashmap in that we store a row and column index so we know square size if we go to index again.
+
+*/
+class Solution {
+    HashMap<String,Integer> hmRowColumnToSquareSize=new HashMap<>();
+    
+    public int maximalSquareHelper(int rowIndex,int columnIndex,char[][] matrix){
+        if(rowIndex<0||rowIndex>=matrix.length||columnIndex<0
+           ||columnIndex>=matrix[0].length||matrix[rowIndex][columnIndex]=='0'){
+            return 0;
+        }
+        String key=rowIndex+"-"+columnIndex;
+        if(hmRowColumnToSquareSize.containsKey(key)){
+            return hmRowColumnToSquareSize.get(key);
+        }
+        int numberOnesFromRight=maximalSquareHelper(rowIndex,columnIndex+1,matrix);
+        int numberOnesFromDown=maximalSquareHelper(rowIndex+1,columnIndex,matrix);
+        int numberOnesFromDiag=maximalSquareHelper(rowIndex+1,columnIndex+1,matrix);
+    
+        int squareSize=Math.min(numberOnesFromDiag,Math.min(numberOnesFromRight,numberOnesFromDown))+1;
+            hmRowColumnToSquareSize.put(key,squareSize);
+        return squareSize;
+    }
+    public int maximalSquare(char[][] matrix) {
+        int maxSizeOfSquare=0;
+        
+        for(int i=0;i<matrix.length;i++){
+            for(int j=0;j<matrix[0].length;j++){
+           maxSizeOfSquare=Math.max(maxSizeOfSquare,maximalSquareHelper(i,j,matrix)); 
+        }
+        }
+        return maxSizeOfSquare*maxSizeOfSquare;
+    }
+}
+
+/* // recursion
+class Solution {
+    public int maximalSquareHelper(int rowIndex,int columnIndex,char[][] matrix){
+        if(rowIndex<0||rowIndex>=matrix.length||columnIndex<0
+           ||columnIndex>=matrix[0].length||matrix[rowIndex][columnIndex]=='0'){
+            return 0;
+        }
+        
+        int numberOnesFromRight=maximalSquareHelper(rowIndex,columnIndex+1,matrix);
+        int numberOnesFromDown=maximalSquareHelper(rowIndex+1,columnIndex,matrix);
+        int numberOnesFromDiag=maximalSquareHelper(rowIndex+1,columnIndex+1,matrix);
+        
+        return Math.min(numberOnesFromDiag,Math.min(numberOnesFromRight,numberOnesFromDown))+1;
+    }
+    public int maximalSquare(char[][] matrix) {
+        int maxSizeOfSquare=0;
+        
+        for(int i=0;i<matrix.length;i++){
+            for(int j=0;j<matrix[0].length;j++){
+           maxSizeOfSquare=Math.max(maxSizeOfSquare,maximalSquareHelper(i,j,matrix)); 
+        }
+        }
+        return maxSizeOfSquare*maxSizeOfSquare;
+    }
+}
+
+
+*/
