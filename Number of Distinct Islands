@@ -1,0 +1,70 @@
+/*
+DFS: In this question, we return U/D/R/L depending upon the movement in the direction. append the movement to a string and add '{' & '}' as delimiter then we put the shape in string form in set and size of set is total distinct shape of island and we also keep a visited set of index so we don't cross a visited island.
+*/
+class Solution {
+    Set<String> allIsland=new HashSet<>();
+    Set<String> visitedVertix=new HashSet<>();
+    
+    public String numDistinctIslandsHelper(int rowIndex,int columnIndex,int[][] grid){
+        
+        if(rowIndex<0||columnIndex<0||columnIndex>=grid[0].length
+           ||rowIndex>=grid.length||grid[rowIndex][columnIndex]==0){
+            return "";
+        }
+        
+        if(visitedVertix.contains(rowIndex+","+columnIndex)){
+            return "";
+        }
+        
+          visitedVertix.add(rowIndex+","+columnIndex);
+        String shapeStr="";
+        int temp=0;
+        // move right
+             temp=columnIndex+1;
+        if(temp<grid[0].length&&!visitedVertix.contains(rowIndex+","+temp)&&grid[rowIndex][temp]==1){
+          //  visitedVertix.add(rowIndex+","+temp);
+            shapeStr=shapeStr+"R"+numDistinctIslandsHelper(rowIndex,temp,grid);
+        }
+        //move left
+        
+            temp=columnIndex-1;
+        if(temp>=0&&!visitedVertix.contains(rowIndex+","+temp)&&grid[rowIndex][temp]==1){
+            shapeStr=shapeStr+"L"+numDistinctIslandsHelper(rowIndex,temp,grid);
+        }
+        
+        //move down
+        
+          temp=rowIndex+1;
+        if(temp<grid.length&&!visitedVertix.contains(temp+","+columnIndex)&&grid[temp][columnIndex]==1){
+            shapeStr=shapeStr+"D"+numDistinctIslandsHelper(temp,columnIndex,grid);
+        }
+        // move up
+        temp=rowIndex-1;
+        if(temp>=0&&!visitedVertix.contains(temp+","+columnIndex)&&grid[temp][columnIndex]==1){
+            shapeStr=shapeStr+"U"+numDistinctIslandsHelper(temp,columnIndex,grid);
+        }
+        
+        return "{"+shapeStr+"}";
+        
+    }
+    public int numDistinctIslands(int[][] grid) {
+        
+        for(int i=0;i<grid.length;i++){
+            
+            
+              for(int j=0;j<grid[0].length;j++){
+                  if(grid[i][j]==1&&!visitedVertix.contains(i+","+j)){
+                      String islandShape=numDistinctIslandsHelper(i,j,grid);
+                      System.out.println(i+","+j+"->"+islandShape);
+                        allIsland.add(islandShape);
+                  }
+          
+        }
+            
+            
+        }
+        
+        
+        return allIsland.size();
+    }
+}
