@@ -1,0 +1,59 @@
+/* recursion + memorization
+This question is liek edit distance except there is only insert at end or start and if start> end that means we covered all indexs. For memorization we store start and end index to avoid seeing the same sub-tree again
+case 1
+akd -- insert at start 
+d|akd -- thus we keep start index same but decrease end index
+We are inserting character hypothetically as we don't need to display the string
+*/
+class Solution { 
+    HashMap<String,Integer> hmStartAndEndIndexToMinStep=new HashMap<>();
+    public int minInsertionsHelper(int startIndex,int endIndex,String s){
+        if(startIndex>endIndex){
+            return 0;
+        }
+        String key=startIndex+"-"+endIndex;
+        if(hmStartAndEndIndexToMinStep.containsKey(key)){
+            return hmStartAndEndIndexToMinStep.get(key);
+        }
+        if(s.charAt(startIndex)==s.charAt(endIndex)){
+            int minSteps=minInsertionsHelper(startIndex+1,endIndex-1,s);
+            hmStartAndEndIndexToMinStep.put(key,minSteps);
+            return minSteps;
+        }else{ // start and end character don't match
+            int minsStepsIncrStart=minInsertionsHelper(startIndex+1,endIndex,s)+1; // add character to end
+            
+              int minsStepsIncrEnd=minInsertionsHelper(startIndex,endIndex-1,s)+1; // add character to end
+          int minSteps= Math.min(minsStepsIncrStart,minsStepsIncrEnd);
+             hmStartAndEndIndexToMinStep.put(key,minSteps);
+            return minSteps;
+        }
+    }
+    public int minInsertions(String s) {
+        return minInsertionsHelper(0,s.length()-1,s);
+    }
+}
+
+/*  recursion
+class Solution { 
+    public int minInsertionsHelper(int startIndex,int endIndex,String s){
+        if(startIndex>endIndex){
+            return 0;
+        }
+        if(s.charAt(startIndex)==s.charAt(endIndex)){
+            int minSteps=minInsertionsHelper(startIndex+1,endIndex-1,s);
+            return minSteps;
+        }else{ // start and end character don't match
+            int minsStepsIncrStart=minInsertionsHelper(startIndex+1,endIndex,s)+1; // add character to end
+            
+              int minsStepsIncrEnd=minInsertionsHelper(startIndex,endIndex-1,s)+1; // add character to end
+            
+            return Math.min(minsStepsIncrStart,minsStepsIncrEnd);
+        }
+    }
+    public int minInsertions(String s) {
+        return minInsertionsHelper(0,s.length()-1,s);
+    }
+}
+
+
+*/
