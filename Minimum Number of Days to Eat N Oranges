@@ -1,0 +1,40 @@
+/*
+We cannot use recursion + memeorization as recursion is dfs and dfs gives bad time complexity in finding minimum path as it will go the deepest path. Thus we will use BFS+ memorization
+*/
+class Solution {
+    public int minDays(int n) {
+        Set<Integer> set = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(n);
+          queue.offer(null);
+        set.add(n);
+        int steps = 0;
+        while (!queue.isEmpty()) {
+  Integer node=queue.poll();
+            if(node!=null){
+                
+                 if (node == 0) {
+                    return steps;
+                }
+                if (!set.contains(node - 1)) {
+                    queue.offer(node - 1);
+                    set.add(node - 1);
+                } 
+                if (node % 2 == 0 && !set.contains(node / 2)) {
+                    queue.offer(node / 2);
+                    set.add(node / 2);
+                }
+                if (node % 3 == 0 && !set.contains(node / 3)) {
+                    queue.offer(node / 3);
+                    set.add(node / 3);
+                }
+                
+            }else{
+                steps++;
+                if(!queue.isEmpty())
+                    queue.add(null);
+            }
+        }
+        return -1;
+    }
+}
