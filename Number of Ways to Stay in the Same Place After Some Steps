@@ -1,0 +1,57 @@
+/*
+Memorization + recursion
+This question is like total different ways to reach a destination (dynamic programming)
+In memory, we store the index and number of steps as it is affecting the recursion and the sub-tree of each recursion. storing helps to not iterate over that sub-tree again.
+*/
+class Solution {
+    HashMap<String,Integer> mem=new HashMap<>();
+    final int  MOD= 1000000007;
+    public int numWaysHelper(int index,int numberOfStepsLeft,int arrLen){
+        if(numberOfStepsLeft==0&&index==0){
+            return 1;
+        }
+        if(index<0||index>=arrLen||numberOfStepsLeft<=0){
+            return 0;
+        }
+        String key=index+"-"+numberOfStepsLeft;
+        if(mem.containsKey(key)){
+         //   System.out.println("I am here");
+            return mem.get(key);
+        }
+        int waysToStay=numWaysHelper(index,numberOfStepsLeft-1,arrLen);
+        int waysToMoveRight=numWaysHelper(index+1,numberOfStepsLeft-1,arrLen);
+        int waysToMoveLeft=numWaysHelper(index-1,numberOfStepsLeft-1,arrLen);
+        
+        int totalWays=(waysToStay+(waysToMoveRight+waysToMoveLeft)%MOD)%MOD;
+        mem.put(key,totalWays);
+        return  totalWays;
+    }
+    public int numWays(int steps, int arrLen) {
+        return numWaysHelper(0,steps,arrLen);
+        }
+}
+/* // recursion
+class Solution {
+    public int numWaysHelper(int index,int numberOfStepsLeft,int arrLen){
+        if(numberOfStepsLeft==0&&index==0){
+            return 1;
+        }
+        if(index<0||index>=arrLen||numberOfStepsLeft<=0){
+            return 0;
+        }
+        int waysToStay=numWaysHelper(index,numberOfStepsLeft-1,arrLen);
+        int waysToMoveRight=numWaysHelper(index+1,numberOfStepsLeft-1,arrLen);
+        int waysToMoveLeft=numWaysHelper(index-1,numberOfStepsLeft-1,arrLen);
+        
+        return waysToStay+waysToMoveRight+waysToMoveLeft;
+    }
+    public int numWays(int steps, int arrLen) {
+        return numWaysHelper(0,steps,arrLen);
+        }
+}
+
+
+*/
+    
+    
+    
