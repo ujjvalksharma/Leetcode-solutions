@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+Post order, 'L' left, 'R' right , 'N' root
+In this question we know the direction we going to, so lets say we are get direction 'R' then we calculate from nodes in left subtree and for left subtree we will use right subtree. thus we will form zigzag path and we store max zigzag path in maxPath variable.
+
+
+*/
+class Solution {
+    int maxPath=0;
+    public int longestZigZagHelper(TreeNode root,char dir){
+        if(root==null){
+            return 0;
+        }
+        
+        int leftTotalNodes=longestZigZagHelper(root.left,'L');
+         int RightTotalNodes=longestZigZagHelper(root.right,'R');
+        if(dir=='R'){
+           maxPath=Math.max(maxPath,leftTotalNodes+1); 
+            return leftTotalNodes+1;
+        } 
+        else if(dir=='L'){
+              maxPath=Math.max(maxPath,RightTotalNodes+1); 
+            return RightTotalNodes+1;
+        }
+        else{
+            int maxPathFromRoot=Math.max(leftTotalNodes,RightTotalNodes)+1;
+            maxPath=Math.max(maxPath,maxPathFromRoot-1);
+            return maxPathFromRoot;
+        }
+        
+    }
+    public int longestZigZag(TreeNode root) {
+         longestZigZagHelper(root,'N');
+        return maxPath;
+    }
+}
