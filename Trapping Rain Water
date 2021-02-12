@@ -1,0 +1,43 @@
+/*
+Similar to histogram question in which we find maximum rectangle area formed
+Water to be filled at an index we need to have atleast to element with higher tallness on left and right. then we know it can hold water. we need to find next greater element on both sides and then minimum of them and one of samller length in taller ones would limit else it would over flow. then we substract current height from it. the left over is the amount of water it can hold
+
+*/
+class Solution {
+    /*
+    Store the water by knowing a current i left and right most maximum number
+    
+    */
+    public int trap(int[] height) {
+        
+        if(height.length==0)
+            return 0;
+        
+        int left_max_heigh[]= new int[height.length];
+        int right_max_heigh[]= new int[height.length];
+        
+        int right_max=height[height.length-1];
+        int left_max=height[0];
+    
+        for(int i=height.length-1;i>=0;i--)
+        {
+            right_max=right_max_heigh[i]=Math.max(right_max,height[i]);
+           // System.out.println(right_max_heigh[i]);
+        }
+        
+         for(int i=0;i<height.length;i++)
+        {
+            left_max=left_max_heigh[i]=Math.max(left_max,height[i]);
+        }
+        
+        int max_volume=0;
+          for(int i=0;i<height.length;i++)
+        {
+              
+              max_volume=max_volume+Math.min(left_max_heigh[i],right_max_heigh[i])-height[i];
+          }
+        
+        return max_volume;
+        
+    }
+}
