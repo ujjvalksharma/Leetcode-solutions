@@ -1,0 +1,65 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
+       StringBuilder sb=new StringBuilder("");
+      List<Integer> treePath=new ArrayList<Integer>();
+    boolean isLinkListFound=false;
+public void preoder(TreeNode root){
+    
+    if(root==null){
+        if(treePath.toString().contains(sb.toString())){
+            isLinkListFound=true;
+          
+        }
+          return;
+    }
+  //  System.out.println(treePath);
+    treePath.add(root.val);
+    preoder(root.left);
+    preoder(root.right);
+    
+    treePath.remove(treePath.size()-1);
+}
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        
+        ListNode tempHead=head;
+        while(tempHead!=null){
+           // linklist.
+            if(tempHead.next!=null)
+            sb.append(tempHead.val+", ");
+            else   
+                sb.append(tempHead.val);
+            
+            tempHead=tempHead.next;
+                
+        }
+      //  System.out.println(sb.toString());
+        preoder(root);
+        
+        return isLinkListFound;
+    }
+}
