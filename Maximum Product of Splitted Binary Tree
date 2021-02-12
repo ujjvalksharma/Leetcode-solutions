@@ -1,0 +1,71 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*class Solution {
+    int totalSum=0;
+    int maxProduct=0;
+final    int  MOD=1000000007;
+    public void preorder(TreeNode root){
+        if(root==null){
+            return;
+        }
+        totalSum=(totalSum+root.val)%MOD;
+        preorder(root.left);
+        preorder(root.right);
+    }
+  public int  postOrder(TreeNode root){
+      if(root==null){
+          return 0;
+      }
+      
+      int subTreeFromLeft=postOrder(root.left);
+      int subTreeSumFromRight=postOrder(root.right);
+      
+      int subTreeSum=((subTreeFromLeft+subTreeSumFromRight)%MOD+root.val)%MOD;
+      
+      int leftSum=totalSum-subTreeSum;
+      
+      maxProduct=Math.max(maxProduct,(leftSum*subTreeSum)%MOD);
+      return subTreeSum;
+      
+        
+    }
+    public int maxProduct(TreeNode root) {
+        preorder(root);
+        postOrder(root);
+        
+        return maxProduct;
+    }
+}
+
+*/
+class Solution {
+    List<Integer> all=new ArrayList();
+    private int sum(TreeNode subroot){
+        if(subroot==null) return 0;
+        int l=sum(subroot.left);
+        int r=sum(subroot.right);
+        int total=l+r+subroot.val;
+        all.add(total);
+        return total;
+    }
+    public int maxProduct(TreeNode root) {
+        long total=sum(root);
+        long ans=0;
+        for(long i:all)
+            ans=Math.max(ans,i*(total-i));
+        return (int)(ans%1000000007);
+    }
+}
