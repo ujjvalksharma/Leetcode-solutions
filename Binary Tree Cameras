@@ -1,0 +1,91 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+/*
+some abbrevations: 
+isParentPresent - tells whether a node has a parent
+"Empty" - tells whether node was null
+"watched" -- means that child node has a camera
+"unwatched" -- means that child node isn't being watched
+"camp" - child node has a camera
+
+we try to put camera from child to parent. try that child watches parent. if child cannot watch the parent, then we try parent/ current node watches itself.
+
+In this question, we will do a post order traversal and we add camera if the child needs it.
+if we know that one of child node has "unwatched" that means the current has to have a camera so we will return "camp". "empty" means that child is null to it cannot wach parent, thus parent should return "unwatched" if it cannot be watched by both null child.
+the current node has to have a camera even if node of the child node is unwatched. Also we if know that current node has no parent is child are just being watched that means current node is 2 distance away from parent, so put a camera, else we know that we can return "unwatched", and its parent can watch child.
+
+*/
+class Solution {
+   int cameras = 0;
+
+public int minCameraCover(TreeNode root) {
+    String finalStatus= minCameraCoverHelper(root,false);
+	 if(finalStatus.equals("unwatched")){
+              cameras++;
+     }
+	return cameras;
+}
+
+    /*Order of if condition is important*/
+public String minCameraCoverHelper(TreeNode root,boolean isParentPresent ) {
+
+	if (root == null)
+		return "Empty";
+    
+    String leftStatus=minCameraCoverHelper(root.left,true);
+    String rightStatus=minCameraCoverHelper(root.right,true);
+    
+    /*I cannot be watched has I null child*/
+    if(leftStatus.equals("Empty")&&rightStatus.equals("Empty")){
+        return "unwatched";
+    }
+        
+    /*I need to put camera as one of my child is unwatched*/
+        if(leftStatus.equals("unwatched")||rightStatus.equals("unwatched")){
+              cameras++;
+            return "camp";
+          
+        }
+      
+    /*
+    One of my child has camera, so I am being watched
+    */
+        if(leftStatus.equals("camp")||rightStatus.equals("camp")){
+          //    cameras++;
+            return "watched";
+          
+        }
+    
+      /*this means child say I am being watched and also there is no unwatched child as it would have caught in above if statement, put a camera because you cannot be wached a you have no parent*/  if((leftStatus.equals("watched")||rightStatus.equals("watched"))&&isParentPresent==false){
+              cameras++;
+            return "camp";
+          
+        }
+      /*this means child say I am being watched and also there is no unwatched child as it would have caught in above if statement, don't put a camera because you can watched by a parent, so tell parent that you are unwatched*/
+     if((leftStatus.equals("watched")||rightStatus.equals("watched"))&&isParentPresent==true){
+            //  cameras++;
+            return "unwatched";
+          
+        }
+    
+    
+        
+        return "unwatched";
+    }
+
+	
+}
