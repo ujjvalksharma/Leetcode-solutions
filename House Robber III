@@ -1,0 +1,27 @@
+class Solution {
+    public int rob(TreeNode root) {
+        //dfs traversal (post order)
+        int[] ans = dfs(root);
+        //take max of root robbed or not robbed 
+        return Math.max(ans[0], ans[1]);
+    }
+    
+    // index 0 -> not-robbed, 
+    // index 1 -> robbed
+    private int[] dfs(TreeNode root){
+        if(root==null){
+			//initially return a empty arrray, we will return final value later in post order traversal
+            return new int[]{0,0};
+        }
+        
+        int[] left = dfs(root.left);
+        int[] right = dfs(root.right);
+        
+        //if not-robbed current node then add (left max & right max) values
+        int not_rob = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        //if robbed current node then just take root node value together with not robbed left & right nodes values
+        int rob = root.val + left[0] + right[0];
+        
+        return new int[]{not_rob, rob};
+    }
+}
