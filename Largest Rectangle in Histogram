@@ -1,0 +1,90 @@
+/*
+we know that the contribution a array index to tallness of rectangle is basically till its next smaller element at right and left as when we reach the smaller element, the height of rectangle is smaller element. and we acheive the rectangle by just going directly to that smaller element index. So, for each index if we know the next smaller element at right and left then we know the range it will cover and we know the length width of that rectangle.
+
+to find the next samller element at right and left we use stack. we insert elements in stack and we see a element samller than top we keep poping till we some element samller than that. so, basically, we try to maintain to stack in increasing order from bottom to top.
+
+'-1' means no smaller element at right/left side
+*/
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        
+        
+        
+        Stack<Integer> stk=new Stack<>();
+        int[] nextSamllerAtRight=new int[heights.length];
+        int[] nextSamllerAtLeft=new int[heights.length];
+        
+        // smallest element at right side. pop elements till we see a new smaller element
+        for(int i=0;i<heights.length;i++){
+            if(stk.isEmpty()){
+                stk.push(i);
+            }else{
+                if(heights[stk.peek()]>heights[i]){
+                    while(!stk.isEmpty()&&heights[stk.peek()]>heights[i]){
+                        nextSamllerAtRight[stk.pop()]=i;
+                    }
+                }
+                
+                stk.push(i);
+            }
+        }
+              // elements who did not have samller element at right side
+         while(!stk.isEmpty()){
+            nextSamllerAtRight[stk.pop()]=-1;
+        }
+        
+            // smallest element at left side. pop elements till we see a new smaller element
+         // code code as smaller next element at right except we start from end
+            for(int i=heights.length-1;i>=0;i--){
+            if(stk.isEmpty()){
+                stk.push(i);
+            }else{
+                if(heights[stk.peek()]>heights[i]){
+                    while(!stk.isEmpty()&&heights[stk.peek()]>heights[i]){
+                        nextSamllerAtLeft[stk.pop()]=i;
+                    }
+                }
+                
+                stk.push(i);
+            }
+        }
+        
+        // elements who did not have samller element at left side
+          while(!stk.isEmpty()){ 
+            nextSamllerAtLeft[stk.pop()]=-1;
+        }
+       int maxReactangleArea=0;
+        
+        /*
+        length= (currentIndex- nextSmallestIndexTolleft) // left range contribution to length
+             +(nextSmallestIndexTolRight - currentIndex) // right range contribution to lengh
+             + 1 // current index contribution to length
+             *heigts[i] //tallness of all bar
+        
+        */
+        for(int i=0;i<heights.length;i++){
+            int rangeOnLeft=nextSamllerAtLeft[i];
+             int rangeOnRight=nextSamllerAtRight[i];
+   
+            if(rangeOnLeft==-1&&rangeOnRight==-1){
+                maxReactangleArea=Math.max(maxReactangleArea,heights[i]*heights.length);
+            }else if(rangeOnLeft==-1){
+                    rangeOnRight=rangeOnRight-i-1;
+                  maxReactangleArea=Math.max(maxReactangleArea,heights[i]*(i+rangeOnRight+1));
+            }else if(rangeOnRight==-1){
+                   rangeOnLeft=i-rangeOnLeft-1;
+                  maxReactangleArea=Math.max(maxReactangleArea,heights[i]*
+                                             ((heights.length-1-i)+rangeOnLeft+1));
+            }else{
+                rangeOnLeft=i-rangeOnLeft-1;
+                rangeOnRight=rangeOnRight-i-1;
+                maxReactangleArea=Math.max(maxReactangleArea,heights[i]*(rangeOnLeft+rangeOnRight+1));
+                
+            }
+            
+            
+        }
+        
+        return maxReactangleArea;
+    }
+}
