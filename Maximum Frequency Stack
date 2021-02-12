@@ -1,0 +1,53 @@
+/*
+Solution is inspired from https://www.youtube.com/watch?v=lg9VeVe6_zY
+In this question, we we keep freq map from num to frequency and we keep a frequncy stack and we add element to the stack for each frequency thus we will know element sequential order for each frequency. we decrease frequency element from numToFreq as it affect calculating frequncy
+at push and we pop element for each max frequency. we also keep a max frequency variable that is decreased when the size of the stack for that frequency is 0.
+*/
+class FreqStack {
+
+    HashMap<Integer,Integer> numToFreq=new HashMap<>();
+    HashMap<Integer,Stack<Integer>> freqToStkofElements=new HashMap<>();  
+    public FreqStack() {
+        
+    }
+    int maxFreq=0;
+    public void push(int x) {
+        
+        if(!numToFreq.containsKey(x)){
+            numToFreq.put(x,0);
+        }
+        int freq=numToFreq.get(x)+1;
+        numToFreq.put(x,freq);
+        
+         if(!freqToStkofElements.containsKey(freq)){
+            freqToStkofElements.put(freq,new Stack<Integer>());
+        }
+       // ;
+        Stack<Integer> currentFreqStk=freqToStkofElements.get(freq);
+        currentFreqStk.push(x);
+        freqToStkofElements.put(freq,currentFreqStk);
+        maxFreq=Math.max(maxFreq,freq);
+    }
+    
+    public int pop() {
+      // System.out.println("pop");
+        int element=freqToStkofElements.get(maxFreq).pop();
+        numToFreq.put(element,numToFreq.get(element)-1);
+        if(numToFreq.get(element)<=0){
+            numToFreq.remove(element);
+        }
+        if(freqToStkofElements.get(maxFreq).size()==0){
+            freqToStkofElements.remove(maxFreq);
+            maxFreq--;
+        }
+        return element;
+        
+    }
+}
+
+/**
+ * Your FreqStack object will be instantiated and called as such:
+ * FreqStack obj = new FreqStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ */
