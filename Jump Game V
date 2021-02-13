@@ -1,0 +1,120 @@
+/*
+recursion + memorization
+In this question if we know we travel to any position between index... index+d we always check if all indexs before that were less and if yes we travel to that postion. we keep variable to note the maxJumps we get from each-subtree. and we use memory to store index and how many jumps we can do from there.
+similary jumping technique is for index-d... index.
+
+
+*/
+class Solution {
+HashMap<Integer,Integer> hmIndexToNumberOfJumps=new HashMap<>();
+    private int maxJumpsUtil(int index,int [] arr, int d){
+
+    if(index<0 || index >= arr.length){
+        return 0;
+    }
+    if(hmIndexToNumberOfJumps.containsKey(index)){
+        return hmIndexToNumberOfJumps.get(index);
+    }
+        int maxJumps = 0;
+
+            for(int j = index+1 ; j<=index+d && j<arr.length ; j++){
+                if(arr[index]>arr[j]){
+                     maxJumps = Math.max(maxJumps,maxJumpsUtil(j,arr,d));
+                }
+                else {
+                     break;
+                }
+                   
+            }
+
+            for(int j = index-1 ; j>=index-d && j>=0 ; j--){
+               if(arr[index]>arr[j]){
+                   maxJumps = Math.max(maxJumps,maxJumpsUtil(j,arr,d));
+               }   
+                else{
+                    break;
+                }
+                 
+            }
+
+        hmIndexToNumberOfJumps.put(index,maxJumps+1);
+        return maxJumps+1;
+    
+}
+
+public int maxJumps(int[] arr, int d) {
+    
+    int maxJumps = 1;
+
+    for(int i=0;i<arr.length;i++){
+  
+        int curMaxJumps = maxJumpsUtil(i,arr,d);
+         maxJumps = Math.max(maxJumps , curMaxJumps);
+    }
+        
+       
+          return maxJumps;
+    }
+    
+   
+
+}
+/*
+// recursion
+class Solution {
+
+    private int maxJumpsUtil(int index,int [] arr, int d){
+
+    if(index<0 || index >= arr.length){
+        return 0;
+    }
+    
+        int maxJumps = 0;
+
+            for(int j = index+1 ; j<=index+d && j<arr.length ; j++){
+                if(arr[index]>arr[j]){
+                     maxJumps = Math.max(maxJumps,maxJumpsUtil(j,arr,d));
+                }
+                else {
+                     break;
+                }
+                   
+            }
+
+            for(int j = index-1 ; j>=index-d && j>=0 ; j--){
+               if(arr[index]>arr[j]){
+                   maxJumps = Math.max(maxJumps,maxJumpsUtil(j,arr,d));
+               }   
+                else{
+                    break;
+                }
+                 
+            }
+
+        
+        return maxJumps+1;
+    
+    
+    
+}
+
+public int maxJumps(int[] arr, int d) {
+    
+    int maxJumps = 1;
+
+    for(int i=0;i<arr.length;i++){
+  
+        int curMaxJumps = maxJumpsUtil(i,arr,d);
+         maxJumps = Math.max(maxJumps , curMaxJumps);
+    }
+        
+       
+          return maxJumps;
+    }
+    
+   
+
+}
+
+
+*/
