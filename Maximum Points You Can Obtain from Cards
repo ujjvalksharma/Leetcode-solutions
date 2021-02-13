@@ -1,0 +1,120 @@
+/*
+prefix sum from left and right
+In this question we take prefix sum from left and right of the array. and we add the prefix sum from both as such length of the added prefix sum array is equal to k.
+
+
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+------                             --------
+took 3 from left(k1 elements)      took 4 elements from right(k2 elements)
+
+k1+k2=k, thus we can use prefix sum from both sides and length of that sum to K
+
+
+*/
+class Solution {
+    public int maxScore(int[] cardPoints, int k) {
+        int[] prefixSumFromRight=new int[cardPoints.length];
+        int[] prefixSumFromLeft=new int[cardPoints.length];
+        
+        int index=0;
+        int prefixSum=0;
+        
+        for(int i=cardPoints.length-1;i>=0;i--){
+            prefixSum+=cardPoints[i];
+            prefixSumFromRight[index]=prefixSum;
+            index++;
+        }
+        
+        prefixSum=0;
+        index=0;
+        for(int i=0;i<cardPoints.length;i++){
+            prefixSum+=cardPoints[i];
+            prefixSumFromLeft[index]=prefixSum;
+            index++;
+        }
+        
+        int end=k-1;
+        int start=-1;
+        int maxScore=0;
+        /*
+        Pick start and end such that they sum up to K-1
+        */
+        while(start<k){
+              int sumFromLeft=0;
+            int sumFromRight=0;
+            if(start>=0){
+                sumFromLeft=prefixSumFromLeft[start];
+            }
+             if(end>=0){
+                sumFromRight=prefixSumFromRight[end];
+            }
+           maxScore=Math.max(maxScore,sumFromRight+sumFromLeft);
+            end--;
+            start++;
+        }
+        
+        return maxScore;
+        
+    }
+}
+/* recursion + memorization
+class Solution {
+    HashMap<String,Integer> mem=new HashMap<>();
+    public int maxScoreHelper(int start,int end,int[] cardPoints, int k){
+        if(start>end){
+            return 0;
+        }
+        if(k==0){
+            return 0;
+        }
+        String key=start+"-"+end+"-"+k;
+        if(mem.containsKey(key)){
+          //  System.out.println("I m here");
+            return mem.get(key);
+        }
+        
+        int scoreByPickStart=maxScoreHelper(start+1,end,cardPoints,k-1)+cardPoints[start];
+        int scoreByPickEnd=maxScoreHelper(start,end-1,cardPoints,k-1)+cardPoints[end];
+        int maxScore=Math.max(scoreByPickStart,scoreByPickEnd);
+        mem.put(key,maxScore);
+        return maxScore;
+        
+    }
+    public int maxScore(int[] cardPoints, int k) {
+        return maxScoreHelper(0,cardPoints.length-1,cardPoints,k);
+    }
+}
+
+
+*/
+
+/* recursion
+class Solution {
+  //  HashMap<String,Integer> mem=new HashMap<>();
+    public int maxScoreHelper(int start,int end,int[] cardPoints, int k){
+        if(start>end){
+            return 0;
+        }
+        if(k==0){
+            return 0;
+        }
+        String key=start+"-"+end+"-"+k;
+  //      if(mem.containsKey(key)){
+          //  System.out.println("I m here");
+            return mem.get(key);
+    //    }
+        
+        int scoreByPickStart=maxScoreHelper(start+1,end,cardPoints,k-1)+cardPoints[start];
+        int scoreByPickEnd=maxScoreHelper(start,end-1,cardPoints,k-1)+cardPoints[end];
+        int maxScore=Math.max(scoreByPickStart,scoreByPickEnd);
+ //       mem.put(key,maxScore);
+        return maxScore;
+        
+    }
+    public int maxScore(int[] cardPoints, int k) {
+        return maxScoreHelper(0,cardPoints.length-1,cardPoints,k);
+    }
+}
+
+
+*/
