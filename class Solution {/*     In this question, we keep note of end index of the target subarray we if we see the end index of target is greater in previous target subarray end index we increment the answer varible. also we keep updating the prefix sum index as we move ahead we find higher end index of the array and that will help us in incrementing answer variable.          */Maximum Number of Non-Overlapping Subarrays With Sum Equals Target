@@ -1,0 +1,22 @@
+class Solution {
+    /*
+    In this question, we keep note of end index of the target subarray we if we see the end index of target is greater in previous target subarray end index we increment the answer varible. also we keep updating the prefix sum index as we move ahead we find higher end index of the array and that will help us in incrementing answer variable.
+    
+    */
+    public int maxNonOverlapping(int[] nums, int target) {
+        HashMap<Integer, Integer> prefixSumToIndex = new HashMap();
+        prefixSumToIndex.put(0,-1);
+        int last=-2;
+        int sum=0;
+        int maxNonOverlappingSubarray=0;
+        for(int i=0;i<nums.length;i++){
+            sum+=nums[i];
+            if(prefixSumToIndex.containsKey(sum-target)&&prefixSumToIndex.get(sum-target)>=last) {
+                last = i;
+                maxNonOverlappingSubarray++;
+            }
+            prefixSumToIndex.put(sum,i);
+        }
+        return maxNonOverlappingSubarray; 
+    }
+}
