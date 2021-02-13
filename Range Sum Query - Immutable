@@ -1,0 +1,48 @@
+/*
+Use prefix sum
+
+*/
+class NumArray {
+
+    int prevfix[];
+    int suffix[];
+    int total_sum;
+    int arr[];
+    public NumArray(int[] nums) {
+        
+        int sum=0;
+        prevfix= new int[nums.length];
+        suffix= new int[nums.length];
+        arr= new int[nums.length];
+        for(int i=0;i<nums.length;i++)
+        {
+            sum=sum+nums[i];
+          prevfix[i]=sum;
+            arr[i]=nums[i];
+        }
+        sum=0;
+        for(int i=nums.length-1;i>=0;i--)
+        {
+            sum=sum+nums[i];
+          suffix[i]=sum;
+        }
+        total_sum=sum;
+        
+    }
+    
+    public int sumRange(int i, int j) {
+      
+      //  System.out
+        if(i==0)
+   return prevfix[j];
+        
+        if(j==prevfix.length-1)
+   return suffix[i];
+        
+        if(i==j)
+            return arr[i];
+        
+        return total_sum-prevfix[i-1]-suffix[j+1];
+        
+    }
+}
