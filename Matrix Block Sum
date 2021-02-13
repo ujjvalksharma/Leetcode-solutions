@@ -1,0 +1,79 @@
+/*
+ 
+[[1,2,3],
+ [4,5,6],
+ [7,8,9]]
+ 
+ i=0---> 0-1<= r <= 0+1
+ j=0---> 0-1<= c <= 0+1
+ 
+ i=0---> 0-1<= r <= 0+1
+ j=1---> 1-1<= c <= 1+1
+ 
+ find prefix sum for each row and then we when you are at a specific row and column go to each row from row-k to row+k and for find the row prefix sum from col-k to col+k.
+ and after all sum for each row. that will be prefix sum for mat[i][j].
+
+*/
+class Solution {
+    
+    public int FindSum(int[][] prefix, int i, int j,int K )
+    {
+               int up_i=i - K;
+               int down_i=i + K;
+               int left_i=j - K-1;
+               int right_i=j + K;
+
+                 
+                 if(up_i<0)
+                    up_i=0; 
+                 
+                 if(down_i>=prefix.length)
+                     down_i=prefix.length-1;
+                 
+                 if(right_i>=prefix[0].length)
+                     right_i=prefix[0].length-1;
+                 
+                 int total_sum=0;
+                 for(int k=up_i;k<=down_i;k++)
+                 {
+                     int left_sum=0;
+                     
+                     if(left_i>=0)                      
+                         left_sum=prefix[k][left_i];
+
+                     int right_sum=prefix[k][right_i];
+                     
+                     total_sum=total_sum+(right_sum-left_sum);
+                 }
+        
+        return total_sum;
+    }
+    public int[][] matrixBlockSum(int[][] mat, int K) {
+        
+        int prefix[][]= new int[mat.length][mat[0].length];
+        
+        for(int i=0;i<mat.length;i++)
+        {
+            int sum=0;
+            for(int j=0;j<mat[0].length;j++)
+            {
+              sum=sum+mat[i][j];
+              prefix[i][j]=sum;  
+            }
+        }
+        
+        
+        for(int i=0;i<mat.length;i++)
+        {
+             for(int j=0;j<mat[0].length;j++)
+            {
+                 mat[i][j]=FindSum(prefix,i,j,K);
+  
+             }
+        }
+
+        return mat;
+        
+        
+    }
+}
