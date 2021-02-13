@@ -1,0 +1,81 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+/*
+
+In this question, we do a post order traversal in which we use logic from is valid bst, but we know that at point/node the sub-tree is not a bst when we can that the whole sub-tree from that node top most parent is not valid bst. we know cur.isBST will be false for all nodes.
+Example   0 --- not valid bst
+        /
+     1 -- not valid bst
+    /
+    10 --- not valid bst, now all top parents are not valid bst, and none of thm will be used for calcation the sum for that indivisual node or some sub-tree
+  /  \
+3     4
+*/
+    
+    
+    
+class Solution {
+    int max = 0;
+    
+    public int maxSumBST(TreeNode root) {
+        find(root);
+        return max;
+    }
+    
+    private ValidateBST find(TreeNode node) {
+        if (node == null) return new ValidateBST(true);
+        
+        ValidateBST left = find(node.left);
+        ValidateBST right = find(node.right);
+        ValidateBST cur = new ValidateBST();
+        
+        int curValue = node.val;
+        
+        //getting lower bound -> min(cur, left.lower, right.lower)
+        cur.lower = Math.min(curValue, Math.min(left.lower, right.lower));
+        
+        //getting upper bound -> max(cur, left.upper, right.upper)
+        cur.upper = Math.max(curValue, Math.max(left.upper, right.upper));
+        
+        //isBST -> left.upper < curValue < right.lower
+        cur.isBST = left.isBST && right.isBST && curValue>left.upper && curValue<right.lower;
+        
+        if (cur.isBST) {
+            cur.sum = curValue + left.sum + right.sum;
+            max = Math.max(max, cur.sum);
+        }
+        
+        return cur;
+    }
+    
+    private class ValidateBST {
+        int sum;
+        boolean isBST;
+        
+        //we will be doing post order traversal, 
+        //so the leaf nodes left.upper should be min and right.lower should be max
+        int lower = Integer.MAX_VALUE;
+        int upper = Integer.MIN_VALUE;
+        
+        public ValidateBST(){
+        }
+        
+        public ValidateBST(boolean isBST) {
+           this.isBST = isBST;
+        }
+    }
+}
