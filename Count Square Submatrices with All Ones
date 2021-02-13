@@ -1,0 +1,96 @@
+/*
+
+this question is similar as maximal square problem. We use the same logic as maxmial square but we keep a visitex index so we don't count number of matrix from same index again. Each index in matrix is considered as starting point. 
+lets say we know the maximum size of square we can form a index is 3 that means we know for sure we can form a size of 0,1,2,3
+
+*/
+class Solution {
+      int totalOnesSubMat=0;
+    HashSet<String> visitedIndex=new HashSet<>();
+    HashMap<String,Integer> hmRowAndColumnToSubMatSize=new HashMap<>();
+    public int countSquaresHelper(int row,int column,int[][] mat){
+        if(row<0||column<0||row>=mat.length||column>=mat[0].length||mat[row][column]==0){
+            return 0;
+        }
+    String key=row+"-"+column;
+        if(hmRowAndColumnToSubMatSize.containsKey(key)){
+            return hmRowAndColumnToSubMatSize.get(key);
+        }
+        int totalSubOnesFromDown=countSquaresHelper(row+1,column,mat);
+        int totalSubOnesFromRight=countSquaresHelper(row,column+1,mat);
+         int totalSubOnesFromDiag=countSquaresHelper(row+1,column+1,mat);
+        
+        int subOnesSubMat=Math.min(totalSubOnesFromDiag,Math.min(totalSubOnesFromDown,totalSubOnesFromRight));
+        if(!visitedIndex.contains(row+","+column)){
+             totalOnesSubMat++; // size of 1 square
+             totalOnesSubMat=totalOnesSubMat+subOnesSubMat; // size of 1.2.3.subOnesSubMat
+        }
+           
+        
+              
+      
+        
+            visitedIndex.add(row+","+column);
+
+        hmRowAndColumnToSubMatSize.put(key,subOnesSubMat+1);
+        return subOnesSubMat+1;
+        
+    }
+    public int countSquares(int[][] matrix) {
+        
+         for(int row=0;row<matrix.length;row++){
+           
+              for(int column=0;column<matrix[0].length;column++){
+                  countSquaresHelper(row,column,matrix); // each index is starting point
+        }
+            
+        }
+      
+        return totalOnesSubMat;
+        
+    }
+}
+/* // recursion
+class Solution {
+      int totalOnesSubMat=0;
+    HashSet<String> visitedIndex=new HashSet<>();
+    
+    public int countSquaresHelper(int row,int column,int[][] mat){
+        if(row<0||column<0||row>=mat.length||column>=mat[0].length||mat[row][column]==0){
+            return 0;
+        }
+    
+        int totalSubOnesFromDown=countSquaresHelper(row+1,column,mat);
+        int totalSubOnesFromRight=countSquaresHelper(row,column+1,mat);
+         int totalSubOnesFromDiag=countSquaresHelper(row+1,column+1,mat);
+        
+        int subOnesSubMat=Math.min(totalSubOnesFromDiag,Math.min(totalSubOnesFromDown,totalSubOnesFromRight));
+        if(!visitedIndex.contains(row+","+column))
+            totalOnesSubMat++;
+        
+               if(!visitedIndex.contains(row+","+column))
+       totalOnesSubMat=totalOnesSubMat+subOnesSubMat;
+        
+            visitedIndex.add(row+","+column);
+
+        return subOnesSubMat+1;
+        
+    }
+    public int countSquares(int[][] matrix) {
+        
+         for(int row=0;row<matrix.length;row++){
+           
+              for(int column=0;column<matrix[0].length;column++){
+          //   totalOnesSubMat+=numSubmatHelper(row,column,mat);
+                  countSquaresHelper(row,column,matrix);
+        }
+            
+        }
+      
+        return totalOnesSubMat;
+        
+    }
+}
+
+
+*/
