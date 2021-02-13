@@ -1,0 +1,53 @@
+class Solution {
+    /*terative approach and use prefix sum approach
+    I
+    https://www.youtube.com/watch?v=hrd-MEcZkOI
+    We store the prefix sum for all one's with we form from a point moving towards right and for each row/height we     note the minimum width and that is the number of submatrix we can form
+    
+    [1, 0, 1]
+    [1, 1, 0]
+    [1 ,1 ,0]
+    
+    lets say our stating point is 0,0 our width is limited by minimum width from top to bottom
+    [1, 0, 1] height 1 we can form [1]
+    [2, 1, 0] height two and can form [1,1]
+    [2, 1, 0] height three and can form [1,1,1]
+    
+    */
+    public int numSubmat(int[][] mat) {
+        
+        int row = mat.length;
+        int col = mat[0].length;
+        int totalCountSubmatrices = 0;
+        
+        for(int r= 0; r<row;r++){
+            int numberOfOnes=0;
+            for(int c = col-1; c>=0; c--){
+                if(mat[r][c] == 1){
+                    numberOfOnes++;
+                }else{
+                    numberOfOnes=0;
+                }
+                mat[r][c]=numberOfOnes;
+            }
+        }
+        for(int r= 0; r<row;r++){
+            for(int c = 0; c < col; c++){
+                
+                int minWidth = mat[r][c];
+                for(int d = r;d<row;d++){
+                    if(mat[d][c] ==0){
+                        break;
+                    }else{
+                   minWidth = Math.min(minWidth, mat[d][c]);
+                    totalCountSubmatrices += minWidth;
+                    }
+                    
+                  
+                } 
+            }
+        }
+        return totalCountSubmatrices;
+        
+    }
+}
