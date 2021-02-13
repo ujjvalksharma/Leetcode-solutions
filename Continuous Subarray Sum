@@ -1,0 +1,33 @@
+class Solution {
+    /*
+    
+   (sum1- sum2)%k==0 then sum1%k=sum2%k
+   this means we keep a subarray for continous (prefix-sum)%k and if see the same sum again that means we found a sub-array which is divible by k
+   k=6;
+   23, 2, 4
+     |     |
+     sum1=23  sum2=29
+    
+    (29-23)%6=0 that means we found a subarray between indexs of sum1 and sum2
+    */
+    public boolean checkSubarraySum(int[] nums, int k) {
+          Map<Integer, Integer> hmSubArraySumToIndex = new HashMap<>();
+        hmSubArraySumToIndex.put(0, -1); // if whole subarray is divisle by k
+        int sum = 0;
+        for (int i = 0; i < nums.length; ++i) {
+ 
+            if(k==0){
+                sum=sum+nums[i];
+            }else{
+                  sum=(sum+nums[i])%k;
+            }
+            if (hmSubArraySumToIndex.containsKey(sum) && i - hmSubArraySumToIndex.get(sum) > 1)          {
+              //  System.out.println(sum);
+                return true;
+            }
+            hmSubArraySumToIndex.putIfAbsent(sum, i); // index of subarray
+        }
+        
+        return false;
+    }
+}
