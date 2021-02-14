@@ -1,0 +1,68 @@
+/*
+To find a triangle in graph we have to visit the start index again and length of that dfs is should be 3. we store all the paths in a list of list and iterate over list and find the degree.
+
+
+*/
+class Solution {
+    
+     List<List<Integer>> trioEdges=new ArrayList<>();
+    Set<Integer> visitedIndex=new HashSet<Integer>();
+      List<List<Integer>> adj=new ArrayList<>();
+    public void minTrioDegreeHelper(int index,int start,int lenOfTrio,List<Integer> path){
+        
+        if(lenOfTrio==3&&index==start){
+            
+            trioEdges.add(new ArrayList<>(path));
+            return;
+        }
+        if(lenOfTrio==3){
+            return;
+        }
+        if(visitedIndex.contains(index)){
+            return;
+        }
+        visitedIndex.add(index);
+        path.add(index);
+        List<Integer> children=adj.get(index);
+        
+        for(int i=0;i<children.size();i++){
+            int childIndex=children.get(i);
+            minTrioDegreeHelper(childIndex,start,lenOfTrio+1, path);
+        }
+
+        path.remove(path.size()-1);
+        
+        
+    }
+    public int minTrioDegree(int n, int[][] edges) {
+        
+        
+        for(int i=0;i<=n;i++){
+            adj.add(new ArrayList<Integer>());
+        }
+        
+        for(int[] edge:edges){
+            adj.get(edge[0]).add(edge[1]);
+            adj.get(edge[1]).add(edge[0]);
+        }
+        
+        for(int i=1;i<=n;i++){
+            minTrioDegreeHelper(i,i,0,new ArrayList<Integer>());
+            visitedIndex=new HashSet<Integer>();
+        }
+        
+        int minimumDegree=Integer.MAX_VALUE;
+        
+        for(int i=0;i<trioEdges.size();i++){
+            List<Integer> trioEdge=trioEdges.get(i);
+            int totalDegree=0;
+            totalDegree+=adj.get(trioEdge.get(0)).size()-2;
+            totalDegree+=adj.get(trioEdge.get(1)).size()-2;
+            totalDegree+=adj.get(trioEdge.get(2)).size()-2;
+            minimumDegree=Math.min(minimumDegree,totalDegree);
+        }
+        
+        return minimumDegree==Integer.MAX_VALUE?-1:minimumDegree;
+        
+    }
+}
