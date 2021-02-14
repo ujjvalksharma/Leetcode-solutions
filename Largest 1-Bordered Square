@@ -1,0 +1,96 @@
+class Solution {
+    /*
+   
+ In thsi question, we know that if at a point the max width of ones towards right is 4, that means we need have :
+ top of square
+  -  -  -  - width: 4
+ |4 len     | len 4
+ |          | right of square
+ | left     |
+ |          | 
+  -  -  - -:  width: 4
+  bottom of square
+  so from a point in matrix we can find point to all other 4 corners because it will be at a distance of current width. 
+Then from 4 vertix we need to have number of 1 at column/row wise depending upon the direction as number of ones should be greater or equal currentwidth.
+
+we need to verify currentwidth should satisfy ones at top/bottom/left/right from a start poiston
+
+    */
+    public int largest1BorderedSquare(int[][] grid) {
+        
+        int[][] widthRowWise=new int[grid.length][grid[0].length];
+        int[][] widthColumnWise=new int[grid.length][grid[0].length];
+        
+            for(int r= 0; r<grid.length;r++){
+            int numberOfOnes=0;
+            for(int c = grid[0].length-1; c>=0; c--){
+                if(grid[r][c] == 1){
+                    numberOfOnes++;
+                }else{
+                    numberOfOnes=0;
+                }
+                widthRowWise[r][c]=numberOfOnes;
+            }
+        }
+        
+        
+      
+          
+            for(int c = grid[0].length-1; c>=0; c--){
+                  int numberOfOnes=0;
+             for(int r= grid.length-1; r>=0;r--){
+                
+                 if(grid[r][c] == 1){
+                    numberOfOnes++;
+                }
+                 else{
+                    numberOfOnes=0;
+                }
+                widthColumnWise[r][c]=numberOfOnes;
+            }
+        }
+        
+        int maxBorderedSquareFormed=0;
+        for(int row=0;row<grid.length;row++){
+            
+             for(int column=0;column<grid[0].length;column++){
+                  if(grid[row][column]==1){
+                maxBorderedSquareFormed=Math.max(maxBorderedSquareFormed,1);
+                     int currentWidth=widthRowWise[row][column];
+    /*we decrease width because lets say max width is 3 but can also form square for 3,2,1 so check if any other bordered square can be formed*/
+                        while(currentWidth>=1){ 
+                            
+        int currentDownLen= widthColumnWise[row][column]; 
+        boolean isDownLenGreater=false;
+        boolean isRightDownLenGreater=false;
+        boolean isDownRightGreater=false;
+        
+        if(currentDownLen>=currentWidth){
+            isDownLenGreater=true;
+        }
+        /*ones in row wise when going right from current index at a distance of width to verify left a base of the square*/   
+      if(column+currentWidth-1<grid[0].length){
+          if(widthColumnWise[row][column+currentWidth-1]>=currentWidth){
+              isRightDownLenGreater=true;
+          }
+      }
+   /*ones in row wise when going down from current index at a distance of width to verify ones a base of the square*/
+         if(row+currentWidth-1<grid.length){
+          if(widthRowWise[row+currentWidth-1][column]>=currentWidth){ 
+              isDownRightGreater=true;
+          }
+      }
+        if(isDownRightGreater&&isRightDownLenGreater&&isDownLenGreater){
+              maxBorderedSquareFormed=Math.max(maxBorderedSquareFormed,currentWidth*currentWidth);
+        }
+                           currentWidth--;
+                     }
+            }
+        }
+            
+        }
+    
+        return maxBorderedSquareFormed;
+        
+    }
+}
