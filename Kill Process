@@ -1,0 +1,44 @@
+/*
+In this question, we put all process in hashmap with key as parent and child in list. we do a dfs traversal on for each child and put that child value in killedChildProcess list.
+
+
+*/
+class Solution {
+          List<Integer> killedChildProcess=new ArrayList<>();
+            HashMap<Integer,List<Integer>> hmParentToChild=new HashMap<>();
+    
+    public void findAllProcess(int processId){
+        
+        killedChildProcess.add(processId);
+        if(!hmParentToChild.containsKey(processId)){
+            return;
+        }
+        List<Integer> childProcess=hmParentToChild.get(processId);
+        
+        for(int i=0;i<childProcess.size();i++){
+            findAllProcess(childProcess.get(i));
+        }
+    }
+    public List<Integer> killProcess(List<Integer> pid, List<Integer> ppid, int kill) {
+        
+        
+
+  
+        for(int i=0;i<ppid.size();i++){
+            int indexOfProcess=i;
+            int parent=ppid.get(i);
+            
+            if(!hmParentToChild.containsKey(parent)){
+                hmParentToChild.put(parent,new ArrayList<Integer>());
+            }
+            hmParentToChild.get(parent).add(pid.get(indexOfProcess));
+            
+        }
+        
+        findAllProcess(kill);
+        System.out.println(hmParentToChild);
+        
+        return killedChildProcess;
+        
+    }
+}
