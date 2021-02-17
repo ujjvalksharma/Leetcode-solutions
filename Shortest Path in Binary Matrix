@@ -1,0 +1,58 @@
+/*
+Since we have to find the minimum path, we use bfs to find. we keep a visited set which contains row and column that we visited and we also keep a bfs queue to traverse all 8 direction from a point. we do not traverse a visited index, and  keep track of  distance at each level.
+
+
+*/
+class Solution {
+    public boolean isValidIndex(int rowIndex,int colIndex,int[][] grid){
+        if(rowIndex>=0&&colIndex>=0&&colIndex<grid[0].length
+           &&rowIndex<grid.length&&grid[rowIndex][colIndex]==0){
+            return true;
+        }
+        return false;
+    }
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        
+        Queue<int[]> bfsQueue=new LinkedList<>();
+        bfsQueue.add(new int[]{0,0});
+         bfsQueue.add(null); // delimiter
+         int lengthOfPath=1;
+        Set<String> visitedIndex=new HashSet<>();
+     int row[]=new int[]{0,1,1,-1,1};//right,down/diag down to right/ diag up to right/ diag left dowm
+      int col[]=new int[]{1,0,1,1,-1};
+        while(!bfsQueue.isEmpty()){
+            int[] currIndex=bfsQueue.poll();
+            if(currIndex!=null){
+                
+                visitedIndex.add(currIndex[0]+","+currIndex[1]);
+                if(!isValidIndex(currIndex[0],currIndex[1],grid)){
+                    continue;
+                }
+                
+                  if(currIndex[0]==grid.length-1&&currIndex[1]==grid[0].length-1){
+                      return lengthOfPath;
+                  }
+                
+                for(int i=0;i<row.length;i++){
+                    int[] newIndex=new int[]{currIndex[0]+row[i],currIndex[1]+col[i]};
+                    
+                     if(!visitedIndex.contains(newIndex[0]+","+newIndex[1])
+                       &&isValidIndex(newIndex[0],newIndex[1],grid)){
+                            visitedIndex.add(newIndex[0]+","+newIndex[1]);
+                    bfsQueue.add(newIndex);
+                }
+                    
+                }
+               
+             
+                
+            }else{
+                if(bfsQueue.peek()!=null){
+                    lengthOfPath++;
+                    bfsQueue.add(null);
+                }
+            }
+        }
+        return -1;
+    }
+}
