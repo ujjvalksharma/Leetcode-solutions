@@ -1,0 +1,67 @@
+/*
+In this question, we consider two sceniro that either a number is the max number then it will search for max-1 as we move forward in list and we find it we increment the length of for max or if the number is min number then it will search for min+1 and increment the list length for min.
+
+*/
+class Solution {
+    public int findLHS(int[] nums) {
+        
+        HashMap<Integer,Integer> hmMaxToLength=new HashMap<>();
+        HashMap<Integer,Boolean> hmMaxToFoundLesser=new HashMap<>();
+        int longestHarmoniousSubsequence=0;
+        /*** Current number is max number****/
+        for(int num:nums ){
+            if(!hmMaxToLength.containsKey(num)){
+                hmMaxToLength.put(num,1);
+            }else{
+                hmMaxToLength.put(num,hmMaxToLength.get(num)+1);
+            }
+            
+              if(hmMaxToLength.containsKey(num-1)){
+                hmMaxToLength.put(num-1,hmMaxToLength.get(num-1)+1);
+                    
+                  hmMaxToFoundLesser.put(num-1,true);
+            }
+        }
+        
+           for (Map.Entry<Integer,Integer> entry : hmMaxToLength.entrySet()){  
+
+               int maxNumber= entry.getKey() ;
+               if(hmMaxToFoundLesser.containsKey(maxNumber)){
+                    longestHarmoniousSubsequence=Math.max(longestHarmoniousSubsequence
+                                                        ,hmMaxToLength.get(maxNumber));
+               }
+               
+               
+               }
+               
+       HashMap<Integer,Integer> hmMinToLength=new HashMap<>();
+        HashMap<Integer,Boolean> hmMinToFoundGreater=new HashMap<>();
+           /*** Current number is min number****/
+         for(int num:nums ){
+            if(!hmMinToLength.containsKey(num)){
+                hmMinToLength.put(num,1);
+            }else{
+                hmMinToLength.put(num,hmMinToLength.get(num)+1);
+            }
+            
+              if(hmMinToLength.containsKey(num+1)){
+                hmMinToLength.put(num+1,hmMinToLength.get(num+1)+1);
+                   hmMinToFoundGreater.put(num+1,true);
+            }
+        }
+        
+        
+           for (Map.Entry<Integer,Integer> entry : hmMinToLength.entrySet()){  
+
+               int minNumber= entry.getKey() ;
+               if(hmMinToFoundGreater.containsKey(minNumber)){
+                    longestHarmoniousSubsequence=Math.max(longestHarmoniousSubsequence
+                                                        ,hmMinToLength.get(minNumber));
+               }
+               
+               
+               }
+        
+        return longestHarmoniousSubsequence;
+    }
+}
