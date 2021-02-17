@@ -1,0 +1,47 @@
+/*
+ Count ones for each row and put weakRows list which is of type  WeakRow class. then sort the list function custom lamda function and then get the first K rows 
+
+*/
+class Solution {
+    
+    class WeakRow{
+       public int rowId;
+       public int totalCivilian;
+      public  WeakRow(int rowId, int totalCivilian){
+            this.rowId=rowId;
+            this.totalCivilian=totalCivilian;
+        }
+        
+        @Override
+        public String toString(){
+            return " rowId: "+rowId+" totalCivilian: "+totalCivilian;
+        }
+    }
+  
+    public int[] kWeakestRows(int[][] mat, int k) {
+          List<WeakRow> weakRows=new ArrayList<>();
+          int[] weakRowsArr=new int[k];
+        for(int i=0;i<mat.length;i++){
+            int totalSoilder=0;
+           for(int j=0;j<mat[0].length;j++){
+               if(mat[i][j]==1){
+                   totalSoilder++;
+               }
+           }
+               weakRows.add(new WeakRow(i,totalSoilder));
+     
+        }
+        Collections.sort(weakRows,(WeakRow a,WeakRow b)->{
+            if(a.totalCivilian==b.totalCivilian){
+                return a.rowId-b.rowId;
+            }
+            return a.totalCivilian-b.totalCivilian;
+        } );
+        int index=0;
+        while(index<k){
+            weakRowsArr[index]=weakRows.get(index).rowId;
+            index++;
+        }
+        return weakRowsArr;
+    }
+}
