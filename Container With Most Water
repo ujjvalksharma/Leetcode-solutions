@@ -1,0 +1,33 @@
+/*
+
+https://www.youtube.com/watch?v=ZHQg07n_tbg
+start-> s
+end-> e
+[ 1, 8, 6, 2, 5, 4, 8, 3, 7]
+ s                         e
+ now we know that height[e]>height[s],  
+ Now we shouldn't decrement index of e because e has larger value.
+ let say move s, and we end up with larger value at s, even then I would pick the minimum height at
+ s and e as height[start],height[end]). This turns out to be bad case in height is still the same for the container and length decreased. same goes for if find a smaller value.
+ 
+ So, the idea that at two index we already found the best answer and there is no point of sticking there so we move the index with smaller value.
+
+*/
+class Solution {
+    public int maxArea(int[] height) {
+        
+      int end=height.length-1;
+        int start=0;
+        int maxArea=0;
+        while(start<=end){
+            maxArea=Math.max(maxArea,Math.min(height[start],height[end])*(end-start));
+            if(height[start]>height[end]){
+                end--;
+            }else{
+                start++;
+            }
+        }
+        
+        return maxArea;
+    }
+}
