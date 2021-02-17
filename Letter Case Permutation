@@ -1,0 +1,44 @@
+/*
+Simple recursion in which we trun lower case to upper case and vice versa and use stringbuilder and remove last character at the end of recursion. so when I go back parent node in recursion, my child node character is removed.
+
+*/
+class Solution {
+    List<String> allPermutations=new ArrayList<String>();
+    
+    public void letterCasePermutationHelper(int index,String S,int strSize,StringBuilder sb){
+        if(index>=strSize){
+            allPermutations.add(sb.toString());
+            return;
+        }
+        
+        int indexofCharLower=S.charAt(index)-'a';
+          int indexofCharUpper=S.charAt(index)-'A';
+        
+        if((indexofCharLower>=0&&indexofCharLower<=25)
+           ||(indexofCharUpper>=0&&indexofCharUpper<=25)){ //character
+            char currentChar=S.charAt(index);
+            char lowercaseChar=Character.toLowerCase(S.charAt(index));
+            sb.append(lowercaseChar);
+            
+            letterCasePermutationHelper(index+1,S,strSize,sb);
+             sb.deleteCharAt(sb.length()-1);
+            
+            char uppcaseChar=Character.toUpperCase(currentChar);
+             sb.append(uppcaseChar);
+            
+              letterCasePermutationHelper(index+1,S,strSize,sb);
+            
+        }else{
+            sb.append(S.charAt(index));
+            letterCasePermutationHelper(index+1,S,strSize,sb);
+        }
+        
+        sb.deleteCharAt(sb.length()-1);
+        
+    }
+    public List<String> letterCasePermutation(String S) {
+        
+        letterCasePermutationHelper(0,S,S.length(),new StringBuilder(""));
+        return allPermutations;
+    }
+}
