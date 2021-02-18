@@ -1,0 +1,22 @@
+/*
+try try to reach a index without taking any jump, but we cannot reach a index, then we assume we a jump value which greatest we incountered yet as that is the best choice for us and we move with till we cannot reach another index.
+
+*/
+class Solution {
+    public int jump(int[] nums) {
+        int miniJumps=0;
+        int reachableIndex=0;
+        int maxJumpVaue=0;
+        for(int i=0;i<nums.length;i++){
+            if(reachableIndex<i&&maxJumpVaue>=i){
+                miniJumps++;
+                reachableIndex=maxJumpVaue;
+            }
+            maxJumpVaue=Math.max(maxJumpVaue,nums[i]+i);
+           
+        }
+        
+        return miniJumps;
+    }
+
+}
