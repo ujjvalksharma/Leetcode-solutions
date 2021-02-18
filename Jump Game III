@@ -1,0 +1,36 @@
+/*
+In this question, we use simple bfs to reach the value with 0 fastest. we keep a visited index list too. Thus we iterate every element one only.
+We can also apply DFS.
+*/
+class Solution {
+    public boolean canReach(int[] arr, int start) {
+        
+        Queue<Integer> bfsQueue=new LinkedList<>();
+        Set<Integer> visitedIndex=new HashSet<>();
+        bfsQueue.add(start);
+        
+        while(!bfsQueue.isEmpty()){
+            int currIndex=bfsQueue.poll();
+            System.out.println(currIndex);
+            if(arr[currIndex]==0){
+                return true;
+            }
+
+            visitedIndex.add(currIndex);
+            int indexToRight=currIndex+arr[currIndex];
+            int indexToLeft=currIndex-arr[currIndex];
+            if(indexToRight<arr.length&&!visitedIndex.contains(indexToRight)){
+                visitedIndex.add(indexToRight);
+                bfsQueue.add(indexToRight);
+            }
+            
+             if(indexToLeft>=0&&!visitedIndex.contains(indexToLeft)){
+                    visitedIndex.add(indexToLeft);
+                bfsQueue.add(indexToLeft);
+            }
+            
+        }
+        
+        return false;
+    }
+}
