@@ -1,0 +1,53 @@
+/*
+
+https://www.youtube.com/watch?v=MDmZm_aVDF8
+*/
+class Solution {
+    HashMap<String, Boolean> map;        
+    public boolean isScramble(String s1, String s2) {
+      
+            map = new HashMap();
+            return find(s1,s2);
+    }
+    
+    boolean find(String s1, String s2){
+        
+        
+        if( s1.equals("")){ 
+            return false;
+        }
+        if(s1.equals(s2)){ 
+            return true;
+        }
+        
+        int n = s1.length();
+        
+        if( n == 1){
+            return false;
+        }
+
+        if( map.containsKey(s1+"-"+s2))
+                return map.get(s1+"-"+s2);
+        
+        
+        boolean flag = false;
+        
+        for( int k = 0; k < n-1; k++ ){
+            
+            flag = ( 
+                find(s1.substring(0, k+1), s2.substring(0, k+1)) 
+                && find(s1.substring( k+1, n), s2.substring(  k+1, n)) )
+                || ( 
+                find(s1.substring(0, k+1), s2.substring( n-(k+1), n)) 
+                && find(s1.substring( k+1, n), s2.substring( 0, n-(k+1)) )
+                  ) ;
+            
+            map.put(s1+"-"+s2, flag);
+            
+            if(flag)
+                return true;    
+        }
+        
+        return flag;        
+    }
+}
