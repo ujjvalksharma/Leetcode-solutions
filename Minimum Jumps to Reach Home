@@ -1,0 +1,27 @@
+/*
+Minimum word measn Bfs we do a simple bfs keeping contraints in order
+
+*/
+class Solution {
+    public int minimumJumps(int[] forbidden, int a, int b, int x) {
+        Set<Integer> f = new HashSet();
+        for(int m : forbidden)
+            f.add(m);
+        Queue<int[]> q = new LinkedList();
+        q.add(new int[]{0, 0, 0}); // index,backward ( 1)/not backward (0)/ min jumps
+        f.add(0);
+        while(!q.isEmpty()){
+            int[] cur = q.poll();
+            int i = cur[0];
+            if(i==x) return cur[2];
+            int nextSteps = cur[2]+1;
+            if(!f.contains(i+a) && i+a<=2000 + 2 * b){ // max limit for moving forward
+                q.add(new int[]{i+a, 0, nextSteps});
+                f.add(i+a);
+            }
+            if(!f.contains(i-b) && i-b>=0 && cur[1]!=1)
+                q.add(new int[]{i-b, 1, nextSteps});
+        }
+        return -1;
+    }
+}
