@@ -1,0 +1,70 @@
+class Pair
+{
+    char bracket;
+    int index;
+    
+    
+    public Pair(char bracket,int index)
+    {
+        this.bracket=bracket;
+        this.index=index;
+    }
+}
+/*
+The question is same valid parathesis question, except we have to remove it. So when do we remove a parathesis if the stack is not
+empty and those open did find a pair for them or stack is empty when we found a closing one.
+
+
+*/
+class Solution {
+    public String minRemoveToMakeValid(String s) {
+        
+        
+        Stack<Pair> stk= new Stack<Pair>();
+     //   System.out.println((int)')');
+      //  System.out.println((int)'(');
+        String answer="";
+        for(int i=0;i<s.length();i++)
+        {
+            if(s.charAt(i)=='(')
+            {
+                stk.push(new Pair('(',i));
+            }
+            if(s.charAt(i)==')')
+            {
+                if(stk.isEmpty()==false&&stk.peek().bracket=='(')
+                {
+                    stk.pop();
+                }
+                else
+                {
+                    stk.push(new Pair(')',i));
+                }
+            }
+        }
+        
+        if(stk.isEmpty()==true)
+            return s;
+        
+        
+        for(int i=s.length()-1;i>=0;i--)
+        {
+            if(stk.isEmpty()==false&&stk.peek().index==i)
+            {
+                stk.pop();
+            }
+            else
+            {
+                answer=Character.toString(s.charAt(i))+answer;
+            }
+           // System.out.println(answer);
+        }
+        
+        return answer;
+      
+        
+        
+        
+        
+    }
+}
