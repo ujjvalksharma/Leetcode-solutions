@@ -4,67 +4,79 @@
  *     int val;
  *     TreeNode left;
  *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
+ *     TreeNode(int x) { val = x; }
  * }
  */
 /*
-the question is same as 1123. Lowest Common Ancestor of Deepest Leaves. same to same code is present here
+  // status: 'n'---> found nothing, 'p'--> found p node,  'q'---> found q node
+Lowest common ancestor in single pass. We do a post order traversal. we know we a ancestor if we found 
+cases for ancestor node:
+1) 'p'/'q' together at right/left of child subtree status
+2) one of 'p'/'q' at right/left of child subtree status and the current node is either p node or q node.
+
+
 */
 class Solution {
     
-    /**
-    We return the string "d" when we know we have found the depth node and not all parents will get left and right node as "d" because not all will have left and right subtree with deepest node.
+  
+    TreeNode lowestAncestor=null;
     
-    **/
-      TreeNode answer;
-    int max_whole_depth=-1;
-    public void preorder(TreeNode root,int depth)
-    {
-        if(root==null)
-            return;
-        
-        max_whole_depth=Math.max(max_whole_depth,depth);
-        preorder(root.left,depth+1);
-        preorder(root.right,depth+1);
-   
-    }
-    public String postorder(TreeNode root,int depth)
-    {
-        if(root==null)
-            return " ";
-        
-        
-        String left_tree=postorder(root.left,depth+1);
-        String right_tree=postorder(root.right,depth+1);
-    //    System.out.println("root:"+root.val+"left_tree:"+left_tree+"right_tree:"+right_tree);
-        if(left_tree.equals(right_tree)&&right_tree.equals("d"))
-        {
-            answer=root;
-            //found=true;
+    public char lowestCommonAncestorHelper(TreeNode root, TreeNode p, TreeNode q){
+        if(root==null){
+            return 'n';
         }
-        if(depth==max_whole_depth)
-        {
-            answer=root; // edge case if there is only one deep node
-            return "d";
-        }   
         
-        if(left_tree.equals("d")||right_tree.equals("d"))
-            return "d";
+        char statusOfLeft=lowestCommonAncestorHelper(root.left,p,q);
+        char statusOfRight=lowestCommonAncestorHelper(root.right,p,q);
         
-        return "n";
-            
-   
+       
+
+        if(statusOfLeft=='p'&&statusOfRight=='q'){
+            if(lowestAncestor==null){
+                lowestAncestor=root;
+            }
+            return 'n';
+        }
+        else if(statusOfLeft=='q'&&statusOfRight=='p'){
+            if(lowestAncestor==null){
+                lowestAncestor=root;
+            }
+            return 'n';
+        }
+        else if((statusOfLeft=='p'||statusOfRight=='p')&&root==q){
+            if(lowestAncestor==null){
+                lowestAncestor=root;
+            }
+              return 'p';
+        } else if((statusOfLeft=='q'||statusOfRight=='q')&&root==p){
+            if(lowestAncestor==null){
+                lowestAncestor=root;
+            }
+              return 'q';
+        }
+         else if(statusOfLeft=='p'||statusOfRight=='p'){
+          
+              return 'p';
+        } else if(statusOfLeft=='q'||statusOfRight=='q'){
+          
+              return 'q';
+        }
+        
+        
+         if(root==p){
+            return 'p';
+        }
+        
+          if(root==q){
+            return 'q';
+        }
+        return 'n';
+        
+        
     }
-    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         
-        preorder(root,0);
-        postorder(root,0);
-        return answer;
+        lowestCommonAncestorHelper( root,  p,  q);
+        return lowestAncestor;
     }
 }
