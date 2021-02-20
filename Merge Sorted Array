@@ -1,0 +1,33 @@
+class Solution {
+    /**
+    This solution is without taking extra space and putting it in place. we keep 3 pointer last of both filled array and last on unfilled in num1 and fill nums1 if we find a greater starting from descending order.
+    
+    **/
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        
+        int indexOfUnfilledArr=nums1.length-1;
+        m--;
+        n--;
+        
+        while(m>=0&&n>=0){
+            if(nums1[m]>nums2[n]){
+                nums1[indexOfUnfilledArr]=nums1[m];
+                m--;
+                indexOfUnfilledArr--;
+                
+            }else{
+                  nums1[indexOfUnfilledArr]=nums2[n];
+                n--;
+                indexOfUnfilledArr--;
+            }
+        }
+        
+        while(n>=0){
+              nums1[indexOfUnfilledArr]=nums2[n];
+                n--;
+                indexOfUnfilledArr--;
+        }
+        
+        
+    }
+}
