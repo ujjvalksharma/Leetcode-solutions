@@ -1,0 +1,98 @@
+class WordDictionary {
+
+    class Node{
+        int leaf;
+        Node children[];
+        public Node(int leaf)
+        {
+            this.leaf=leaf;
+            children= new Node[26];
+            for(int i=0;i<26;i++)
+                children[i]=null;
+            
+        }
+    }
+    Node head;
+    /** Initialize your data structure here. */
+    public WordDictionary() {
+       head= new Node(0); 
+    }
+    
+    /** Adds a word into the data structure. */
+    public void addWord(String word) {
+        Node current=head;
+        for(int i=0;i<word.length();i++)
+        {
+            if(current.children[word.charAt(i)-'a']==null)
+             current.children[word.charAt(i)-'a']= new Node(0);
+            
+            current=current.children[word.charAt(i)-'a'];
+        }
+       current.leaf=1; 
+        
+    }
+    boolean word_found;
+    public void findword(String word,Node current,int index)
+    {
+            if(index==word.length())
+        {
+                return;
+            }
+    
+        if(word.charAt(index)!='.')
+        {
+            
+           
+         if(current.children[word.charAt(index)-'a']==null)
+            return; 
+            
+               if(index==word.length()-1)
+        {
+         
+            if(current.children[word.charAt(index)-'a'].leaf==1)       
+             word_found=true;
+                   
+            return;
+        }
+        
+            
+            if(word_found==false)
+            findword(word,current.children[word.charAt(index)-'a'],index+1);
+        }
+        else
+        {
+            for(int i=0;i<26&&word_found==false;i++)
+            {
+                if(current.children[i]!=null)
+                {
+                    
+             if(index==word.length()-1)
+        {
+          if(current.children[i].leaf==1)
+             word_found=true;
+                               
+           // return;
+        }
+                     findword(word,current.children[i],index+1);
+                }
+             
+            }
+        }
+        
+    }
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    public boolean search(String word) {
+        word_found=false;
+        findword(word,head,0);
+        
+        return word_found;
+        
+    }
+}
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary();
+ * obj.addWord(word);
+ * boolean param_2 = obj.search(word);
+ */
