@@ -1,0 +1,40 @@
+class Solution {
+    /* reucursion + memorization
+    In this question, we divide string at each point recursively and check the if divison of string are present in hashmap and if they are present that means whole string is present too. We will use memory to store string and its presence value in hashmap.
+    
+    */
+      Set<String> setOfWords;
+    HashMap<String,Boolean> hmWordToPresence=new HashMap<>();
+    public boolean wordBreakHelper(String str){
+        
+    
+        if(setOfWords.contains(str)){
+            return true;
+        }
+         if(str.length()==1){
+            return false;
+        }
+        if(hmWordToPresence.containsKey(str)){
+        //    System.out.println("I am here");
+            return hmWordToPresence.get(str);
+        }
+        int s1=0;
+        int e2=str.length();
+        boolean foundWord=false;
+        int sizeOfStr=str.length();
+        for(int i=1;i<sizeOfStr;i++){
+            
+            int e1=i;
+            int s2=i;
+            foundWord=foundWord|(wordBreakHelper(str.substring(s1,e1))
+                                 &&wordBreakHelper(str.substring(s2,e2)));
+           
+        }
+        hmWordToPresence.put(str,foundWord);
+        return foundWord;
+    }
+    public boolean wordBreak(String s, List<String> wordDict) {
+        setOfWords=new HashSet<>(wordDict);
+     return   wordBreakHelper(s);
+    }
+}
