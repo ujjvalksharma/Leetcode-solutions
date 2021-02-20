@@ -1,0 +1,34 @@
+/**
+ * // This is the BinaryMatrix's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface BinaryMatrix {
+ *     public int get(int row, int col) {}
+ *     public List<Integer> dimensions {}
+ * };
+ */
+/*
+In this question since each row is sorted we start from the right most index we start from top row and right most column. if we find a zero at a index, we know that there are zeros to the left, so not point of seeing this row, thus we move down and we if see one that means there is chance of one at more left of row, so decrease the column index.
+
+*/
+class Solution {
+    public int leftMostColumnWithOne(BinaryMatrix binaryMatrix) {
+        
+       List<Integer> dimensions=binaryMatrix.dimensions();
+        int rowSize=dimensions.get(0)-1;
+        int colIndex=dimensions.get(1)-1;
+        int leftMostIndex=Integer.MAX_VALUE;
+        int rowIndex=0;
+        while(rowIndex<=rowSize&&colIndex>=0){
+            if(binaryMatrix.get(rowIndex,colIndex)==0){
+                rowIndex++;
+            }else{
+                leftMostIndex=Math.min(leftMostIndex,colIndex);
+               colIndex--;
+                
+            }
+        }
+        
+        return leftMostIndex==Integer.MAX_VALUE?-1:leftMostIndex;
+        
+    }
+}
