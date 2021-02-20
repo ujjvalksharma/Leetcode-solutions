@@ -1,0 +1,98 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+/*
+In this question, we traverse the linklist ahead and if we find a next node is null we node it is the end of linklist and that must be the head, so we return it. now we are backtracking, so, during post order traversal a node has itself and front node. so we if fronNode points to back node then we do similary for every node. the linklist is reversed.
+
+
+*/
+/*
+recursive solution
+class Solution {
+    
+    ListNode newHead=null;
+    public ListNode reverseListHelper(ListNode head){
+        if(head==null){
+            return null;
+        }
+        if(head.next==null){
+            newHead=head;
+            return head;
+        }
+      ListNode nextNode=  reverseListHelper(head.next);
+        
+       nextNode.next= head;
+        return head;
+    }
+    public ListNode reverseList(ListNode head) {
+        
+      ListNode  tail= reverseListHelper(head);
+        if(tail!=null){
+            tail.next=null;
+        }
+        
+        return newHead;
+    }
+}
+*/
+// iterative solution
+/*
+  1->2->3->4
+ 
+ nextNodeFromCurrentNode=current.next
+ current.next=prev;
+ prev=current;
+ current=nextNodeFromCurrentNode;
+
+
+*/
+/*
+Iterative solution:
+In this question lets say:
+p: prev node
+n: next node from current node
+c: current node
+
+// set n to next node from current node as we pont current node to prev node so we lose the refernce for it. we need to reference to transfer current node to next after switchin ppointer
+
+       1 ->. 2. ->. 3 ->. 4 ->null  
+    p  c     n 
+    
+     <- 1  2. ->. 3 ->. 4 ->null // current node point to prev node
+     p  c  n
+     
+      <- 1    2. ->. 3 ->. 4 ->null // make prev node same as current
+         p,c  n
+         
+            1    2. ->. 3 ->. 4 ->null .//change current node to next node
+            p    c      n
+            
+            Do this iterativly.
+*/   
+class Solution {
+    public ListNode reverseList(ListNode head) {
+          ListNode newHead=null;
+        if(head==null){
+            return null;
+        }
+       ListNode prev=null;
+      ListNode currentNode=head;
+        while(currentNode.next!=null){
+ListNode nextNodeFromCurrentNode=currentNode.next;
+ currentNode.next=prev;
+ prev=currentNode;
+ currentNode=nextNodeFromCurrentNode;
+        }
+
+ currentNode.next=prev;
+        return currentNode;
+    }
+}
