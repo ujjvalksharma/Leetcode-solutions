@@ -1,0 +1,59 @@
+class Solution {
+    /*
+    Finding the greatest number won't work reason being, it could be grestest number is before the samller number for instance decreasing number like 987 we don't swap 9 and 7. So at index we need to check other 9-0 digits that available and that should be after the current index. so that we can swap.
+    
+    */
+     static String swap(String str, int i, int j) 
+    { 
+        if (j == str.length() - 1) 
+            return str.substring(0, i) + str.charAt(j) 
+                + str.substring(i + 1, j) + str.charAt(i); 
+  
+        return str.substring(0, i) + str.charAt(j) 
+            + str.substring(i + 1, j) + str.charAt(i) 
+            + str.substring(j + 1, str.length()); 
+    } 
+
+    public int maximumSwap(int num) {
+        
+      HashMap<Integer,Integer> hm= new HashMap<Integer,Integer>();
+        
+        String input_str=String.valueOf(num);
+        
+        for(int j=9;j>=1;j--) // base case for telling if the index is not digit is not present
+                {
+                   hm.put(j,-1);
+                }
+        
+        /* integer and index . we keep the last index as in case we swap we will try to swap the most last greater digit for largest number
+        like 7808
+             8807 (swap of 0th and 3rd)> 8708  (swap of 0th and 1rd)
+        */
+        
+        for(int i=0;i<input_str.length();i++) 
+        {
+            hm.put(Integer.parseInt(Character.toString(input_str.charAt(i))),i);
+        }
+        
+        /*
+        for each character check other 9-0 digit if a greater one is present and if yes find swap and return.
+        
+        */
+            for(int i=0;i<input_str.length();i++)
+        {
+            int current_number=Integer.parseInt(Character.toString(input_str.charAt(i)));
+            int max_number=9;    
+                for(int j=9;j>=1;j--)
+                {
+                    if(j>current_number&&hm.get(j)>i)
+                    {
+                       String answer=swap(input_str,i,hm.get(j));
+                        return Integer.parseInt(answer);
+                    }
+                }
+        }
+        
+        return num;
+        
+    }
+}
