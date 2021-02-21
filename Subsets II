@@ -1,0 +1,30 @@
+class Solution {
+    
+    public void FindAllSubset(List<List<Integer>> answer,List<Integer> list,int start,int[] nums)
+    {
+        if(answer.contains(list)==false)
+        answer.add(new ArrayList<>(list));
+        
+        for(int i=start;i<nums.length;i++)
+        {
+            list.add(nums[i]);
+            FindAllSubset(answer,list,i+1,nums);
+            list.remove(list.size()-1);
+            
+        }
+        
+    }
+    
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        
+        List<List<Integer>> answer= new ArrayList<>();
+        List<Integer> list= new ArrayList<Integer>();
+        
+        Arrays.sort(nums);
+        
+        FindAllSubset(answer,list,0,nums);
+        
+        return answer;
+        
+    }
+}
