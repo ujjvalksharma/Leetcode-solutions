@@ -1,0 +1,38 @@
+class RandomizedSet {
+    
+    /*
+    We use hashmap to check presence of an element and find its index and list of find index and removal. we can do removal of an element in 0(1) if find index of that element swap at it last element in list and then remove the last element in list.
+    */
+    private Map<Integer, Integer> map;
+    private List<Integer> list;
+    /** Initialize your data structure here. */
+    public RandomizedSet() {
+        map = new HashMap<>();
+        list = new ArrayList<>();
+    }
+    
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    public boolean insert(int val) {
+        if(map.containsKey(val)) return false;
+        map.put(val, list.size());
+        list.add(val);
+        return true;
+    }
+    
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    public boolean remove(int val) {
+        if(!map.containsKey(val)) return false;
+        int index = map.get(val);
+        map.remove(val);
+        list.set(index, list.get(list.size()-1));
+        list.remove(list.size()-1);
+        if(index < list.size()) map.put(list.get(index), index);
+        return true;
+    }
+    
+    /** Get a random element from the set. */
+    public int getRandom() {
+        int ran = (int)(Math.random() * list.size());
+        return list.get(ran);
+    }
+}Insert Delete GetRandom O(1)
