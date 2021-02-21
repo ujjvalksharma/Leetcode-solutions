@@ -1,0 +1,39 @@
+/*
+We start from right to left, and we take 0 as the base that means whatever is first rightmost letter value we just add it as it is greater than 0. The idea the we store the prev char moving from right to left and check if the current value>= prev we add current char value else we subtract current value. 
+L        V   I      I     I
++50 > +5  > +1     = +1     = +1
+
+
+I     V // I is prev to V and has less value so we subtract value I fromt total sum
+-1 < +5 
+
+
+M       C        M       X        C         I            V
++1000> -100   < +1000 >  -10  < +100    >   1  <        +5
+*/
+class Solution {
+    public int romanToInt(String s) {
+      int numberFormed=0;
+        
+        HashMap<Character,Integer> hmRomanToNum=new HashMap<>();
+           hmRomanToNum.put('0',0); //base case
+           hmRomanToNum.put('I',1);
+           hmRomanToNum.put('V',5);
+           hmRomanToNum.put('X',10);
+           hmRomanToNum.put('L',50);
+           hmRomanToNum.put('C',100);
+           hmRomanToNum.put('D',500);
+           hmRomanToNum.put('M',1000);
+        char prev='0';
+        for(int i=s.length()-1;i>=0;i--){
+            if(hmRomanToNum.get(s.charAt(i))>=hmRomanToNum.get(prev)){
+                numberFormed+=hmRomanToNum.get(s.charAt(i));
+            }else{
+                       numberFormed-=hmRomanToNum.get(s.charAt(i));
+            }
+            prev=s.charAt(i);
+        }
+        
+        return numberFormed;
+    }
+}
