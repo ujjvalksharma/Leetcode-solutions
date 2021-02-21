@@ -1,10 +1,10 @@
 class Solution {
     
     /*
-    recursion + memorization
+       recursion + memorization
     At every index, we make a choice whether we want to pick an element in current sum or not. either case we increment the index and proceed.
     we always check if we are exceeding the array bound or sum is greater than target. we meorizie the index and current sum that affects reaching the target
-    and how many more index can we pick.
+    and how many more index can we pick. Also meorization helps in avoid re visiting the same subtree.
     
     */
     HashMap<String,Boolean> hmIndexAndSumToPresence=new HashMap<>();
