@@ -1,89 +1,43 @@
-/*
-Memory + recusrion
-In this question, we keep finding subsequence like we did in wiggle question, we return true if we found sequence in whose sum is equal total's sum/2 and we store the index and current as key in memory as we may iterate over this branch. we cannot store only index as we come to particular index with a different sum.
-*/class Solution {
-    HashMap<String,Boolean> hmSumIndexToIsPartition=new HashMap<>();
-    Set<Integer> setOfIndex=new HashSet<Integer>();
-    boolean answer=false;
-    public boolean canPartitionHelper(int index,int currentSum,int maxSum,int[] nums){
-        if(currentSum==maxSum){
-           answer=true;
-            return true;
-        }
-        if(answer==true){
-            return true;
-        }
-        boolean isEqualPartition=false;
-        if(hmSumIndexToIsPartition.containsKey(index+"-"+currentSum)){
-            return hmSumIndexToIsPartition.get(index+"-"+currentSum);
-        }
-        for(int i=index+1;i<nums.length;i++){
-isEqualPartition=isEqualPartition|canPartitionHelper(i+1,currentSum+nums[i],maxSum,nums);
-       
-        }
-        hmSumIndexToIsPartition.put(index+"-"+currentSum,isEqualPartition);
-        return isEqualPartition;
-    }
-    public boolean canPartition(int[] nums) {
-        
-        if(nums.length<2){
-            return false;
-        }
-        int totalSum=0;
-        
-        for(int num:nums){
-            totalSum+=num;
-        }
-        if(totalSum%2!=0){
-            return false;
-        }
-        
-        
-        boolean isEqualPartition=false;
-        
-        for(int i=0;i<nums.length;i++){
-            isEqualPartition=isEqualPartition|canPartitionHelper(i,nums[i],totalSum/2,nums);
-        }
-            return answer|isEqualPartition;
-    }
-}
-/*
-// recursion
 class Solution {
     
-    public boolean canPartitionHelper(int index,int currentSum,int maxSum,int[] nums){
-        
-        if(currentSum==maxSum){
+    /*
+    recursion + memorization
+    At every index, we make a choice whether we want to pick an element in current sum or not. either case we increment the index and proceed.
+    we always check if we are exceeding the array bound or sum is greater than target. we meorizie the index and current sum that affects reaching the target
+    and how many more index can we pick.
+    
+    */
+    HashMap<String,Boolean> hmIndexAndSumToPresence=new HashMap<>();
+    public boolean canPartitionHelper(int index,int currentSum,int[] nums,int targetSum){
+        if(currentSum==targetSum){
             return true;
         }
-        boolean isEqualPartition=false;
-        for(int i=index+1;i<nums.length;i++){
-            isEqualPartition=isEqualPartition|canPartitionHelper(i+1,currentSum+nums[i],maxSum,nums);
+        
+        if(currentSum>targetSum||index>=nums.length){
+            return false;
+        }
+        String key=index+"-"+currentSum;
+        if(hmIndexAndSumToPresence.containsKey(key)){
+            return hmIndexAndSumToPresence.get(key);
         }
         
-        return isEqualPartition;
+        boolean isTargetSumFound= (canPartitionHelper(index+1,currentSum,nums,targetSum)||
+               canPartitionHelper(index+1,currentSum+nums[index],nums,targetSum));
+        
+        hmIndexAndSumToPresence.put(key,isTargetSumFound);
+        
+        return isTargetSumFound;
     }
     public boolean canPartition(int[] nums) {
-        
         int totalSum=0;
-        
-        for(int num:nums){
-            totalSum+=num;
+        for(int i=0;i<nums.length;i++){
+            totalSum+=nums[i];
         }
         if(totalSum%2!=0){
             return false;
         }
+     //   boolean foundPartitionSum
+        return canPartitionHelper(0,0,nums,totalSum/2);
         
-        
-        boolean isEqualPartition=false;
-        
-        for(int i=0;i<nums.length;i++){
-            isEqualPartition=isEqualPartition|canPartitionHelper(i,nums[i],totalSum/2,nums);
-        }
-            return isEqualPartition;
     }
 }
-
-
-
-*/
