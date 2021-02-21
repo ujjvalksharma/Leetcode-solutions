@@ -1,0 +1,55 @@
+class Solution {
+    /*
+    In this question, we sort the array for instance:
+ Before:   [-1,0,1,2,-1,-4]
+    
+ After sorting:   [-4, -1, -1, 0, 1, 2]
+ 
+ lets say we iterate from end index (n) now we have a subarray from 
+ 0,1,2...n-1 index now if we array 2sum in this subarray and target is the n+1 index value because we know if a+b=c that means a, and b would be before c after sorting
+Similar we do the question a^2+b^2=C^2.
+    
+    */
+    public List<List<Integer>> threeSum(int[] nums) {
+     
+      //  [-4,-1,-1,0,1,2]
+        Arrays.sort(nums);
+        System.out.println(Arrays.toString(nums));
+        List<List<Integer>> answer=new ArrayList<>();
+        Set<String> visitedPairs=new HashSet<String>();
+        for(int i=nums.length-1;i>=0;i--){
+            int target=-nums[i];
+            int start=0;
+            int end=i-1;
+      //      System.out.println("target:"+nums[i]);
+            while(start<end){
+                
+                int sum=nums[start]+nums[end];
+             //   System.out.println("current sum:"+sum+" start index:"+start+" end index:"+end);
+                if(sum==target){
+            //        System.out.println("I am here");
+                    List<Integer> tempAnswer=new ArrayList<>();
+                  if(!visitedPairs.contains(nums[start]+"-"+nums[end]+"-"+nums[i])){
+                      
+                        tempAnswer.add(nums[start]);
+                    tempAnswer.add(nums[end]);
+                      tempAnswer.add(nums[i]);
+                    answer.add(tempAnswer);
+                      visitedPairs.add(nums[start]+"-"+nums[end]+"-"+nums[i]);
+                  }
+                  
+                    start++;
+                        end--;
+                }else if(sum>target){
+                    end--;
+                    
+                }else if(sum<target){
+                    start++;
+                }
+            }
+          
+            
+        }
+        return answer;
+    }
+}
