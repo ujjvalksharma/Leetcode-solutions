@@ -1,0 +1,31 @@
+class Solution {
+    /*
+    Sliding window with window size as length of p string size and find if the frequency array for s for that window matches the frequency array of p.
+    
+    */
+    public List<Integer> findAnagrams(String s, String p) {
+        
+        int[] freqOfP=new int[26];
+        int[] tempFreqOfS=new int[26];
+        List<Integer> listOfStartIndex=new ArrayList<>();
+        for(int i=0;i<p.length();i++){
+            freqOfP[p.charAt(i)-'a']++;
+        }
+        int start=0;
+        int sizeOfSubArr=p.length();
+        int currLen=0;
+          for(int i=0;i<s.length();i++){
+              currLen++;
+            tempFreqOfS[s.charAt(i)-'a']++;
+              if(currLen==sizeOfSubArr){
+                 if(Arrays.toString(tempFreqOfS).equals(Arrays.toString(freqOfP))){
+                     listOfStartIndex.add(start);
+                 }
+                  tempFreqOfS[s.charAt(start)-'a']--;
+                  start++;
+                  currLen--;
+              }
+        }
+        return listOfStartIndex;
+    }
+}
