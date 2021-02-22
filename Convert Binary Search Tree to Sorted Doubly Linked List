@@ -1,0 +1,53 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val,Node _left,Node _right) {
+        val = _val;
+        left = _left;
+        right = _right;
+    }
+};
+*/
+/*
+Do a inorder traversl and keep track of previous node that did its jobs. we know after a node has been displayed in inorder it's function call won't happen again, so we set prev node's right pointer and current node left pointer as curren node's left pointer has done his job in current function call implementation of function call happens between left and right child node function call.
+
+*/
+class Solution {
+    Node prevNode;
+    Node head;
+    public void treeToDoublyListHelper(Node root){
+        if(root==null){
+            return;
+        }
+        treeToDoublyListHelper(root.left);
+        if(prevNode==null){
+            head=root; // set head only once
+            prevNode=root;
+        }else{
+            root.left=prevNode;
+            prevNode.right=root;
+            prevNode=root; // keep changing prev node
+        }
+        treeToDoublyListHelper(root.right);
+    }
+    public Node treeToDoublyList(Node root) {
+        
+        if(root==null){
+            return null;
+        }
+         treeToDoublyListHelper(root);
+        head.left=prevNode; // head would be set only once to it is the smallest node
+        prevNode.right=head; // now prev would be last/greatest node as it keeps changing and inorder is an increasing order traversal
+        return head;
+    }
+}
