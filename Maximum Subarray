@@ -1,0 +1,16 @@
+class Solution {
+    /*
+    IF we know that current element is grater than the subarray we will form till current element then we choose that element, else we add the current element in the subarray
+    
+    */
+    public int maxSubArray(int[] nums) {
+        int maxSum=nums[0];
+        int maxSumOverAll=nums[0];
+        for(int i=1;i<nums.length;i++){
+        
+            maxSum=Math.max(maxSum+nums[i],nums[i]);
+            maxSumOverAll=Math.max(maxSum,maxSumOverAll);
+        }
+        return maxSumOverAll;
+    }
+}
