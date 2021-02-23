@@ -1,0 +1,77 @@
+/*
+Kmp algorithm 
+https://www.youtube.com/watch?v=BXCEFAzhxGY
+https://www.youtube.com/watch?v=GTJr8OvyEVQ&t=644s
+
+*/
+class Solution {
+    public void fillLpsTable(int[] lpsTable,String subStr){
+        
+     
+        int start=0;
+        int end=1;
+        lpsTable[0]=0;
+        while(end<lpsTable.length){
+            if(subStr.charAt(start)==subStr.charAt(end)){
+                lpsTable[end]=start+1;
+                start++;
+                end++;
+            }else{
+               if(start!=0){
+                   start=lpsTable[start-1];
+               }else{
+                     lpsTable[end]=0;
+                   end++;
+               }
+                
+            }
+        }
+        
+        
+    }
+    public int strStr(String haystack, String needle) {
+        
+        
+       
+        
+           if(needle.length()>haystack.length()){
+            return -1;
+        }
+        
+             if(haystack.length()==0||needle.length()==0){
+            return 0;
+        }
+        int[] lpsTable=new int[needle.length()];
+        fillLpsTable(lpsTable,needle);
+        
+        int idxOfHaystack=0;
+        int idxOfNeedle=0;
+        int lengthOFHaystack=haystack.length();
+          int lengthOFNeedle=needle.length();
+        
+        while(idxOfHaystack<lengthOFHaystack){
+            
+          if(haystack.charAt(idxOfHaystack)==needle.charAt(idxOfNeedle)){
+              idxOfHaystack++;
+              idxOfNeedle++;
+              if(idxOfNeedle>=lengthOFNeedle){
+                  return idxOfHaystack-lengthOFNeedle;
+              }
+          }else{
+              if(idxOfNeedle==0){
+                  idxOfHaystack++;
+              }else{
+                  idxOfNeedle=lpsTable[idxOfNeedle-1];
+              }
+              
+          }
+            
+        }
+    //    System.out.println(Arrays.toString(lpsTable));
+        
+        
+            
+            return -1;
+        
+    }
+}
