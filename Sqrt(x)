@@ -1,21 +1,62 @@
+
+/*
+This is a O(root(n)) approach in which we go till root of n / i*i<n we keep track of the minimum difference we find, and if we find a smaller difference we keep that number as a possible square root as i*i should be closed to x, but we know that difference is negative then we have break out as i,i+1,i+2 are not valid possible square root as their square is exceeding x. Also if we find difference zero that means we found the perfect number.
+
+*/
+/*class Solution {
+
+    public int mySqrt(int x) {
+        
+        int i=0;
+        int closetNumValue=i;
+        int diff=Integer.MAX_VALUE;
+        for( i=0;i*i<=x;i++){   
+            if(x-(i*i)<=diff){
+                 if((x-i*i)<0){
+                    break;
+                }
+                closetNumValue=i;
+                diff=x-i*i;
+                if(diff==0){
+                    break;
+                }
+            }
+            
+        }
+        
+        return closetNumValue;
+    }
+}
+*/
+
+/*
+Do a simple binary search in log(n) time
+*/
 class Solution {
-    /*
-    Do a simple binary search.
-    
-    */
   public int mySqrt(int x) {
     if (x < 2) return x;
 
     long num;
-    int pivot, left = 2, right = x;
+    int pivot;
+    int left = 0;
+    int right = x / 2;
+      int result=0;
     while (left <= right) {
       pivot = left + (right - left) / 2;
-      num = (long)pivot * pivot;
-      if (num > x) right = pivot - 1;
-      else if (num < x) left = pivot + 1;
-      else return pivot;
+        /* multilication of two large numbers can exceed 32 bit, so we may need 64 bit to compare*/
+      num = (long)pivot * pivot; 
+      if (num > x){
+           right = pivot - 1;
+      }
+      else if (num < x){
+          result=pivot;
+           left = pivot + 1;
+      }
+      else{
+          return pivot;
+      } 
     }
 
-    return right;
+    return result;
   }
 }
