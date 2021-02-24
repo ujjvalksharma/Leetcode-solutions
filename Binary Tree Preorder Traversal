@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+    /*
+    Right side of the node to added first as in stack we last element on top and we want left element to be top.
+    if we insert left node and then right node. right is on top.
+    
+    */
+class Solution {
+
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> preOrderList=new ArrayList<Integer>();
+        
+        if(root==null){
+            return new ArrayList<Integer>();
+        }
+        Stack<TreeNode> stk=new Stack<>();
+        stk.add(root);
+        
+        while(!stk.isEmpty()){
+            
+            TreeNode curr=stk.pop();
+            preOrderList.add(curr.val);
+            if(curr.right!=null){
+                stk.add(curr.right);
+            }
+            
+              if(curr.left!=null){
+                stk.add(curr.left);
+            }
+        }
+        return preOrderList;
+    }
+}
