@@ -1,0 +1,46 @@
+public class Solution {
+    /*
+    https://www.youtube.com/watch?v=quAS1iydq7U
+    take an example of 62|1|5430 ------> 62|3|5430 swap 1 and 3        -------->62|3|0145 reverse after swapping from 3 new position
+    
+    Note in permutation: we choose a smaller element before larger to form a increasing sequence.
+    
+    lets say we start from right to left for example 5430 we know that 5>4>3>0 this means we are having greater element at left position only when it has already chosen a smaller element before.
+    
+    62|1|5430
+    However, we we meet 1 from right to left we see that 1 is smaller that its next element that means in
+    1 search space there is possibility of a larger element which we can check from end as smaller numbers would be from end. 
+    
+    After replacing 1 with 3 we see that 62|3|5410. we should reverse after 3 as smaller numbers should before to form a small number.
+    
+    */
+    public void nextPermutation(int[] nums) {
+        int i = nums.length - 2;
+        while (i >= 0 && nums[i] >= nums[i+1]) {
+            i--;
+        }
+        if (i >= 0) {
+            int j = nums.length - 1;
+            while (j >= 0 && nums[j] <= nums[i]) {
+                j--;
+            }
+            swap(nums, i, j);
+        }
+        reverse(nums, i + 1);
+    }
+
+    private void reverse(int[] nums, int start) {
+        int i = start, j = nums.length - 1;
+        while (i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
