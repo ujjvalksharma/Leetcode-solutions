@@ -1,0 +1,51 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        
+        if(root==null){
+            return new ArrayList<Integer>();
+        }
+        List<Integer> inOrder=new ArrayList<Integer>();
+        Stack<TreeNode> stk=new Stack<>();
+        TreeNode curr=root;
+        boolean finished=false;
+        
+        while(!finished) // not finished
+        {
+            if(curr!=null){ // go till the left most
+                stk.push(curr);
+                curr=curr.left;
+                
+            }else{
+                if(stk.isEmpty()){
+                    finished=true;
+                    
+                }/* see right is no left is availble the left most whose right we are going to see is added to the list*/
+                else{ 
+                    TreeNode latestNode=stk.pop(); 
+                    inOrder.add(latestNode.val);
+                    curr=latestNode.right;
+                }
+            }
+            
+            
+        }
+        
+        return inOrder;
+        
+    }
+}
