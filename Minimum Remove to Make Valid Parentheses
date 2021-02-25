@@ -1,4 +1,4 @@
-class Pair
+/*class Pair
 {
     char bracket;
     int index;
@@ -9,14 +9,14 @@ class Pair
         this.bracket=bracket;
         this.index=index;
     }
-}
+}*/
 /*
 The question is same valid parathesis question, except we have to remove it. So when do we remove a parathesis if the stack is not
 empty and those open did find a pair for them or stack is empty when we found a closing one.
 
 
 */
-class Solution {
+/*class Solution {
     public String minRemoveToMakeValid(String s) {
         
         
@@ -66,5 +66,46 @@ class Solution {
         
         
         
+    }
+}
+*/
+class Solution {
+    /*
+    https://www.youtube.com/watch?v=thL70BR3yMA
+    We remove closed bracket if we havn't seen a open bracket yet and closed is incountered.
+    if open is in exceess we remove open bracket from end as excess open bracket would start from end.
+    
+    */
+    public String minRemoveToMakeValid(String s) {
+        
+        StringBuilder sb=new StringBuilder("");
+        int open=0;
+        for(char c: s.toCharArray()){
+         
+            if(c=='('){
+                open++;
+            }else if(c==')'){
+                
+                if(open==0){
+                    continue; // closed bracket is not added
+                } 
+                open--;
+            }
+            sb.append(c);
+        }
+        System.out.println(sb.toString());
+        
+        StringBuilder result=new StringBuilder("");
+        
+        
+        for(int i=sb.length()-1;i>=0;i--){
+            if(sb.charAt(i)=='('&&open>0){
+                open--;
+                continue;
+            }
+            result.append(sb.charAt(i));
+        }
+        
+        return result.reverse().toString();
     }
 }
