@@ -1,0 +1,97 @@
+/*
+In this question, we find frequency of each and add it to the prioirty sorted by increasing frequency to have to avoid delay in time as finishing large frequency first gives no waiting time to them at the end as they smaller ones to pair with. we get all element from priority queue till the waiting time. we drecement the count of the process after using them. Also, we if always occpy the full waiting time except when we know that there is no process left in queue and we could eneded the whole till after the queue is finished.
+
+The priority queue is space is also O(1) as priority queue size is less 26
+*/
+/*
+class Solution {
+    
+    class Task{
+        char taskName;
+        int count;
+        Task(char taskName, int count){
+            this.count=count;
+            this.taskName=taskName;
+        }
+         
+        @Override
+        public String toString(){
+            return "taskName: "+taskName+" count: "+count;
+        }
+    }
+    public int leastInterval(char[] tasks, int n) {
+        
+        HashMap<Character,Integer> hm=new HashMap<>();
+        PriorityQueue<Task> pq=new PriorityQueue<>((a,b)->b.count-a.count);
+        for(char task: tasks){
+            if(!hm.containsKey(task)){
+                hm.put(task,0);
+            }
+            hm.put(task,hm.get(task)+1);
+        }
+        
+        for(Map.Entry<Character,Integer> map: hm.entrySet()){
+            char task=map.getKey();
+            int freq=map.getValue();
+            pq.add(new Task(task,freq));
+            
+        }
+        int totalTimeTaken=0;
+        while(!pq.isEmpty()){
+            
+            System.out.println(pq);
+             int totalTimeOfWork=n;
+            int totalJobs=pq.size();
+            List<Task> tempJobs=new ArrayList<Task>();
+            
+        while(totalTimeOfWork>=0&&!pq.isEmpty()){
+            Task currentTask=pq.poll();
+            currentTask.count=currentTask.count-1;
+            tempJobs.add(currentTask);
+            totalTimeOfWork--;
+        }
+            for(int i=0;i<tempJobs.size();i++){
+                if(tempJobs.get(i).count>0){
+                     pq.add(tempJobs.get(i));
+                }
+            }
+            if(!pq.isEmpty()){
+                totalTimeTaken+=n+1; // always waiting the full cpu cycles
+            }else{
+                totalTimeTaken+=totalJobs; // if process are finished we don't need to wait for full cpu cycles we can finished as soon as process finishes.
+            }
+            
+        }
+        
+        return totalTimeTaken;
+    }
+}
+*/
+
+/*
+In this question, we assume that all tasks are just filler for the maximum task and assuming that we have to finsh all task. if we know that fillers are left that means there was some extra waiting period,else we know that there was no waiting period.
+
+*/
+class Solution {
+    
+      public int leastInterval(char[] tasks, int n) {
+          
+       int[] taskCount=new int[26];
+          
+          for(char task:tasks){
+              taskCount[task-'A']++;
+          }
+          
+          Arrays.sort(taskCount);
+          int maxFrequent=taskCount[taskCount.length-1]-1;
+          int totalIdleTime=(maxFrequent)*(n);
+          
+          for(int i=0;i<=24;i++){
+              // we take the minimum as if we know that a task has equal than max or 1 greater than max as maxFrequent is reduced by one that means we fill as much as max only
+              totalIdleTime-=Math.min(taskCount[i],maxFrequent);
+          }
+          
+          // this tells whether some extra waiting period was there or all task were performed sequently.
+          return totalIdleTime>0?totalIdleTime+tasks.length:tasks.length;
+      }
+}
