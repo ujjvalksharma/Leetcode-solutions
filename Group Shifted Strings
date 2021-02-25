@@ -1,0 +1,37 @@
+class Solution {
+    /*
+    In this question, we know that strings which are in sequence will have same difference betweene its ajacent letters, so we keep the difference in hashmap for string and difference for each character is seperated by a delimiter ','. the same difference strings are grouped together.
+    
+    */
+    public List<List<String>> groupStrings(String[] strings) {
+        
+        HashMap<String,List<String>> hmStrToPairs=new HashMap<>();
+        List<List<String>> allPairs=new ArrayList<>();
+        for(String str: strings){
+            
+            StringBuilder seq=new StringBuilder("");
+            int lenOfStr=str.length();
+            for(int i=1;i<lenOfStr;i++){
+                int diff=str.charAt(i-1)-str.charAt(i);
+                if(diff<0){
+                    diff+=26;
+                }
+                if(diff>=26){
+                    diff%=26;
+                }
+                String diffStr=(diff)+",";
+                seq.append(diffStr);
+            }
+            if(!hmStrToPairs.containsKey(seq.toString())){
+                hmStrToPairs.put(seq.toString(),new ArrayList<String>());
+            }
+              hmStrToPairs.get(seq.toString()).add(str);
+        }
+        
+        for(Map.Entry<String,List<String>> map: hmStrToPairs.entrySet()){
+            allPairs.add(new ArrayList<>(map.getValue()));
+        }
+     //   System.out.println(hmStrToPairs);
+        return allPairs;
+    }
+}
