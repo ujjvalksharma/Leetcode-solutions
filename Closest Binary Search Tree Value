@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+We travel the subtree of our interst as it is bst
+     if(target<=root.val) we go left else right and we keep track of the closest dfference form current, left, right node
+
+*/
+class Solution {
+    int closestVal=0;
+    Double OverAlldiff=null;
+    public void closestValueHelper(TreeNode root, double target){
+        if(root==null){
+            return;
+        }
+        double currentDiff=Math.abs((double)(root.val-target));
+        if(OverAlldiff==null||currentDiff<=OverAlldiff){
+            closestVal=root.val;
+            OverAlldiff=currentDiff;
+        }
+        if(OverAlldiff==null||root.left!=null){
+              currentDiff=Math.abs(root.left.val-target);
+        if(currentDiff<=OverAlldiff){
+            closestVal=root.left.val;
+            OverAlldiff=currentDiff;
+        } 
+        }
+        
+          if(OverAlldiff==null||root.right!=null){
+               currentDiff=Math.abs(root.right.val-target);
+        if(currentDiff<=OverAlldiff){
+            closestVal=root.right.val;
+            OverAlldiff=currentDiff;
+        }
+        }
+        
+            if(target<=root.val)
+        closestValueHelper(root.left,target);
+          if(target>=root.val)
+        closestValueHelper(root.right,target);
+    }
+    public int closestValue(TreeNode root, double target) {
+        
+        closestValueHelper(root,target);
+        return closestVal;
+    }
+}
