@@ -1,0 +1,43 @@
+/*
+https://www.youtube.com/watch?v=fWS0TCcr-lE
+*/
+class Solution {
+
+    int totalSum=0;
+    int[] prefixSum;
+    public Solution(int[] w) {
+        
+        prefixSum=new int[w.length];
+        int i=0;
+        for(int weight: w){
+               totalSum+=weight;
+           prefixSum[i]=totalSum;
+         
+               i++;
+        }
+        
+    }
+    
+    public int pickIndex() {
+        double target=Math.random()*totalSum;
+        int low=0;
+        int high=this.prefixSum.length;
+        while(low<high){
+            int mid=low+((high-low)/2);
+            if(target>this.prefixSum[mid]){
+                low=mid+1;
+            }else{
+                high=mid;
+            }
+        }
+        
+        return low;
+        
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(w);
+ * int param_1 = obj.pickIndex();
+ */
