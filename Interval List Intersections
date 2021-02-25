@@ -1,0 +1,30 @@
+/*
+In this question, we keep note of the index of A and B using two pointer. Start is always max of both array index start point and end is min of both array index end point. we pointer a pointer ahead if we know that opposite array end is greater than my array end as that samller array needs to find a longer array.
+
+*/
+class Solution {
+    public int[][] intervalIntersection(int[][] A, int[][] B) {
+    
+        int indexOfA=0;
+        int indexOfB=0;
+        
+    List<int[]> ans = new ArrayList();
+        while(indexOfA<A.length&&indexOfB<B.length){
+            
+            int start=Math.max(A[indexOfA][0],B[indexOfB][0]);
+            int end=Math.min(A[indexOfA][1],B[indexOfB][1]);
+            if(start<=end){
+                ans.add(new int[]{start,end});
+            }
+            
+            if(B[indexOfB][1]>=A[indexOfA][1]){
+                indexOfA++;
+            }else{
+                indexOfB++;
+            }
+        }
+        
+        
+         return ans.toArray(new int[ans.size()][]);
+    }
+}
