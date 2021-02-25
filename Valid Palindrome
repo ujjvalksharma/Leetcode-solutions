@@ -1,0 +1,63 @@
+class Solution {
+    public boolean isPalindrome(String s) {
+        
+        int end=s.length()-1;
+        int start=0;
+        
+        while(start<=end){
+            char charFromStart=s.charAt(start);
+            char charFromEnd=s.charAt(end);
+            boolean isStartCharValid=false;
+            boolean isEndCharValid=false;
+            
+            //start char
+              if(charFromStart>='A'&&charFromStart<='Z'){
+                  isStartCharValid=true;
+            }
+            
+            if(charFromStart>='a'&&charFromStart<='z'){
+               charFromStart=Character.toUpperCase(charFromStart);
+                isStartCharValid=true;
+            }
+            
+             if(charFromStart>='0'&&charFromStart<='9'){
+                isStartCharValid=true;
+            }
+            // end char
+            
+            
+              if(charFromEnd>='A'&&charFromEnd<='Z'){
+                  isEndCharValid=true;
+            }
+            
+            if(charFromEnd>='a'&&charFromEnd<='z'){
+               charFromEnd=Character.toUpperCase(charFromEnd);
+                isEndCharValid=true;
+            }
+            
+             if(charFromEnd>='0'&&charFromEnd<='9'){
+                isEndCharValid=true;
+            }
+            
+            if(isEndCharValid&&isStartCharValid){
+                if(charFromStart!=charFromEnd){
+                    return false;
+                }
+                start++;
+                end--;
+            }
+            if(!isEndCharValid){
+                  end--;
+            }
+              if(!isStartCharValid){
+                  start++;
+            }
+            
+            
+            
+        }
+        
+        return true;
+        
+    }
+}
