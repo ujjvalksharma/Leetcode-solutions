@@ -1,0 +1,72 @@
+class Solution {
+    
+    List<Integer> al= new ArrayList<Integer>();
+    int myarr[];
+    public void heapify(int[] arr,int root,int size){
+        
+        int root_index=root;
+        int left_child=2*root+1;
+        int right_child=2*root+2;
+        
+        // verify leftr part
+        
+        if(left_child<size&&arr[left_child]<arr[root_index])
+        {
+            root_index=left_child;
+        }
+        
+         //verify right part
+          if(right_child<size&&arr[right_child]<arr[root_index])
+        {
+            root_index=right_child;
+        }
+        
+          // heapify affection part if any
+       if(root!=root_index)
+       {
+           int swap=arr[root_index];
+           arr[root_index]=arr[root];
+           arr[root]=swap;
+           
+           heapify(arr,root_index,size);
+           
+           
+          
+       }
+        return;
+        
+      
+        
+    }
+    
+    
+    public List<Integer> sortArray(int[] nums) {
+        
+        //  myarr=nums;
+        int array_length=(nums.length/2)-1; //non leaf;
+      
+        for(int i=array_length;i>=0;i--)
+        {
+            heapify(nums,i,nums.length);
+        }
+        
+        
+        
+        for(int i=nums.length-1;i>=0;i--){
+          
+            
+            al.add(nums[0]);
+            
+            int swap=nums[0];
+            nums[0]=nums[i];
+            nums[i]=swap;
+            heapify(nums,0,i);
+          //  nums = ArrayUtils.remove(nums, i); 
+     
+        }
+        
+     //   System.out.println(Arrays.toString(nums));
+        return al;
+        
+    }
+}
