@@ -1,0 +1,44 @@
+class Solution {
+    /*
+    Acquire and release character using 2 pointer + hashmap.
+    
+    keep a track of hashmap size if greater than k then keep releasing character from start till you don't reach a hashmap size of k else acquire character from end.
+    
+    */
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        
+        int start=0;
+        int end=0;
+        int sizeOfS=s.length();
+        HashMap<Character,Integer> hmCharToCount=new HashMap<>();
+        int maxLengthOFkDistinct=0;
+        while(end<sizeOfS){
+            
+            if(!hmCharToCount.containsKey(s.charAt(end))){
+                hmCharToCount.put(s.charAt(end),0);
+            }
+            hmCharToCount.put(s.charAt(end),hmCharToCount.get(s.charAt(end))+1);
+            
+            while(hmCharToCount.size()>k){
+                
+                
+                if(hmCharToCount.containsKey(s.charAt(start))){
+                    hmCharToCount.put(s.charAt(start),hmCharToCount.get(s.charAt(start))-1);
+                    if(hmCharToCount.get(s.charAt(start))==0){
+                        hmCharToCount.remove(s.charAt(start));
+                    }
+                }
+                
+               
+                start++;
+            }
+             if(hmCharToCount.size()<=k){
+            maxLengthOFkDistinct= Math.max(maxLengthOFkDistinct,end-start+1);
+                }
+                
+                end++;
+            
+        }
+        return maxLengthOFkDistinct;
+    }
+}
