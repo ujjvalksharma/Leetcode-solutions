@@ -1,0 +1,29 @@
+class Solution {
+    /*
+    When we form a number of from power of 2, we choose the greatest power of 2 then go on till samllest power of two
+    
+    */
+public int divide(int dividend, int divisor) {
+           if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
+        }
+        
+        boolean isNegative = (dividend > 0 && divisor < 0) || (dividend < 0 && divisor > 0);
+        long a = Math.abs((long) dividend);
+        long b = Math.abs((long) divisor);
+        int shift = 30;
+        int res = 0;
+        while (a >= b) {
+          //  System.out.println("a: "+a+"b: "+b);
+            while (a < (b)*(1<<shift)) {
+              
+                shift--;
+            }
+           //   System.out.println("shift: "+shift+"(1<<shift): "+(b)*(1<<shift));
+            a -=(b)*(1<<shift);
+            res += 1 << shift;
+        }
+        
+        return isNegative ? -res : res;
+    }
+}
