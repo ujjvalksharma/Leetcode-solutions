@@ -1,0 +1,19 @@
+class Solution {
+    /*
+    https://www.youtube.com/watch?v=snOaKR2xgZg&t=921s
+    In this question lets say we have x^32 writing it x*x*x*x*x*x*x*x*x.... is a lot of multipleication, but we can write it as (x^2)16*(x^2)8 ...... this reduces the multiplication and it faster.
+    
+    */  
+    public double myPowHelper(double x,long n){
+       if(n == 0) return 1.0;
+    if(n == 1) return x;
+    if(n < 0) return myPowHelper(1/x, -n);
+    double result = myPowHelper(x*x, n/2);
+    if(n%2 == 1) result *= x;
+    return result;
+    }
+    public double myPow(double x, int n) {
+        
+        return myPowHelper(x,n);
+    }
+}
