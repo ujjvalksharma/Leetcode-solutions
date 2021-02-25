@@ -1,0 +1,136 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node next;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _next) {
+        val = _val;
+        next = _next;
+    }
+};
+*/
+
+/*
+
+we can solve this by finding the smallest node and thinking of it as sorted linklist and insert value in it. For this question after finding the smallest node the last node and prev_smallest_node.
+
+*/
+class Solution {
+    
+    public void insertAtlast(Node head, int insertVal)
+    {
+        Node start=head;
+        while(true)
+        {
+            if(start.next==head) //last node
+            {
+                      Node node= new Node(insertVal);
+                      start.next=node;
+                      node.next=head;
+                break;
+            }
+            start=start.next;
+        }
+    }
+    public Node insert(Node head, int insertVal) {
+        
+        if(head==null)
+        {
+            Node node= new Node(insertVal);
+            node.next=node;
+            return node;
+        }
+        
+        if(head.next==head)
+        {
+            Node node= new Node(insertVal);
+            node.next=head;
+            head.next=node;
+            return head;
+        }
+        
+        Node prev_smallest=null;
+        Node smallest=head;
+        Node prev=null;
+        Node start=head;
+      
+        while(true)
+        {
+           Node temp=start;
+            if(start.val<smallest.val)
+            {
+                smallest=start;
+                prev_smallest=prev;
+            }
+              start=start.next;
+            prev=temp;
+            if(start==head)
+                break;
+        }
+        System.out.println("smallest-->"+smallest.val);
+         //System.out.println("prev_smallest-->"+prev_smallest.val);
+        Node last=prev_smallest;
+        start=smallest;
+        boolean nodeInserted=false;
+        prev=null; 
+         while(true)
+        {
+             Node temp=start;
+             if(insertVal<=start.val)
+             {
+                 nodeInserted=true;
+                 if(prev==null)
+                 {
+                     if(last!=null)
+                     {
+                          Node insertedNode=new Node(insertVal);
+                     last.next=insertedNode;
+                     insertedNode.next=start; 
+                         
+                     }
+                     else
+                     {
+                         // the list is sorted and the smallest node is the head
+                         // go to the last node and insert it there
+                         insertAtlast(head,insertVal);
+                     }
+                    break;
+                    
+                 }
+                 else
+                 {
+                      Node insertedNode=new Node(insertVal);
+                     prev.next=insertedNode;
+                     insertedNode.next=start;
+                 }
+             }
+             start=start.next;
+             prev=temp;
+             if(start==smallest||nodeInserted)
+                 break;
+         }
+        
+        if(nodeInserted==false) //the value is the largest and has to to placed at the last moreover list is sorted and head being the smallest
+        {
+            if(last==null)
+            {
+                insertAtlast(head,insertVal);
+            }
+            else
+            {
+                Node insertedNode=new Node(insertVal);
+                     last.next=insertedNode;
+                     insertedNode.next=start; 
+            }
+              
+        }
+        return head;
+    }
+}
