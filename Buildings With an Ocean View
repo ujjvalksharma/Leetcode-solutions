@@ -1,0 +1,24 @@
+class Solution {
+
+    public int[] findBuildings(int[] heights) {
+        
+     List<Integer> allOceanViewApartment=new ArrayList<>();
+        int maxHeight=Integer.MIN_VALUE;
+        for(int i=heights.length-1;i>=0;i--){
+            if(heights[i]>maxHeight){
+                allOceanViewApartment.add(i);
+            }
+            maxHeight=Math.max(maxHeight,heights[i]);
+        }
+        
+        Collections.reverse(allOceanViewApartment);
+        
+        int ans[]=new int[allOceanViewApartment.size()];
+        
+        for(int i=0;i<allOceanViewApartment.size();i++){
+            ans[i]=allOceanViewApartment.get(i);
+        }
+        
+        return ans;
+    }
+}
