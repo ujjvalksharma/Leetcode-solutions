@@ -1,0 +1,13 @@
+class Solution {
+/*
+Simple XOR between two number, duplicate turn 0 in xor, and O 0 and a number xor in a number.
+
+*/
+  public int singleNumber(int[] nums) {
+    int a = 0;
+    for (int i : nums) {
+      a ^= i;
+    }
+    return a;
+  }
+}
