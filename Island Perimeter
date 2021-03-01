@@ -1,0 +1,42 @@
+class Solution {
+    /*
+    The number of sides a square/ index at which is present is 4- number of adjacent ones because if a index has 1 in its neighbours one if it side is neglected incoperating its neighbour.
+    
+    */
+    Set<String> visitedIndex=new HashSet<>();
+    int[] rowIncr=new int[]{1,-1,0,0};
+    int[] colIncr=new int[]{0,0,1,-1};
+    int totalPerimeter=0;
+   public void islandPerimeterHelper(int row, int column,int[][] grid){
+        
+        if(row>=grid.length||column>=grid[0].length||row<0||column<0||grid[row][column]==0){
+            return;
+        }
+        int totalNeigh=0;
+        
+        for(int i=0;i<rowIncr.length;i++){
+            int newRow=rowIncr[i]+row;
+            int newColumn=colIncr[i]+column;
+            
+        if(newRow>=grid.length||newColumn>=grid[0].length
+           ||newRow<0||newColumn<0||grid[newRow][newColumn]==0){
+            continue;
+        }
+          totalNeigh++;  
+        }
+        totalPerimeter+=4-totalNeigh;
+      
+    }
+    public int islandPerimeter(int[][] grid) {
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[0].length;j++){
+                if(grid[i][j]==1){
+                     islandPerimeterHelper(i,j,grid);
+                }
+               
+            }
+        }
+        
+        return totalPerimeter;
+    }
+}
