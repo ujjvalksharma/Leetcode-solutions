@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+    /*
+    reverse inorder(decreasing order like 10,9,8,7,..) right to left. keep track of totalSum.
+    */
+class Solution {
+
+    int totalSum=0;
+    public void bstToGstHelper(TreeNode root){
+        if(root==null){
+            return;
+        }
+        
+        bstToGstHelper(root.right);
+     //   System.out.println(root.val);
+        root.val+=totalSum;
+        totalSum=root.val;
+           bstToGstHelper(root.left);
+    }
+    public TreeNode bstToGst(TreeNode root) {
+        
+        bstToGstHelper(root);
+        
+        return root;
+        
+    }
+}
