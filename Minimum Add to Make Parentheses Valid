@@ -1,0 +1,47 @@
+/* Valid parentheses using stack
+class Solution {
+    public int minAddToMakeValid(String S) {
+        Stack<Character> stk=new Stack<Character>();
+        int lenOfS=S.length();
+        for(int i=0;i<lenOfS;i++){
+            if(stk.isEmpty()){
+                stk.push(S.charAt(i));
+            }else{
+                if(S.charAt(i)==')'||S.charAt(i)=='('){
+                    if(S.charAt(i)==')'&&stk.peek()=='('){
+                        stk.pop();
+                    }else{
+                        stk.push(S.charAt(i));
+                    }
+                }
+            }
+        }
+        return stk.size();
+    }
+}
+*/
+/*Keep track of open and closed bracket using unClosedBracket and openBracket variables*/
+class Solution {
+    public int minAddToMakeValid(String S) {
+        
+        int unClosedBracket=0;
+        int openBracket=0;
+        
+         int lenOfS=S.length();
+        for(int i=0;i<lenOfS;i++){
+            
+            if(S.charAt(i)=='('){
+                openBracket++;
+            }else if(S.charAt(i)==')'){
+                if(openBracket>0){
+                     openBracket--;
+                }else{
+                    unClosedBracket++;
+                }
+               
+            }
+            
+        }
+        return unClosedBracket+openBracket;
+    }
+}
