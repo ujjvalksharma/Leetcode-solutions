@@ -1,0 +1,28 @@
+class Solution {
+    int current_dep=0;
+    int max_dep=0;
+    
+    public void preorder(TreeNode root)
+    {
+        current_dep++;
+        if(current_dep>max_dep)
+        {
+           max_dep= current_dep;
+        }
+        if(root!=null)
+        {
+            
+            preorder(root.left);
+            current_dep--;
+            preorder(root.right);
+            current_dep--;
+        }
+        return;
+    }
+    public int maxDepth(TreeNode root) {
+        
+        preorder(root);
+        
+        return max_dep-1;
+    }
+}
