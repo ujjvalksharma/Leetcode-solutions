@@ -1,0 +1,33 @@
+/*
+Simple recursion with pick and leave strategy. when we pick we stay at the saem index and if we leave we move forward.
+*/
+class Solution {
+    
+    List<List<Integer>> answer=new ArrayList<>();
+        List<Integer> subAnswer=new ArrayList<>();
+ public void combinationSumHelper(int index,int[] candidates,int currentSum,int target){
+        if(currentSum==target){
+            answer.add(new ArrayList<>(subAnswer));
+          //  System.out.println("I am here");
+            return;
+        }
+        
+         if(currentSum>=target){
+            return;
+        }
+        
+        if(index>=candidates.length){
+            return;
+        }
+        subAnswer.add(candidates[index]);
+        combinationSumHelper(index,candidates,currentSum+candidates[index],target); //pick
+     subAnswer.remove(subAnswer.size()-1);
+        combinationSumHelper(index+1,candidates,currentSum,target); // leave
+        
+    }
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        
+        combinationSumHelper(0,candidates,0,target);
+        return answer;
+    }
+}
