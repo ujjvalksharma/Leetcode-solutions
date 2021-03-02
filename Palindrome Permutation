@@ -1,0 +1,26 @@
+  /**
+        A palindrome string can maximum one odd number of letter
+        
+        */
+        HashMap<Character,Integer> hmCharToFreq=new HashMap<Character,Integer>();
+        
+        for(int i=0;i<s.length();i++){
+            if(!hmCharToFreq.containsKey(s.charAt(i))){
+                hmCharToFreq.put(s.charAt(i),0);
+            }
+            int prevFreq=hmCharToFreq.get(s.charAt(i));
+            prevFreq++;
+            hmCharToFreq.put(s.charAt(i),prevFreq);
+        }
+        
+        int oddCountOfLetters=0;
+               for (Map.Entry mapElement : hmCharToFreq.entrySet()) { 
+            char letter = (Character)mapElement.getKey(); 
+            int freq = (int)mapElement.getValue(); 
+  
+          if(freq%2!=0){
+              oddCountOfLetters++;
+          }
+        } 
+        
+        return oddCountOfLetters<=1;
