@@ -1,0 +1,25 @@
+class Solution {
+public List<String> removeSubfolders(String[] folder) {
+        
+List<String> list=new ArrayList<>();
+Arrays.sort(folder);  // Sort the array so that subfolders come after main folder
+
+//Store first item in temp and add"/" in the end as subfolders will be having same path and additional path.
+String temp=folder[0]+"/";
+list.add(folder[0]);
+
+for(int i=1;i<folder.length;i++)
+{
+//  If the item is subfolder, ignore it. If not, add the item to arraylist as it is main folder and update the temp. 
+	if(!folder[i].startsWith(temp))
+	{
+		temp=folder[i]+"/";	
+		list.add(folder[i]);	
+	}
+}
+
+return list;
+        
+        
+    }
+}
