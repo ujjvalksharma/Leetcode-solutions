@@ -1,0 +1,19 @@
+class Solution {
+    /*
+    Keep track of max open brackets
+    */
+    public int maxDepth(String s) {
+       int maxOpenBracket=0;
+        int currentOpenBracket=0;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)=='('){
+                currentOpenBracket++;
+            }else if(s.charAt(i)==')'){
+               currentOpenBracket--; 
+            }
+            maxOpenBracket=Math.max(currentOpenBracket,maxOpenBracket);
+        }
+        
+        return maxOpenBracket;
+    }
+}
