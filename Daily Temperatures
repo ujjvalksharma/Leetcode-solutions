@@ -1,0 +1,26 @@
+class Solution {
+    /*
+    Next greater element in array
+    */
+    public int[] dailyTemperatures(int[] T) {
+        Stack<Integer> stk=new Stack<Integer>();
+        int[] ans=new int[T.length];
+        for(int i=0;i<T.length;i++){
+            if(stk.isEmpty()){
+                stk.add(i);
+            }else{
+                if(T[i]>T[stk.peek()]){
+                   while(!stk.isEmpty()&&T[i]>T[stk.peek()]){
+                       int smallTempIndex=stk.pop();
+                       ans[smallTempIndex]=i-smallTempIndex;
+                   }
+                }
+                stk.push(i);
+            }
+        }
+         while(!stk.isEmpty()){
+             ans[stk.pop()]=0;
+         }
+        return ans;
+    }
+}
