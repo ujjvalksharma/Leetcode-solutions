@@ -1,0 +1,27 @@
+public class Solution {
+    public int findPairs(int[] nums, int k) {
+
+        int result = 0;
+
+        HashMap <Integer,Integer> hmNumToCount = new HashMap<>();
+        for (int num: nums) {
+            if(!hmNumToCount.containsKey(num)){
+                hmNumToCount.put(num,0);
+            }
+            hmNumToCount.put(num,hmNumToCount.get(num)+1);
+        }
+
+
+        for (Map.Entry <Integer, Integer> tempHmNumToCount: hmNumToCount.entrySet()) {
+            
+            int num = tempHmNumToCount.getKey();
+            int freqOfNum = tempHmNumToCount.getValue();
+            if (k > 0 && hmNumToCount.containsKey(num + k)) {
+                result++;
+            } else if (k == 0 && freqOfNum > 1) {
+                result++;
+            }
+        }
+        return result;
+    }
+}
