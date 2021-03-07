@@ -1,0 +1,24 @@
+class Solution {
+    /*
+    
+    https://www.youtube.com/watch?v=UXoYfLrxqI0
+    There is only combination with a particular start number
+    lets say 5 = 2 + 3
+    then 5 = (1+1) + (1+2) , here k/start num=1;
+    5-1-2=1+1%k this means this combination is a valid combination
+    */
+    public int consecutiveNumbersSum(int N) {
+     int totalCombinations=0;
+        int i=1;
+       while(N>0){
+          if(N%i==0){
+              totalCombinations++;
+          } 
+           N-=i;
+           i++;
+           
+       }
+        
+        return totalCombinations;
+    }
+}
