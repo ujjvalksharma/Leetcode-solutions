@@ -1,0 +1,43 @@
+class Solution {
+   
+    /*
+    https://www.youtube.com/watch?v=vvRY7bS4OMI
+    
+    In this question, we will try to find two diagonals and find vertix adjacent to them,and then calculate min area of rectangle
+    */
+    public int minAreaRect(int[][] points) {
+        
+        HashMap<Integer,Set<Integer>> hmRowToListOfCol=new HashMap<>();
+        int minRectangleArea=Integer.MAX_VALUE;
+        for(int[] point: points){
+            if(!hmRowToListOfCol.containsKey(point[0])){
+                hmRowToListOfCol.put(point[0],new HashSet<Integer>());
+            }
+            hmRowToListOfCol.get(point[0]).add(point[1]);
+        }
+        
+        
+        for(int i=0;i<points.length;i++){
+            for(int j=i+1;j<points.length;j++){
+                int x1=points[i][0];
+                int y1=points[i][1];
+                int x2=points[j][0];
+                int y2=points[j][1];
+                
+                //diagonal
+                if(x1!=x2&&y2!=y1){
+                    // find vertix adjacent
+                    if(hmRowToListOfCol.get(x1).contains(y2)&&
+                      hmRowToListOfCol.get(x2).contains(y1)){
+                       minRectangleArea=Math.min(minRectangleArea,
+                                                Math.abs(x1-x2)*Math.abs(y1-y2)); 
+                    }
+                    
+                }
+            }
+        }
+        
+        return minRectangleArea==Integer.MAX_VALUE?0:minRectangleArea;
+        
+    }
+}
