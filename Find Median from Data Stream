@@ -1,0 +1,73 @@
+class MedianFinder {
+
+    /*
+    https://www.youtube.com/watch?v=1LkOrc-Le-Y
+    
+    We keep track of maxheap from left subarray and min heap from right subarry and middle elemet is mean. for our convience we take maxheap>=minheap+1
+    
+    */
+    /** initialize your data structure here. */
+    
+    PriorityQueue<Integer> maxHeap; // for left sub-array
+    PriorityQueue<Integer> minHeap; // fro right sub-array
+    public MedianFinder() {
+        maxHeap=new  PriorityQueue<Integer>((a,b)-> b-a);
+        minHeap=new  PriorityQueue<Integer>();
+        
+    }
+   // [1  |  2]
+    public void addNum(int num) {
+        if(maxHeap.isEmpty()&&minHeap.isEmpty()){
+            maxHeap.add(num);
+        }else{
+            
+            if(minHeap.size()<maxHeap.size()){
+                
+            int maxFromLeftSubarray=maxHeap.peek();
+            if(maxFromLeftSubarray>num){
+                maxHeap.poll();
+                maxHeap.add(num);
+                minHeap.add(maxFromLeftSubarray);
+            }else{
+                minHeap.add(num);
+            }
+                
+            }else{
+                
+                 int minFromRightSubarray=minHeap.peek();
+            if(minFromRightSubarray<num){
+                minHeap.poll();
+                minHeap.add(num);
+                maxHeap.add(minFromRightSubarray);
+            }else{
+                maxHeap.add(num);
+            }
+                
+                
+            }
+        }
+        
+        
+    }
+    
+    
+    public double findMedian() {
+             double median;
+        
+        if(maxHeap.size()==minHeap.size()){
+             median=(maxHeap.peek()+minHeap.peek());
+            return median/2;
+        }else{
+                    median=maxHeap.peek();
+        }
+
+          return median;
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
