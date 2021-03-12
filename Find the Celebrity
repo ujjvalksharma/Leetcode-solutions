@@ -1,0 +1,80 @@
+/* The knows API is defined in the parent class Relation.
+      boolean knows(int a, int b); */
+
+/*
+In this question, we keep a note of how many people a person follow and how many follow him. we if know a person is followed by n-1 and we know that person follows one person that is himself then he is definitly the celebrity.
+
+*/
+/*public class Solution extends Relation {
+    
+    HashMap<Integer,Integer> personToHowManyKnowHim=new HashMap<>();
+    
+    HashMap<Integer,Integer> personToHowManyHeKnow=new HashMap<>();
+    public int findCelebrity(int n) {
+        
+        System.out.println(n);
+        
+
+        for(int personA=0;personA<n;personA++){
+            
+            personToHowManyHeKnow.put(personA,0);
+             for(int personB=0;personB<n;personB++){
+                 if(knows(personA,personB)){
+                     
+                     personToHowManyHeKnow.put(personA,
+                                              personToHowManyHeKnow.get(personA)+1);
+                     if(!personToHowManyKnowHim.containsKey(personB)){
+                         personToHowManyKnowHim.put(personB,0);
+                     }
+                     personToHowManyKnowHim.put(personB,personToHowManyKnowHim.get(personB)+1);
+                     
+                 }else{
+                     
+                 }
+            
+        }
+        }
+    int celebrity=-1;
+        for(Map.Entry<Integer,Integer> map : personToHowManyKnowHim.entrySet()){
+            int person=map.getKey();
+            int count=map.getValue();
+            if(count==n){
+                if(personToHowManyKnowHim.containsKey(person)&&
+                  personToHowManyHeKnow.get(person)==1){
+                    celebrity=person;
+                    break;
+                }
+            }
+        //    System.out.println(" person: "+person+" count: "+count);
+        }
+        return celebrity;
+        
+    }
+}
+*/
+/*https://www.youtube.com/watch?v=LZJBZEnoYLQ*/
+public class Solution extends Relation {
+        
+    public int findCelebrity(int n) {
+        
+        int celebrityCandidate = 0;
+        // if knows(celebrityCandidate, i) that means i is the potential celebrity and i would be repeated maximum times. plus we start from one so that we don't cross ourselves
+        for (int i = 1; i < n; i++) {
+            if (knows(celebrityCandidate, i)) {
+                celebrityCandidate = i;
+            }
+        }
+        
+         for (int j = 0; j < n; j++) {
+            if (celebrityCandidate == j) continue; // Don't ask if they know themselves.
+            if (knows(celebrityCandidate, j) || !knows(j, celebrityCandidate)) {
+                // this means that either the celebrity doesn't know someone or 
+                // someone doesn't know celebrity
+                return -1;
+            }
+        }
+        return celebrityCandidate;
+    }
+    
+  
+}
