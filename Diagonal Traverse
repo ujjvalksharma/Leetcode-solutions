@@ -1,0 +1,50 @@
+class Solution {
+    /*
+    https://www.youtube.com/watch?v=NTF7sDU0IWA
+    */
+    public int[] findDiagonalOrder(int[][] matrix) {
+  
+    if(matrix.length ==0)return new int[0];
+        int m = matrix.length;
+        int n = matrix[0].length;
+        
+        int idx =0;
+        int dir = 0;//0 means up direction
+        int i = 0;
+        int j = 0;
+        int [] res = new int[m*n];
+        while(idx < m*n){
+            
+                //up direction
+                while(i >=0 && i < m && j < n){
+                    res[idx++] = matrix[i][j];
+                    i--;
+                    j++;
+                }
+                //now i,j would have become neg so get last valid index
+                i++;
+                j--;
+                if(j + 1 < n){
+                    j++;
+                }else {
+                    i++;
+                }
+                //direction is down
+                 while(i < m && j < n && j >=0){
+                    res[idx++] = matrix[i][j];
+                    i++;
+                    j--;
+                }
+                //now i,j would have become neg so get last valid index
+                i--;
+                j++;
+                if(i + 1 < m){
+                    i++;
+                }else {
+                    j++;
+                }
+            
+        }
+        return res;
+    }
+}
