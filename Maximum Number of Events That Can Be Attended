@@ -1,0 +1,41 @@
+    /*
+
+In this question, we know that only one event can be attended per day.
+I we try to attend the event that finishes early as we want to attend other events too, and also since days move
+sequencetially like 1,2,3...365...100000 we need to first attend earlist ending event. 
+We increase the days after the earlist event is attended, and remove the events that end before the current
+day number as it not possible to go in past to attend those events. we insert events of a specific day to keep track of the events we can attend today.
+*/
+     public int maxEvents(int[][] events) {
+      
+      //   Arrays.sort(events, (event1[],event2[])->event1[0]-event2[0]);
+           Arrays.sort(events, (int[] a,int[] b) -> a[0] - b[0]);
+         PriorityQueue<Integer> endingDaysOfEvent=new PriorityQueue<Integer>();
+         int day=1;
+         int maxPossibleEvents=0;
+         int i=0;
+
+         
+            while(!endingDaysOfEvent.isEmpty() || i < events.length) {
+			//If event start current day, put event into queue
+            while(i < events.length && events[i][0] == day){
+                endingDaysOfEvent.add(events[i][1]);
+                i++;
+            } 
+                
+			//if the event in queue has been expired, take it away
+            while(!endingDaysOfEvent.isEmpty() && endingDaysOfEvent.peek() < day){
+               endingDaysOfEvent.poll(); 
+            } 
+			//find one event, count + 1;
+            // attended the earlist end and this attends only current day event
+            if(!endingDaysOfEvent.isEmpty() && endingDaysOfEvent.peek() >= day) {
+                endingDaysOfEvent.poll();
+                maxPossibleEvents++;
+            }
+            day++; // day increases
+        }
+         return maxPossibleEvents;
+         
+     }
+}
