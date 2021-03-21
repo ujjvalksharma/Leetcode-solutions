@@ -1,0 +1,39 @@
+/*
+Put the mirror rotation of the numbers in hashmap and if a digit is not presen that means it won't form a mirror number as its mirror image cannot be a valid number. we check if reverse of the mirror image is same as the number.
+
+*/
+class Solution {
+    public boolean isStrobogrammatic(String num) {
+     
+        HashMap<Character,Character> hmNUmToRotation=new HashMap<>();
+        
+        hmNUmToRotation.put('0','0');
+        hmNUmToRotation.put('1','1');
+        hmNUmToRotation.put('9','6');
+        hmNUmToRotation.put('6','9');
+        hmNUmToRotation.put('8','8');
+        
+        int left=0;
+        int right=num.length()-1;
+        
+        while(left<=right){
+            
+            if(!hmNUmToRotation.containsKey(num.charAt(left))||
+              !hmNUmToRotation.containsKey(num.charAt(right))){
+                return false;
+            }
+            if(num.charAt(left)!=hmNUmToRotation.get(num.charAt(right))){
+                return false;
+            }
+            
+            
+             if(hmNUmToRotation.get(num.charAt(left))!=num.charAt(right)){
+                return false;
+            }
+            left++;
+            right--;
+        }
+        
+        return true;
+    }
+}
