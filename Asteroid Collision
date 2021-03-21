@@ -1,0 +1,38 @@
+/*
+https://www.youtube.com/watch?v=6GGTBM7mwfs
+
+All the negative elements are at bottom of the stack and collison can happen only when a negative comes after a positive number.
+https://www.youtube.com/watch?v=6GGTBM7mwfs
+
+*/
+class Solution{
+public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> recentAstroids =new Stack<>();
+        
+        for(int asteroid:asteroids){
+            if(asteroid < 0  && !recentAstroids.isEmpty() && recentAstroids.peek() > 0){
+                while(!recentAstroids.isEmpty()&& 
+                      recentAstroids.peek() > 0 &&
+                      recentAstroids.peek() <  Math.abs(asteroid)){
+                   recentAstroids.pop();
+                }
+                if(recentAstroids.isEmpty() || 
+                   recentAstroids.peek() < 0 ){
+                    recentAstroids.push(asteroid);
+                }
+                else if(recentAstroids.peek() > 0 && recentAstroids.peek() ==  Math.abs(asteroid)){
+                    recentAstroids.pop();
+                } 
+            }else{
+                recentAstroids.push(asteroid);
+            }
+        }
+    
+        int res[] =new int[recentAstroids.size()];
+    
+        for(int i=recentAstroids.size()-1;i>=0;i--){
+            res[i] =recentAstroids.pop();
+        }
+        return res;
+    }
+}
