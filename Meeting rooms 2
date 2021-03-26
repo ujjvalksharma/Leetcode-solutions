@@ -28,3 +28,49 @@ class Solution {
         
     }
 }
+
+
+class Solution {
+    
+    /*
+Sort the array by start time and then by end time as we move sequentionally in time. 
+We find the earliest ending meeting because when time moves forward we remove all the past meeting 
+(meeting who must be over before the current time)and the current time is always the start time. 
+we keep a max variable to track the max queue size as that will tell how many maximum meeting rooms is required to accomdate all the meeting rooms.
+    
+    */
+    public int minMeetingRooms(int[][] intervals) {
+        
+        if(intervals.length==0){
+            return 0;
+        }
+        /* Sort by start time as we need to move sequentially*/
+        Arrays.sort(intervals,(int[] a,int[] b)-> a[0]-b[0]);
+        
+        /* Find the earliest ending time meeting*/
+            PriorityQueue<int[]> pQueue = new PriorityQueue<int[]>((int[] a,int[] b)->a[1]-b[1]);
+        pQueue.add(intervals[0]);
+        int maxMeetingRooms=0;
+        for(int i=1;i<intervals.length;i++){
+            int[] currentInterval=intervals[i];
+            
+            // keep track of maximum meeting rooms
+            maxMeetingRooms=Math.max(maxMeetingRooms,pQueue.size());
+            
+            // remove the past meetings that should have ended before the current time
+            // currentInterval[0] curren time
+            // pQueue.peek()[1] ending time of previous meeting
+            while(!pQueue.isEmpty()&&currentInterval[0]>=pQueue.peek()[1]){ 
+                pQueue.remove();
+            }
+            // add curren time
+                pQueue.add(currentInterval);
+
+           
+        }
+        maxMeetingRooms=Math.max(maxMeetingRooms,pQueue.size());
+        return maxMeetingRooms;
+        
+        
+    }
+}
