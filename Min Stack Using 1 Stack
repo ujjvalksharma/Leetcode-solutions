@@ -1,0 +1,47 @@
+/*
+In this question minimum element is kept as a delimiter between numbers in stack and this delimeter is added when we know we found a new minimum element.
+
+*/
+class MinStack {
+    int min = Integer.MAX_VALUE;
+    Stack<Integer> stack = new Stack<Integer>();
+    public void push(int x) {
+        // only push the old minimum value when the current 
+        // minimum value changes after pushing the new value x
+        // set previous minimum element as a delimiter
+        if(x <= min){          
+            stack.push(min);
+            min=x;
+        }
+        stack.push(x);
+        
+    }
+
+    public void pop() {
+        // if pop operation could result in the changing of the current minimum value, 
+        // pop twice and change the current minimum value to the last minimum value.
+        // we pop twice as we know we have reached the delimer of minimum element
+        if(stack.pop() == min){ 
+//System.out.println("I am here");
+            min=stack.pop();
+        } 
+        
+         //   System.out.println("pop:"+stack);   
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+   //     System.out.println(stack);
+        return min;
+    }
+}
+/*
+-3
+-2
+0
+-2
+27126273
+*/
