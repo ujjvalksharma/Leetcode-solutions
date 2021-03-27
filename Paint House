@@ -1,0 +1,68 @@
+/*
+Recursion + memorization. In this question we keep a recursive loop for all houses expect taking the previous house color and return the minimum cost. we cost the factor that affect recurison such as index and prevHouseColor and store them in a hashmap to avoid looping over the same recursive sub-tree.
+
+*/
+class Solution {  
+    HashMap<String,Integer> hmIndexAndPrevColorToMinCost=new HashMap<>();
+    public int minCostHelper(int index, int[][] costs, int prevHouseColor){
+        
+        if(index>=costs.length){
+            return 0;
+        }
+        
+        String key=index+"-"+prevHouseColor;
+        
+        if(hmIndexAndPrevColorToMinCost.containsKey(key)){
+            return hmIndexAndPrevColorToMinCost.get(key);
+        }
+     int minCost=Integer.MAX_VALUE;
+        for(int color=0;color<3;color++){
+            
+            if(color!=prevHouseColor){
+               minCost=Math.min(minCost,
+                                minCostHelper(index+1,costs,color)+costs[index][color]); 
+                
+            }
+        }
+        
+        hmIndexAndPrevColorToMinCost.put(key,minCost);
+        return minCost;
+    }
+    public int minCost(int[][] costs) {
+        
+        
+      return  minCostHelper(0,costs,-1);
+        
+    }
+}
+
+/*
+
+class Solution {
+    
+    public int minCostHelper(int index, int[][] costs, int prevHouseColor){
+        
+        if(index>=costs.length){
+            return 0;
+        }
+     int minCost=Integer.MAX_VALUE;
+        for(int color=0;color<3;color++){
+            
+            if(color!=prevHouseColor){
+               minCost=Math.min(minCost,
+                                minCostHelper(index+1,costs,color)+costs[index][color]); 
+                
+            }
+        }
+        
+        return minCost;
+    }
+    public int minCost(int[][] costs) {
+        
+        
+      return  minCostHelper(0,costs,-1);
+        
+    }
+}
+
+*/
