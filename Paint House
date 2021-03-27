@@ -2,7 +2,7 @@
 Recursion + memorization. In this question we keep a recursive loop for all houses expect taking the previous house color and return the minimum cost. we cost the factor that affect recurison such as index and prevHouseColor and store them in a hashmap to avoid looping over the same recursive sub-tree.
 
 */
-class Solution {  
+/*class Solution {  
     HashMap<String,Integer> hmIndexAndPrevColorToMinCost=new HashMap<>();
     public int minCostHelper(int index, int[][] costs, int prevHouseColor){
         
@@ -35,7 +35,7 @@ class Solution {
         
     }
 }
-
+*/
 /*
 
 class Solution {
@@ -66,3 +66,25 @@ class Solution {
 }
 
 */
+
+/*
+Store the prev house min color in place.
+
+*/
+class Solution {
+    public int minCost(int[][] costs) {
+
+        for (int n = costs.length - 2; n >= 0; n--) {
+            // Total cost of painting the nth house red.
+            costs[n][0] += Math.min(costs[n + 1][1], costs[n + 1][2]);
+            // Total cost of painting the nth house green.
+            costs[n][1] += Math.min(costs[n + 1][0], costs[n + 1][2]);
+            // Total cost of painting the nth house blue.
+            costs[n][2] += Math.min(costs[n + 1][0], costs[n + 1][1]);
+        }
+
+        if (costs.length == 0) return 0;   
+
+        return Math.min(Math.min(costs[0][0], costs[0][1]), costs[0][2]);
+    }
+}
