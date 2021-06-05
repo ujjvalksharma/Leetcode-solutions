@@ -1,36 +1,48 @@
+/*
+Point to note: if every element appears twice, then we know array length is even, right side single element and left side of single element has even length. 
+We can know if we find the mid and we know that mid is not a single element then we have to know which side we should go depending where is the odd length.
+
+After a single element comes, we can see that all elements starting number is at an odd index
+
+even  odd--->we encounter 3 at an odd index 2 (single num) came before
+ |     |
+ 0 1 2 3
+[1,1,2,3,3,4,4,8,8]
+
+*/
 class Solution {
-    /*
-    https://www.youtube.com/watch?v=nMGL2vlyJk0
-    */
     public int singleNonDuplicate(int[] nums) {
         
         if(nums.length==1){
             return nums[0];
         }
-        if(nums[0]!=nums[1]){
-            return nums[0];
-        }
-        if(nums[nums.length-1]!=nums[nums.length-2]){
-            return nums[nums.length-1];
-        }
         
-        int low=0;
-        int high=nums.length-1;
-        
-       while(low<=high)
-        {
-            int mid = low + ((high-low)/2);
-            //Unique element condition
-            if(nums[mid]!=nums[mid+1] && nums[mid]!=nums[mid-1])
+        int left=0;
+        int right=nums.length-1;
+        while(left<right){
+            int mid=left+(right-left)/2;
+            System.out.println("mid:"+mid);
+            if(nums[mid]==nums[mid+1]){ //check dublicate on right
+                if(mid%2!=0){
+                    right=mid; 
+                }else{
+                    left=mid+1;
+                }
+                
+            }else if(mid-1>=0&&nums[mid-1]==nums[mid]){//check dublicate on left
+                
+                 if((mid-1)%2!=0){
+                    right=mid; 
+                }else{
+                    left=mid+1;
+                }
+                
+            }else{
                 return nums[mid];
-            
-            if(((mid%2)==0 && nums[mid]==nums[mid+1])
-               ||  ((mid%2)==1 && nums[mid]==nums[mid-1]))
-                low = mid+1;
-            else
-                high = mid-1;
+            } 
             
         }
-        return -1;
+        return nums[left]; // when we know that left==right and array length==1 that means that is single element left after binary search
+        
     }
 }
