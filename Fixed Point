@@ -1,0 +1,27 @@
+/*
+In this question, we know that if arr[mid]>mid :
+for instance, at index 3 there is 11, so since all numbers are distinct, then we know that the rate of increase number is greater than rate of increase of index, so we check left hand side, but if  arr[mid]<mid then we can check right hand side. and if they are equal then we check from mid by considering that.
+*/
+class Solution {
+    public int fixedPoint(int[] arr) {
+        
+        int left=0;
+        int right=arr.length-1;
+        int smallestIndex=Integer.MAX_VALUE;
+        while(left<right){
+            
+            int mid=left+(right-left)/2;
+            if(arr[mid]==mid){
+               smallestIndex= Math.min(smallestIndex,mid);
+                right=mid; // why not right+1?
+            }else if(arr[mid]>mid){
+                right=mid; // why not right+1?
+            }else{
+                left=mid+1;
+            }
+            
+        }
+        
+        return smallestIndex==Integer.MAX_VALUE?-1:smallestIndex;
+    }
+}
