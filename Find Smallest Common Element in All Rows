@@ -1,0 +1,56 @@
+/*
+The idea is that, we take the first array and we loop thorugh all the elements in it and for each element in the array, we search using binary search if it is present in the other arrays.
+*/
+
+class Solution {
+    
+    /*
+    Binary search to find a element
+    
+    */
+ private boolean isTargetPresent(int arr[], int x)
+    {
+        int l = 0, r = arr.length - 1;
+        while (l <= r) {
+            int m = (l + r) / 2;
+        //  int m = l + (r - l) / 2;
+ 
+            if (arr[m] == x)
+                return true;
+ 
+            if (arr[m] < x)
+                l = m + 1;
+            else
+                r = m - 1;
+        }
+
+        return false;
+    }
+ 
+    public int smallestCommonElement(int[][] mat) {
+        
+        if(mat.length==1){
+            return mat[0][0];
+        }
+        
+        for(int c=0;c<mat[0].length;c++){
+            
+            int target=mat[0][c];
+            int countOfTargetPresence=1;
+         for(int r=1;r<mat.length;r++){
+             
+             if(isTargetPresent(mat[r],target)){
+                  countOfTargetPresence++;
+             }else{
+                 break;
+             }
+         }
+            if(countOfTargetPresence==mat.length){
+                return target;
+            }
+            
+        }
+        
+        return -1;
+    }
+}
