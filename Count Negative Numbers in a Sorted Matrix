@@ -1,0 +1,36 @@
+/*
+Solution one:
+Time complexity: O(m*logn)
+In this we loop through all the array and do a binary search to find the closest negative number to 0, then we note down the index, we know the all numbers to the right of that negative number will be negative too.Thus, number of negative numbers will be arry.length-index.
+
+Solution 2:
+Since the matrix is sorted row and column wise.
+We know we that if a negative elements is present in a particular index. All the other negative negative element would towards the right of it, so if we find a negaive index we move left in search of more negative elements and if no more negative elements, we count the total negative elements, and move down the row.
+
+*/
+class Solution {
+    public int countNegatives(int[][] grid) {
+        
+        int colSize=grid[0].length;
+        int col=colSize-1;
+        int row=0;
+        int totalNegNumbers=0;
+        
+        while(col>=0&&row<grid.length){
+            
+            if(grid[row][col]<0&&col>0){
+                col--;
+            }else{
+                if(grid[row][col]>=0&&col<colSize-1){
+                col++;
+                }
+                if(grid[row][col]<0){
+                totalNegNumbers+=colSize-col;
+                }
+                row++;
+                    
+            }
+        }
+        return totalNegNumbers;
+    }
+}
