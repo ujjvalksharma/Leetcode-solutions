@@ -1,0 +1,57 @@
+/*
+Binary search to find the first and last index of target and then compare the size of that array and the size is greater than nums.length/2 then return true
+
+*/
+class Solution {
+    
+    public int findFirstIndexOfTarget(int[] nums, int target){
+        System.out.println("I am here");
+        int left=0;
+        int right=nums.length-1;
+        
+        while(left<right){
+            
+            int mid=left+(right-left)/2;
+            if(nums[mid]==target){
+                right=mid;
+            }else if(target>nums[mid]){
+                left=mid+1;
+            }else{
+                right=mid-1;
+            }
+        }
+        return left; // this will stop when left== right and that will will array of size 1 and minimum index for target
+      //  return right // this will work too
+    }
+    
+       public int findLastIndexOfTarget(int[] nums, int target){
+        int left=0;
+        int right=nums.length-1;
+        
+        while(left<right){
+            
+            int mid=left+(right-left)/2;
+            if(nums[mid]==target){
+                left=mid+1;
+            }else if(target>nums[mid]){
+                left=mid+1;
+            }else {
+                right=mid-1;
+            }
+        }
+        return right; // this will stop when left== right and that will will array of size 1 and maximum index for target
+      //  return right // this will work too
+    }
+    
+    public boolean isMajorityElement(int[] nums, int target) {
+        
+        if(nums.length==1&&nums[0]!=target){
+            return false;
+        }
+        int firstIndexOfTarget=findFirstIndexOfTarget(nums,target);
+          System.out.println("firstIndexOfTarget:"+firstIndexOfTarget);
+        int lastIndexOfTarget=findLastIndexOfTarget(nums,target);     
+        System.out.println("lastIndexOfTarget:"+lastIndexOfTarget);
+        return (lastIndexOfTarget-firstIndexOfTarget+1)>nums.length/2;
+    }
+}
