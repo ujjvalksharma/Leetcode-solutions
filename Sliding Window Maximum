@@ -1,0 +1,86 @@
+class Solution {
+  ArrayDeque<Integer> deq = new ArrayDeque<Integer>();
+  int [] nums;
+
+  public void clean_deque(int i, int k) {
+    // remove indexes of elements not from sliding window
+    if (!deq.isEmpty() && deq.getFirst() == i - k){
+      deq.removeFirst();
+    }
+
+    // remove from deq indexes of all elements 
+    // which are smaller than current element nums[i]
+    while (!deq.isEmpty() && nums[i] > nums[deq.getLast()]) {
+        deq.removeLast();
+    }
+  }
+/*
+Solution1: Dequeue, we try to maintain queue in increasing order and we pop invalid index from the left and pop small element from the right by comparing with the current elements. and we know we the subarray is of size k, then we enter elements in output array.
+*/
+  public int[] maxSlidingWindow(int[] nums, int k) {
+    int n = nums.length;
+    if (n * k == 0) return new int[0];
+    if (k == 1) return nums;
+
+    this.nums = nums;
+
+    int [] output = new int[n - k + 1];
+    int outputIndex=0;
+    for (int i  = 0; i < n; i++) {
+      clean_deque(i, k);
+      deq.addLast(i);
+        if(i - k + 1>=0){
+      output[outputIndex] = nums[deq.getFirst()];
+      outputIndex++;
+        }
+    }
+    return output;
+  }
+}
+/*
+Solution2: 
+We can keep inserting element in a priorityQueue (Max heap) and element would be num and its index. and pop max element from heap when the subarray size is K, now we are worried that we might get the max element from an invalid index as we should discard index before subarray of k size,so for getting valid index, when we get max element and we check its index. if it is invalid, we keep poping from the heap till we get a valid index with max value.
+Time complex: NlogN
+
+*/
+
+/*
+Solution1 using TreeMap:
+In this solution, we take an array and insert elements into treemap one by one, since we know treemap has sorted elements, I can find the max element using tm.lastEntry().getKey() and we know that size of subarray is k+1 we will decrement value of the value at currentindex-k and remove the element if that element count is 0.
+Time complex: NlogN
+*/
+/*
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        //(a,b)->b-a
+        TreeMap<Integer,Integer> tm=new TreeMap<>();
+          int [] output = new int[nums.length - k + 1];
+        int outputIndex=0;
+        for(int i=0;i<nums.length;i++){
+            
+            if(i+1-k>0){ // size of subarray is k+1,so we should remove element.
+                
+                int removalIndex=i-k;
+                int numAtRemovalIndex=nums[removalIndex];
+                
+                if(tm.containsKey(numAtRemovalIndex)){
+                    tm.put(numAtRemovalIndex,tm.get(numAtRemovalIndex)-1);
+                    
+                    if(tm.get(numAtRemovalIndex)<=0){ //remove element from treemap if it count is <=0
+                        tm.remove(numAtRemovalIndex);
+                    }  
+                }
+                
+            }
+             
+               tm.put(nums[i],tm.getOrDefault(nums[i],0)+1);
+             if(i+1-k>=0){
+               output[outputIndex]= tm.lastEntry().getKey();
+                outputIndex++;
+              }
+        }
+        return output;
+        
+    }
+}
+*/
