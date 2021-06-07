@@ -1,0 +1,147 @@
+/*
+Solution 2: Using linkedlist + hashmap, in this solution, we will make a double linklst and insert keep the least recently used element on the left hand side and remove if hashmap reaches the capacity, and if insert elements always at the tail. if we want to update a value we reach to that node and remove it and update the value in it and appended it to the tail and similarly if we get the element from the linked list.
+
+*/
+
+class LRUCache {
+
+    HashMap<Integer,Node> cache;
+    DLL ddl;
+    int capacity;
+    class Node{
+    int val;
+    Node prev;
+    Node next;
+        
+        Node(int val){
+            this.val=val;
+            this.prev=null;
+            this.next=null;
+        }
+        
+}
+    class DLL{
+        
+        Node head;
+        Node tail;
+        DLL(){
+            head=new Node(-1);
+            tail=head;
+        }
+   public void  removeNode(Node node){
+            if(node.next!=null){
+            Node prevNode=node.prev;
+            Node nextNode=node.next;
+            prevNode.next=nextNode;
+            nextNode.prev=prevNode;  
+            }else{ // this means removal of tail node, as it won't have next node
+                node.prev=null;
+            }
+        }
+        
+      public void  addToTail(Node node){
+           tail.next= node;
+           node.prev=tail;
+           tail=node;
+        }
+        
+      public Node  removeLRUNode(){
+            
+            Node lruNode=head.next;
+            removeNode(lruNode);
+            return lruNode;
+        }
+    }
+   public LRUCache(int capacity) {
+  ddl=new DLL();
+  cache=new HashMap<>();  
+       this.capacity=capacity;
+    }   
+    
+        public int get(int key) {
+            if(!cache.containsKey(key)){
+                return -1;
+            }
+            
+            Node node=cache.remove(key);
+            ddl.removeNode(node);
+            Node newNode=new Node(node.val);
+            ddl.addToTail(newNode);
+            cache.put(key,newNode);
+            
+          return node.val;
+    }
+    
+    public void put(int key, int value) {
+        
+ if(cache.size()==capacity){
+     ddl.removeLRUNode();
+ }
+        if(cache.containsKey(key)){
+            Node node=cache.remove(key);
+            ddl.removeNode(node);
+            }
+        
+            Node newNode=new Node(value);
+            ddl.addToTail(newNode);
+            cache.put(key,newNode);
+        
+    }
+    
+}
+
+/*
+Solution 1: Using priroity queue + hashmap, priority queue is used keep track of LRU policy by having a variable count, and using a comparator on count, while hashmap is used retirve value at key in O(1), we update priority queue and hashmap at put and get
+*/
+/*
+class LRUCache {
+
+    HashMap<Integer,int[]> hm;
+    PriorityQueue<int[]> pq;
+    int capacity;
+    int count=0;
+    public LRUCache(int capacity) {
+        this.hm=new HashMap<>();
+        this.pq=new PriorityQueue<>((a,b)->a[1]-b[1]);
+        this.capacity=capacity;
+    }
+    
+    public int get(int key) {
+        
+        if(!hm.containsKey(key)){
+            return -1;
+        }
+         count++;
+     int[] arr=hm.remove(key);
+     pq.remove(arr);
+     int[] newArr=new int[]{arr[0],count,key};
+     hm.put(key,newArr);
+     pq.add(newArr);   
+        
+        return hm.get(key)[0];
+    }
+    
+    public void put(int key, int value) {
+        
+         count++;
+        if(hm.size()==capacity){
+            int[] discardArr=pq.poll();
+            hm.remove(discardArr[2]);
+        }
+        if(hm.containsKey(key)){
+     int[] arr=hm.remove(key);
+     pq.remove(arr);
+        }
+     int[] newArr=new int[]{value,count,key};
+     hm.put(key,newArr);
+     pq.add(newArr);  
+        
+    }
+}
+*/
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
