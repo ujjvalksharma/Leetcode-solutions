@@ -1,0 +1,42 @@
+/**
+ * // This is the FontInfo's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface FontInfo {
+ *     // Return the width of char ch when fontSize is used.
+ *     public int getWidth(int fontSize, char ch) {}
+ *     // Return Height of any char when fontSize is used.
+ *     public int getHeight(int fontSize)
+ * }
+ */
+/*
+Do a simple binary search and if the string exceeds the width or height, go left else g right.
+*/
+class Solution {
+    
+  public int maxFont(String text, int w, int h, int[] fonts, FontInfo fontInfo) {
+        int left = 0, right = fonts.length - 1;
+        int res = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (getTotalWidth(text, fontInfo, fonts[mid]) <= w && getFontHeight(fontInfo, fonts[mid]) <= h) {
+                res = fonts[mid];
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return res;
+    }
+    
+    private int getTotalWidth(String text, FontInfo fontInfo, int fontSize) {
+        int sum = 0;
+        for (int i = 0; i < text.length(); i++) {
+            sum += fontInfo.getWidth(fontSize, text.charAt(i));
+        }
+        return sum;
+    }
+    
+    private int getFontHeight(FontInfo fontInfo, int fontSize) {
+        return fontInfo.getHeight(fontSize);
+    }
+}
