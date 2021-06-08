@@ -1,0 +1,46 @@
+/*
+In this question, we do a simple binary search and we try to find the how many bananas if a person eats in an hours and finish the all the piles within h. we take bounds from 1 to max integer value. we find a mid (which is our current speed), then we move to left to find a lower speed if current speed satisfy else we move right to check for a higher speed.
+
+*/
+class Solution {
+    
+    public int totalHoursToFinishBananas(int[] piles,int capacity){
+        
+        int totalHours=0;
+        for(int i=0;i<piles.length;i++){
+            
+            if(capacity>=piles[i]){
+                totalHours++;
+            }else{
+                double dHours= (double) piles[i]/capacity;
+                int iHours=piles[i]/capacity;
+                totalHours+= iHours;
+                if(dHours>iHours){
+                    totalHours++;
+                }
+                
+            }
+        }
+        return totalHours;
+        
+    }
+    public int minEatingSpeed(int[] piles, int h) {
+        
+        int low=1;
+        int high=Integer.MAX_VALUE;
+        int k=Integer.MAX_VALUE;
+        int eatingSpeed=Integer.MAX_VALUE;
+        while(low<=high){ //move left
+            int mid=low+(high-low)/2;
+            if(totalHoursToFinishBananas(piles,mid)<=h){
+                high=mid-1;
+                eatingSpeed=Math.min(eatingSpeed,mid);
+            }else{ //move right
+                low=mid+1;
+            }
+        }
+        return eatingSpeed;
+    }
+}
+
+//6/4
