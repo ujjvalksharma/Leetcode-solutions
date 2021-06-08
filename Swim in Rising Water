@@ -1,0 +1,60 @@
+/*
+The value of time of would one of values present in the grid we need to check with dfs if a particular minimum time is suitable for reaching the bottom of grid
+
+*/
+/*
+
+DFS+ Binary Search
+*/
+class Solution {
+    boolean visited[][];
+    boolean found=false;
+        public void isDestinationReachableHelper(int time,int[][] grid, int x, int y)
+    {
+        if(x<0||y<0||x>=grid.length||y>=grid[0].length||this.visited[x][y]==true||grid[x][y]>time)
+            return;
+        
+           // System.out.println(time+"->"+x+","+y);
+            if(x==grid.length-1&&y==grid[0].length-1)
+            {
+                
+                found=true;
+                return;
+            }
+        this.visited[x][y]=true;
+
+            if(found==false)
+        isDestinationReachableHelper(time,grid,x-1,y);//left
+             if(found==false)
+        isDestinationReachableHelper(time,grid,x+1,y);//right
+             if(found==false)
+        isDestinationReachableHelper(time,grid,x,y+1);//up
+             if(found==false)
+        isDestinationReachableHelper(time,grid,x,y-1);//down`
+        
+    }
+    
+    public boolean isDestinationReachable(int time,int[][] grid){
+        
+         this.visited= new boolean[grid.length][grid[0].length];
+            this.found=false;
+            isDestinationReachableHelper(time,grid,0,0);
+            
+       return found;
+    }
+    public int swimInWater(int[][] grid) {
+                   
+         int N = grid.length;
+        int lo = grid[0][0], hi = N * N;
+        while (lo <= hi) {
+            int mi = lo + (hi - lo) / 2;
+            if (isDestinationReachable(mi, grid)) {
+                   hi = mi-1;
+            } else {
+             lo=mi+1;
+            }
+        }
+        return lo;
+
+    }
+}
