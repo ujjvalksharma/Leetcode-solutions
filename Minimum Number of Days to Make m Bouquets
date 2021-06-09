@@ -1,0 +1,49 @@
+/*
+So a simple binary for each day and if a day works then go to left day (smaller day) else go to the right (larger day). for each day check we m bouquests can be formed.
+
+*/
+class Solution {
+    
+    public boolean isBouquetsPossible(int[] bloomDay, int currentDay, int adjacentFlowers, int maxBouquests){
+     
+          int result = 0; int counter = 0;
+
+        for(int i = 0; i < bloomDay.length; i++){
+            if(bloomDay[i] <= currentDay && counter < adjacentFlowers){
+                counter++;
+            }
+            else if(bloomDay[i] > currentDay && counter > 0){
+                counter = 0;
+            }
+
+            if(counter >= adjacentFlowers){
+                result++;
+                counter = 0;
+            }
+        }
+        return result >= maxBouquests;
+    }
+    public int minDays(int[] bloomDay, int m, int k) {
+        
+        int maxDay=0;
+        
+        for(int day:bloomDay){
+            maxDay=Math.max(maxDay,day);
+        }
+        int left=1;
+        int right=maxDay;
+        int minDays=Integer.MAX_VALUE;
+        
+        while(left<=right){
+            int mid=left+(right-left)/2;
+            
+            if(isBouquetsPossible(bloomDay,mid,k,m)){
+                right=mid-1;
+                minDays=Math.min(minDays,mid);
+            }else{
+                left=mid+1;
+            }
+        }
+        return minDays!=Integer.MAX_VALUE?minDays:-1;
+    }
+}
