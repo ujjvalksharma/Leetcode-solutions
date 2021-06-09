@@ -1,9 +1,49 @@
 /*
+Solution using binary search:
+
+We find various length using binary search and make a hashset to store the toString of all the subarray of that length, and veridy if subrray is present in the other array 
+*/
+class Solution {
+    public boolean check(int length, int[] A, int[] B) {
+        Set<String> seen = new HashSet();
+        for (int i = 0; i + length <= A.length; ++i) { // store all subrray
+            seen.add(Arrays.toString(Arrays.copyOfRange(A, i, i+length)));
+        }
+        for (int j = 0; j + length <= B.length; ++j) { //verify subrray in other array
+            if (seen.contains(Arrays.toString(Arrays.copyOfRange(B, j, j+length)))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int findLength(int[] A, int[] B) {
+        
+        // binary search to find various lengths
+        int lo = 0;
+        int hi = Math.min(A.length, B.length) + 1;
+        int maxLength=0;
+        while (lo <= hi) {
+            int mi = (lo + hi) / 2;
+            if (check(mi, A, B)){
+                lo = mi + 1;
+                maxLength=Math.max(maxLength,mi);
+            } 
+            else{
+                hi = mi-1;
+            } 
+        }
+        return maxLength;
+    }
+}
+
+/*
 memorization+ recursion
 In this question, we increment both indexs if we see a match else we increment one by one and we store a global max length variable as for substring we need to have consecutive same characters in both arry/string.We add one when there is match we will return 0. In memory we will store index of A AND B as it will affect the sub arrays we are looking at and to avoid over iteration over the same sub-tree.
 
 hasmap is giving TLE, so use 2d matrix for memory
 */
+/*
 class Solution {
 
 public int maxGlobalLength = 0;
@@ -27,10 +67,9 @@ public int maxGlobalLength = 0;
 
         int maxLength = 0;
     //    String key=i+"-"+j;
-/*if(hmIndexOfAAndBToLen.containsKey(key)){
-    System.out.println("I am here");
-    return hmIndexOfAAndBToLen.get(key);
-}*/
+//if(hmIndexOfAAndBToLen.containsKey(key)){
+ //   return hmIndexOfAAndBToLen.get(key);
+//}
          if (memo[i][j] != -1){
              return memo[i][j];
          } 
@@ -46,6 +85,7 @@ public int maxGlobalLength = 0;
         return maxLength;
     }
 }
+*/
 /*
 // recursion
 class Solution {
