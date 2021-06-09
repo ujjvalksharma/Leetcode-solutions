@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+Solution1: https://www.youtube.com/watch?v=CvrPf1-flAA
+
+*/
+class Solution {
+    
+    public int getLevelFromLeft(TreeNode root){
+        if(root==null){
+            return 1;
+        }
+        return 1+getLevelFromLeft(root.left);   
+    }
+    
+      public int getLevelFromRight(TreeNode root){
+        if(root==null){
+            return 1;
+        }
+        return 1+getLevelFromRight(root.right);   
+    }
+    
+    public int countNodesHelper(TreeNode root){
+        if(root==null){
+            return 0;
+        }
+        
+        int levelFromLeft=getLevelFromLeft(root.left);
+        int levelFromRight=getLevelFromRight(root.right);
+    //    System.out.println("levelFromLeft: "+levelFromLeft);
+      //  System.out.println("levelFromRight: "+levelFromRight);
+        if(levelFromLeft!=levelFromRight){
+            
+            return 1+countNodesHelper(root.left)+countNodesHelper(root.right);
+            
+        }else{
+             return (int)Math.pow(2, levelFromLeft) - 1;
+        }
+        
+    }
+    public int countNodes(TreeNode root) {
+        
+        if(root==null){
+            return 0;
+        }
+        return countNodesHelper(root);
+    }
+}
