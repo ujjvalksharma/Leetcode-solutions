@@ -1,0 +1,44 @@
+class Solution {
+    /**
+    We keep a start pointer and move it a to the next index of the character that maches in hashset, so we the new substring from that index to current ith index has no duplicate elements and we can ignore a match is start is ahead of the match index in set because we know that our substring start index is greater than the matched index in set.
+    
+    */
+    public int lengthOfLongestSubstring(String s) {
+        
+        if(s==null||s.length()==0){
+            return 0;
+        }
+        
+     //   HashMap<Character,Integer> hmCharToPosition=new HashMap<Character,Integer>();
+        Set<Character> setOfChar=new HashSet<>();
+        int maxLength=1;
+        int start=0;
+        int end=0;
+        int sLength=s.length();
+        while(end<sLength){
+            
+            if(setOfChar.contains(s.charAt(end))){
+                  char dublicateChar=s.charAt(end);
+                while(start<=end){
+                    setOfChar.remove(s.charAt(start));
+                    
+                    if(s.charAt(start)==dublicateChar){ //repeating char is found, so we can go out of loop
+                        start++;
+                        break;
+                    }
+                    start++;
+                    
+                }
+            }
+                 setOfChar.add(s.charAt(end));
+            maxLength=Math.max(maxLength,setOfChar.size());
+            
+          //  System.out.println("end: "+end+"set of char: "+setOfChar);
+                        end++;
+        }
+       // 0 1 2 3 4 5 6 7 8 9
+       //"a a b a a b ! b b b"
+        
+        return maxLength;
+    }
+}
