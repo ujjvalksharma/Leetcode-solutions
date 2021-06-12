@@ -1,0 +1,35 @@
+class Solution {
+
+    HashMap<Integer,List<Integer>> numToIndexs=new HashMap<>();
+    Random r;
+   final int  seed=100;
+    public Solution(int[] nums) {
+        r= new Random();
+        r.setSeed(seed);
+        for(int i=0;i<nums.length;i++){
+            if(!numToIndexs.containsKey(nums[i])){
+                numToIndexs.put(nums[i],new ArrayList<Integer>());
+            }
+            numToIndexs.get(nums[i]).add(i);
+        }
+        
+    }
+    
+    public int pick(int target) {
+    if(!numToIndexs.containsKey(target)){
+        return -1;
+    }
+        List<Integer> listOfIndex=numToIndexs.get(target);
+
+int low = 0;
+int high = listOfIndex.size();
+int index = r.nextInt(high-low) + low;
+        return listOfIndex.get(index);
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(nums);
+ * int param_1 = obj.pick(target);
+ */
