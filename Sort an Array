@@ -1,0 +1,131 @@
+/*
+// Merge sort
+ class Solution {
+    
+    public void mergeArr(int left, int mid, int right,int[] nums){
+       
+        int leftArr[]=new int[mid-left+1];
+        int rightArr[]=new int[right-(mid+1)+1];
+    //    int mergedArr[]=new int[right-left+1];
+        int index=0;
+        for(int i=left;i<=mid;i++){
+            leftArr[index]=nums[i];
+            index++;
+        }
+        index=0;
+         for(int i=mid+1;i<=right;i++){
+            rightArr[index]=nums[i];
+             index++;
+        }
+        //merge two sorted array
+        
+        int leftArrIndex=0;
+        int rightArrIndex=0;
+    //    int index=0;
+        
+        while(leftArrIndex<leftArr.length&&
+             rightArrIndex<rightArr.length){
+            if(leftArr[leftArrIndex]<=rightArr[rightArrIndex]){
+                nums[left]=leftArr[leftArrIndex];
+                leftArrIndex++;
+            }else{
+                  nums[left]=rightArr[rightArrIndex];
+                rightArrIndex++;
+            }
+            left++;
+        }
+        
+        while(leftArrIndex<leftArr.length){
+             nums[left]=leftArr[leftArrIndex];
+             left++;
+            leftArrIndex++;
+        }
+        
+          while(rightArrIndex<rightArr.length){
+              nums[left]=rightArr[rightArrIndex];
+             left++;
+             rightArrIndex++;
+        }
+        
+   /*     for(int i=0;i<mergedArr.length;i++){
+            nums[left]=mergedArr[i];
+            left++;
+        }
+       */ 
+    }
+    public void sortArrayHelper(int left,int right,int[] nums){
+       
+        if(left>=right){
+            return;
+        }
+        if(right-left==1){
+            int min=Math.min(nums[left],nums[right]);
+            int max=Math.max(nums[left],nums[right]);
+            nums[left]=min;
+            nums[right]=max;
+            return;
+        }
+        int mid=left+(right-left)/2;
+        System.out.println(" left: "+left+" mid: "+mid+" right: "+right);
+        sortArrayHelper(left,mid,nums);
+        sortArrayHelper(mid+1,right,nums);
+        mergeArr(left,mid,right,nums);
+        
+       
+    }
+    public int[] sortArray(int[] nums) {
+        
+        sortArrayHelper(0,nums.length-1,nums);
+        return nums;
+        
+    }
+}
+*/
+/*
+class Solution {
+    public int[] sortArray(int[] nums) {
+        sort(0, nums.length-1, nums);
+        return nums;
+    }
+    
+    private void sort(int lo, int hi, int[] nums) {
+        if (lo >= hi) return;
+        int j = partition(lo, hi, nums);
+        sort(lo,j-1,nums);
+        sort(j+1,hi,nums);
+    }
+    
+    private int partition(int lo, int hi, int[] nums) {
+        int i = lo; int j = hi;
+        while (i<j) {
+            while(nums[i] <= nums[lo]){
+             
+                i++;
+                if (i == hi){
+                    break;
+                } 
+            } 
+            while(nums[j] > nums[lo]){
+            
+                j--;
+                if (j == lo){
+                    break;
+                } 
+            } 
+            
+            if (i >= j) break;
+            swap(i,j,nums);
+        }
+        swap(lo,j,nums);                
+        return j;
+    }
+    
+    private void swap(int i, int j, int[] nums) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+
+*/
