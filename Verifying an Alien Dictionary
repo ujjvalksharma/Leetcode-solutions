@@ -1,0 +1,41 @@
+class Solution {
+    
+  HashMap<Character,Integer> hmCharacterToIndex=new HashMap<>();
+    
+    public boolean isOrderCorrect(String prevWord,String nextWord){
+        
+    
+        int minLen=Math.min(prevWord.length(),nextWord.length());
+        for(int i=0;i<minLen;i++){
+            if(hmCharacterToIndex.get(prevWord.charAt(i))<
+              hmCharacterToIndex.get(nextWord.charAt(i))){
+                return true;
+            }else if(hmCharacterToIndex.get(prevWord.charAt(i))==
+              hmCharacterToIndex.get(nextWord.charAt(i))){
+                continue;
+            }else{
+                 return false;
+            }
+        }
+        return prevWord.length()<=nextWord.length();
+    }
+    public boolean isAlienSorted(String[] words, String order) {
+        
+        if(words.length==1){
+            return true;
+        }
+        
+        
+        for(int i=0;i<order.length();i++){
+            hmCharacterToIndex.put(order.charAt(i),i);
+        }
+        
+        for(int i=1;i<words.length;i++){
+
+            if(!isOrderCorrect(words[i-1],words[i])){
+                return false;
+            }
+        }
+        return true;
+    }
+}
