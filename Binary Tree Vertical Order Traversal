@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+levelOrderId : is needed to keep track of element within same line of sight when seen from top
+rowId: is used to sort elements row wise from top to bottom
+*/
+class Solution {
+     List<List<Integer>> answer;
+    TreeMap<Integer,List<int[]>> tmLevelIdToNums;
+    
+    //preorder
+    public void verticalOrderHelper(TreeNode root, int levelOrderId,int rowId){
+        if(root==null){
+            return;
+        }
+        if(!tmLevelIdToNums.containsKey(levelOrderId)){
+            tmLevelIdToNums.put(levelOrderId,new ArrayList<int[]>());
+        }
+        tmLevelIdToNums.get(levelOrderId).add(new int[]{root.val,rowId});
+        verticalOrderHelper(root.left,levelOrderId-1,rowId+1);
+        verticalOrderHelper(root.right,levelOrderId+1,rowId+1);
+    }
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        
+         this.tmLevelIdToNums=new  TreeMap<Integer,List<int[]>>();
+         this.answer=new ArrayList<List<Integer>>();
+        
+        verticalOrderHelper(root,0,0);
+        
+        
+            for (Map.Entry mapElement : this.tmLevelIdToNums.entrySet()) {
+                List<int[]> itemsAtVerticalLevel=this.tmLevelIdToNums.get(mapElement.getKey());
+                Collections.sort(itemsAtVerticalLevel,(int[] a, int[] b)-> a[1]-b[1]);
+                List<Integer> numsAtLevel=new ArrayList<Integer>();
+                
+                for(int i=0;i<itemsAtVerticalLevel.size();i++){
+                    numsAtLevel.add(itemsAtVerticalLevel.get(i)[0]);
+                }
+                 this.answer.add(numsAtLevel);
+
+        }
+        return answer;
+    }
+}
