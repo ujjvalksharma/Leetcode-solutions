@@ -1,0 +1,71 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+If proceed to left and right child if we see an opening bracket, else we backtrack. after seeing a bracket we increment the index as we want to see an integer and we don't want a paritcular stack trace function to see a wrong bracket.
+
+*/
+class Solution {
+    
+
+    String s;
+    int sIndex=0;    
+    
+    public int getNumFromStr(){
+        
+           StringBuilder numStr=new StringBuilder("");
+        
+                while(this.sIndex<this.s.length()
+              &&this.s.charAt(sIndex)!='('
+              &&this.s.charAt(sIndex)!=')'){
+            numStr.append(this.s.charAt(sIndex));
+            sIndex++;
+        }
+           int num=Integer.parseInt(numStr.toString());
+        
+        return num;
+    }
+    public TreeNode str2treeHelper(){
+    
+        
+            if(this.sIndex>=this.s.length()){
+            return null;
+        }
+    
+        int currentNum=getNumFromStr();
+        boolean isLeftChildPresent=this.sIndex<this.s.length()&&this.s.charAt(sIndex)=='(';
+     
+        TreeNode newNode=new TreeNode(currentNum);
+        if(isLeftChildPresent){ 
+             this.sIndex++; // saw an opening bracket, move to integer
+        newNode.left=str2treeHelper();
+        }
+
+         boolean isRightChildPresent=this.sIndex<this.s.length()&&this.s.charAt(sIndex)=='(';
+           if(isRightChildPresent){
+                this.sIndex++; // we saw an opening bracket, move to integer
+        newNode.right=str2treeHelper();
+           }
+          this.sIndex++; // we saw a closing bracket, move to integer
+        return newNode;
+        
+        
+    }
+    public TreeNode str2tree(String s) {
+        this.s=s;
+        return str2treeHelper();
+        
+    }
+}
