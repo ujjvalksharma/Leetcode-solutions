@@ -1,0 +1,169 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    public String serializeHelper(TreeNode root){
+        if(root==null){
+            return "X";
+        }
+        
+        return root.val+","+serializeHelper(root.left)+","+serializeHelper(root.right);
+    }
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        
+        String serializedTree= serializeHelper(root);
+        System.out.println("serializedTree: "+serializedTree);
+        return serializedTree;
+        
+    }
+
+    public TreeNode deserializeHelper(Queue<String> queue){
+        
+        if(queue.isEmpty()){
+            return null;
+        }
+        String currentItem=queue.poll();
+        if(currentItem.equals("X")){
+            return null;
+        }
+      TreeNode currNode=new TreeNode(Integer.parseInt(currentItem));
+        currNode.left=deserializeHelper(queue);
+        currNode.right=deserializeHelper(queue);
+        return currNode;
+    }
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+       
+        Queue<String> queue=new LinkedList<String>();
+        queue.addAll(Arrays.asList(data.split(",")));
+        System.out.println("queue: "+queue);
+     return   deserializeHelper(queue);
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// TreeNode ans = deser.deserialize(ser.serialize(root));
+
+/*
+//Solution2:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    // Encodes a tree to a single string.
+    String str="";
+    public void preorder(TreeNode root,char direction)
+    {
+        if(root==null&&direction=='L')
+        {
+          str=str+"<"+"n";  
+            return;
+        }
+         if(root==null&&direction=='R')
+        {
+          str=str+">"+"n";  
+             return;
+        }
+        if(direction=='L'){
+                str=str+"<"+root.val; 
+        }
+         if(direction=='R'){
+                str=str+">"+root.val; 
+        }
+        if(direction=='S'){
+            str=str+root.val;  
+        }
+        preorder(root.left,'L');
+        preorder(root.right,'R');
+        return;
+        
+    }
+    public String serialize(TreeNode root) {
+        if(root==null)
+            return "";
+        preorder(root,'S');
+        System.out.println(str);
+        String answer=str;
+        str="";
+        return answer;
+        
+    }
+
+    // Decodes your encoded data to tree.
+      StringBuilder data_temp;
+    public TreeNode MakeTree()
+    {
+       // System.out.println("i am here");
+        TreeNode root;
+        
+        if(data_temp.length()<=0||(data_temp.length()>=0&&data_temp.charAt(0)=='n')){
+         //   System.out.println("i am here1");
+                data_temp=data_temp.deleteCharAt(0); 
+            return null;
+        }
+            
+        
+        String num="";
+        while(data_temp.length()>=0&&data_temp.charAt(0)!='<'&&data_temp.charAt(0)!='>')
+        {
+            num=num+Character.toString(data_temp.charAt(0));
+            data_temp=data_temp.deleteCharAt(0); 
+        }
+          
+        int number=0;
+        number=Integer.parseInt(num);
+      //  System.out.println("i am here2->"+number);
+        root= new TreeNode(number);
+        if(data_temp.length()>=0&&data_temp.charAt(0)=='<')
+        {
+            data_temp=data_temp.deleteCharAt(0); 
+            root.left=MakeTree();
+        }
+            
+        
+           if(data_temp.length()>=0&&data_temp.charAt(0)=='>')
+           {
+                data_temp=data_temp.deleteCharAt(0); 
+                root.right=MakeTree();
+           }
+           
+       
+        
+        return root;
+    }
+    public TreeNode deserialize(String data) {
+        if(data.length()<=0)
+            return null;
+      //  System.out.println(data);
+       // data="2<n>n";
+       data_temp=new StringBuilder(data);
+       return MakeTree();
+       // return null;
+        
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.deserialize(codec.serialize(root));
+
+*/
+
+//Solution 3: Same as question: convert string to tree and tree to string.
