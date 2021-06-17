@@ -1,0 +1,59 @@
+/**
+ * The read4 API is defined in the parent class Reader4.
+ *     int read4(char[] buf4);
+ */
+
+public class Solution extends Reader4 {
+    /**
+     * @param buf Destination buffer
+     * @param n   Number of characters to read
+     * @return    The number of actual characters read
+     */
+       char temp[]=new char[4];
+    int tempStartIndex=-1; // haven't read anything yet
+    int noOfCharLeft=-1;
+    boolean endOfFile=false;
+    public int read(char[] buf, int n) {
+
+        int bufIndex=0;
+        int totalCharRead=0;
+        if(tempStartIndex==-1){ //reading the buffer from read4 first time
+            
+        
+            if(!endOfFile){
+                 noOfCharLeft=read4(temp);
+                if(noOfCharLeft<4){
+                   endOfFile=true; 
+                }
+            }
+           tempStartIndex=0;
+            }
+            while(n>0){
+               
+                
+                 if(noOfCharLeft<=0){
+                    break;
+                }
+                totalCharRead++;
+                buf[bufIndex]=temp[tempStartIndex];
+                n--;
+                bufIndex++;
+                tempStartIndex++;
+                noOfCharLeft--;
+                if(tempStartIndex>3){
+                    
+                     if(!endOfFile){
+                 noOfCharLeft=read4(temp);
+                if(noOfCharLeft<4){
+                   endOfFile=true; 
+                }
+            }
+                    tempStartIndex=0;
+                }
+               
+                
+            }
+        
+        return totalCharRead;
+        }
+}
