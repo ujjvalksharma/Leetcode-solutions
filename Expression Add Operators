@@ -1,0 +1,60 @@
+class Solution {
+    
+    List<String> expressions=new ArrayList<String>();
+    String num;
+    int target;
+    StringBuilder currExpresion;
+    public void addOperatorsHelper(int startIndex,long prevSum, long prevNum){
+        
+         //  System.out.println("currExpresion: "+currExpresion);
+        if(startIndex>=this.num.length()){
+            
+            if(prevSum==target){
+                expressions.add(currExpresion.toString());
+            }
+            return;
+            
+        }
+    
+        int intitalLen=currExpresion.length();
+        for(int i=startIndex;i<this.num.length();i++){
+            
+           String currNum=this.num.substring(startIndex,i+1);
+            long currNumInt=Long.parseLong(currNum);
+            	if(num.charAt(startIndex) == '0' && i != startIndex){ //leading zero
+                    break;
+                } 
+            if(startIndex==0){ // no operator when index is 0
+                
+                prevSum=Long.parseLong(currNum);
+                currExpresion.append(currNum);
+                addOperatorsHelper(i+1,prevSum,currNumInt);
+                currExpresion.setLength(intitalLen);
+                
+            }else{
+                
+                //append +
+                currExpresion.append("+").append(currNum);
+                addOperatorsHelper(i+1,prevSum+currNumInt,currNumInt);
+                currExpresion.setLength(intitalLen);
+                //append -
+                currExpresion.append("-").append(currNum);
+                addOperatorsHelper(i+1,prevSum-currNumInt,-currNumInt);
+                currExpresion.setLength(intitalLen);
+                //append *
+                currExpresion.append("*").append(currNum);
+                addOperatorsHelper(i+1,(prevSum - prevNum) + (currNumInt*prevNum),currNumInt*prevNum);
+                currExpresion.setLength(intitalLen);
+                
+            }
+        }
+        
+    }
+    public List<String> addOperators(String num, int target) {
+        this.num=num;
+        this.target=target;
+        this.currExpresion=new StringBuilder();
+        addOperatorsHelper(0,0,0);
+        return expressions;
+    }
+}
