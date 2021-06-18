@@ -1,0 +1,117 @@
+class Solution {
+    boolean[][] visited;
+    HashMap<Integer,Integer> hmIdToSize;
+    int[][] grid;
+    int[][] dir=new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
+    int ID=1;
+    int size=0;
+    
+    public boolean isCoorValid(int x, int y){
+       
+         if(x<0||y<0||x>=this.grid.length||y>=this.grid[0].length||this.grid[x][y]==0
+          ||visited[x][y]){
+            return false;
+        }
+        return true;
+      
+    }
+    public void markIdToGrid(int x, int y){
+       
+        if(!isCoorValid(x,y)){
+            return;
+        }
+        grid[x][y]=ID;
+            size++;
+        visited[x][y]=true;
+        for(int i=0;i<dir.length;i++){ 
+            
+            int newX=x+dir[i][0];
+            int newY=y+dir[i][1];
+              if(!isCoorValid(newX,newY)){
+            continue;
+        }
+            if(!visited[newX][newY]){
+
+            markIdToGrid(x+dir[i][0],y+dir[i][1]); 
+            }
+             
+        }
+        
+    }
+    public int largestIsland(int[][] grid) {
+        
+        this.hmIdToSize=new HashMap<Integer,Integer>();
+        this.visited=new boolean[grid.length][grid[0].length];
+        this.grid=grid;
+        int largestIsland=0;
+    //    visited[0][0]=true;
+       //     markIdToGrid(0,0);
+      //     System.out.println("size: "+size);
+        for(int i=0;i<grid.length;i++){
+           
+              for(int j=0;j<grid[0].length;j++){
+                  
+                  if(!visited[i][j]&&grid[i][j]==1){
+              //          System.out.println(" i: "+i+" j: "+j);
+                       markIdToGrid(i,j);
+                      hmIdToSize.put(ID,size);
+                    largestIsland= Math.max(largestIsland,size);
+                  //    System.out.println("size: "+size);
+                      size=0;
+                      ID++;
+                  }
+
+              }
+            
+        }
+    //    System.out.println(Arrays.toString(grid[0]));
+      //  System.out.println(Arrays.toString(grid[1]));
+            Set<Integer> visitedId=new HashSet<Integer>();
+        
+              for(int i=0;i<grid.length;i++){
+           
+              for(int j=0;j<grid[0].length;j++){
+                  
+                  if(grid[i][j]==0){
+                   
+                      int currentIslandSize=0;
+                      for(int k=0;k<dir.length;k++){
+                          
+                          int newX=dir[k][0]+i;
+                          int newY=dir[k][1]+j;
+                         if(newX<0||newY<0||newX>=this.grid.length
+                            ||newY>=this.grid[0].length||this.grid[newX][newY]==0){
+                           continue;
+                     }
+                      //       System.out.println(" i: "+i+" j: "+j);
+         //    System.out.println("("+newX+","+newX+")"+"->"+hmIdToSize.get(this.grid[newX][newY]));
+                        if(!visitedId.contains(this.grid[newX][newY])){
+                          currentIslandSize+=hmIdToSize.get(this.grid[newX][newY]);
+                          visitedId.add(this.grid[newX][newY]); 
+                         
+                  
+                        }
+                              
+                 
+                          }
+                          visitedId=new HashSet<Integer>();
+                           largestIsland= Math.max(largestIsland,currentIslandSize+1);
+                      }
+                       
+                  }
+               
+
+              }
+            
+         return largestIsland;
+        }
+        
+       
+        
+    }
+
+
+/*
+[[1,0],
+[0,1]]
+*/
