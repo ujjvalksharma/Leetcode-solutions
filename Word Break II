@@ -1,0 +1,80 @@
+/*
+This is like word break 1, but in this problem we when we brack track we use a new data structure SentenceResult to store the boolean isValid to know if we reached the end of string and sentences to keep track of suffix sentences from an index and use them for memorization
+
+*/
+class Solution {
+    
+class SentenceResult{
+   List<String> sentences;
+   boolean isValid;
+    SentenceResult(List<String> sentences, boolean isValid){
+        this.isValid=isValid;
+        this.sentences=sentences;
+    }
+      SentenceResult(){
+        this.isValid=false;
+        this.sentences=new ArrayList<>();
+    }
+    
+}
+    String s;
+    Set<String> dict;
+    StringBuilder currentSentence;
+    List<String> sentences;
+    HashMap<Integer,SentenceResult> hmIndexToSentences=new HashMap<Integer,SentenceResult>();
+    
+    public SentenceResult wordBreakHelper(int startIndex){
+        
+        if(startIndex>=this.s.length()){
+            return new SentenceResult(new ArrayList<String>(),true);
+        }
+        
+        int initialLen=this.currentSentence.length();
+        
+        if(hmIndexToSentences.containsKey(startIndex)){
+            return hmIndexToSentences.get(startIndex);
+        }
+        List<String> sentences=new ArrayList<String>();
+        boolean currIsValid=false;
+        for(int i=startIndex;i<this.s.length();i++){
+            String prefixWord=this.s.substring(startIndex,i+1);
+            if(dict.contains(prefixWord)){
+                
+            SentenceResult sentenceResult= wordBreakHelper(i+1);
+            currIsValid=currIsValid|sentenceResult.isValid;
+                
+                //base case when we know that sentence can be made and we should just add prefix
+                if(sentenceResult.isValid&&sentenceResult.sentences.size()==0){
+                     sentences.add(prefixWord);
+                }
+                    for(int j=0;j<sentenceResult.sentences.size();j++){
+
+                         sentences.add(prefixWord+" "+sentenceResult.sentences.get(j)); 
+                     } 
+                
+                }
+                
+                
+            }
+        
+            SentenceResult tempSentenceResult= new SentenceResult(sentences,currIsValid);
+        
+        hmIndexToSentences.put(startIndex,tempSentenceResult);
+        
+        return tempSentenceResult;
+        
+        }
+    
+
+        
+    
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        
+        this.s=s;
+        this.dict=new HashSet<String>();
+        this.currentSentence=new StringBuilder("");
+        dict.addAll(wordDict);
+         SentenceResult tempSentenceResult= wordBreakHelper(0);
+        return tempSentenceResult.sentences;
+    }
+}
