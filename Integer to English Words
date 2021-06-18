@@ -1,0 +1,157 @@
+/*
+divide in parition of 3 from end and insert thousand,million,billion between them
+
+123123
+"One Hundred  Twenty Three |Thousand | One Hundred Twenty Three" 
+
+1 234 567
+"One| Million | Two Hundred Thirty Four | Thousand | Five Hundred Sixty Seven"
+
+1234567891
+
+"One |Billion |Two Hundred Thirty Four |Million |Five Hundred Sixty Seven |Thousand | Eight Hundred Ninety One"
+
+Let's say that we have 123123
+and we are forming the word string by iterating from end:
+we first visit 3 and we see there is more left so we store 3 at str=3 at len=1
+we then visit 2 and we see there is more left so we str=32 at len=2
+now our answer str= Twenty Three 
+but there is more left so we add Hundered
+*/
+class Solution {
+    public String numberToWords(int num) {
+        
+        
+        if(num==0){
+            return "Zero";
+        }
+        StringBuilder sb=new StringBuilder(""+num);
+     //   sb.reverse();
+     //   System.out.println("sb: "+sb);
+        List<String> result=new ArrayList<String>();
+        StringBuilder ans=new StringBuilder("");
+        HashMap<String,String> hmPosToVal=new  HashMap<String,String>();
+       hmPosToVal.put("1","One");
+       hmPosToVal.put("2","Two");
+       hmPosToVal.put("3","Three");
+       hmPosToVal.put("4","Four");
+       hmPosToVal.put("5","Five");
+       hmPosToVal.put("6","Six");
+       hmPosToVal.put("7","Seven");
+       hmPosToVal.put("8","Eight");
+       hmPosToVal.put("9","Nine");
+       hmPosToVal.put("10","Ten");
+        hmPosToVal.put("11","Eleven");
+        hmPosToVal.put("12","Twelve");
+        hmPosToVal.put("13","Thirteen");
+        hmPosToVal.put("14","Fourteen");
+        hmPosToVal.put("15","Fifteen");
+        hmPosToVal.put("16","Sixteen");
+        hmPosToVal.put("17","Seventeen");
+        hmPosToVal.put("18","Eighteen");
+        hmPosToVal.put("19","Nineteen");
+        hmPosToVal.put("20","Twenty");
+        hmPosToVal.put("30","Thirty");
+        hmPosToVal.put("40","Forty");
+        hmPosToVal.put("50","Fifty");
+        hmPosToVal.put("60","Sixty");
+        hmPosToVal.put("70","Seventy");
+        hmPosToVal.put("80","Eighty");
+        hmPosToVal.put("90","Ninety");
+        
+                                                             //      321 321 321
+        int pos=0; // to keep track of 3 digit in between comma like 123,456,707
+        int indexFromRightFromNum=0;
+        boolean  isTHousandUsed=false;
+        boolean  isMillionUsed=false;
+         boolean  isBillionUsed=false;
+        
+          for(int i=sb.length()-1;i>=0;i--){
+            
+          //    System.out.println("char: "+sb.charAt(i)+" pos: "+pos);
+               indexFromRightFromNum++; 
+              
+                pos++;
+              if(pos>3){
+                  pos=1;
+              }
+              
+              if(sb.charAt(i)=='0'){
+                  continue;
+              }
+              
+            if(indexFromRightFromNum>9){
+                if(!isBillionUsed){
+                    result.add("Billion");
+                    isBillionUsed=true;
+                }
+                 
+                
+                
+            }else if(indexFromRightFromNum>6){
+                  if(!isMillionUsed){
+                 result.add("Million");
+                       isMillionUsed=true;
+                  }
+                      
+                
+            }else if(indexFromRightFromNum>3){
+            //    System.out.println("I am here");
+                  if(!isTHousandUsed){
+              //          System.out.println("I am here1");
+                 result.add("Thousand");
+                     isTHousandUsed=true;
+                  }
+            }
+            
+             if(pos==3){
+                result.add("Hundred");
+            }
+              
+            
+                       if(pos==2){
+                           
+                                 if(sb.charAt(i)=='1'){
+                                  System.out.println(result);
+                                     if(result.size()>=1
+                                       &&!result.get(result.size()-1).equals("Thousand")
+                                       &&!result.get(result.size()-1).equals("Million")
+                                       &&!result.get(result.size()-1).equals("Billion")){
+                                         result.remove(result.size()-1);
+                                     }
+                                      result.add(hmPosToVal.get(sb.substring(i,i+2)));
+                               
+                                 }else{
+                                     result.add(hmPosToVal.get(sb.substring(i,i+1)+"0"));
+                                 }
+              
+          }else{ //for pos 1 and 3
+              
+                   result.add(hmPosToVal.get(sb.substring(i,i+1)));
+          }
+              
+        
+         }
+        
+        // Arraylist for storing reversed elements
+        // this.revArrayList = alist;
+        for (int i = 0; i < result.size() / 2; i++) {
+            String temp = result.get(i);
+            result.set(i, result.get(result.size() - i - 1));
+            result.set(result.size() - i - 1, temp);
+        }
+        
+        for(int i=0;i<result.size();i++){
+            ans.append(result.get(i)).append(" ");
+        }
+        ans.setLength(ans.length()-1);
+       // ans.reverse();
+        return ans.toString();
+        
+   
+}
+    
+}
+//10000010
+//101
+//1234500891
