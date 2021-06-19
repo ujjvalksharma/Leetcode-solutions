@@ -1,0 +1,58 @@
+class Solution {
+    
+    boolean[] visited;
+    boolean isCycle=false;
+    List<List<Integer>> graph;
+    public void traverseGraph(int courseId,boolean[] tempVisited){
+     //   System.out.println("child courseId: "+courseId);
+        if(tempVisited[courseId]){
+            isCycle=true;
+            return;
+        }
+         if(this.visited[courseId]){
+             return;
+         }
+        this.visited[courseId]=true;
+        tempVisited[courseId]=true;
+        List<Integer> children=this.graph.get(courseId);
+        
+        for(int child: children){
+            
+            traverseGraph(child,tempVisited);
+        }
+           tempVisited[courseId]=false;
+    }
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //check cycle in directed graph
+        this.graph=new ArrayList<List<Integer>>();
+        this.visited=new boolean[numCourses];
+        int totalCourses=numCourses;
+        while(totalCourses>0){
+            
+            graph.add(new ArrayList<Integer>());
+            totalCourses--;
+        }
+        
+        for(int[] prerequisite: prerequisites){
+          graph.get(prerequisite[1]).add(prerequisite[0]);  
+        }
+        
+        for(int courseId=0;courseId<numCourses;courseId++){
+            
+            if(!visited[courseId]){
+           boolean[] tempVisited=new boolean[numCourses];
+                traverseGraph(courseId,tempVisited);
+            }
+            if(isCycle){
+                return !this.isCycle;
+            }
+            
+        }
+        
+        return !this.isCycle;
+    }
+}
+/*
+[a,b]
+b->a
+*/
