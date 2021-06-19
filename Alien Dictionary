@@ -1,0 +1,189 @@
+class Solution {
+    
+    private Map<Character, List<Character>> reverseAdjList = new HashMap<>();
+    private Map<Character, Boolean> seen = new HashMap<>();
+    private StringBuilder output = new StringBuilder();
+    
+    public String alienOrder(String[] words) {
+        
+        // Step 0: Put all unique letters into reverseAdjList as keys.
+        for (String word : words) {
+            for (char c : word.toCharArray()) {
+                reverseAdjList.putIfAbsent(c, new ArrayList<>());
+            }
+        }
+        
+        // Step 1: Find all edges and add reverse edges to reverseAdjList.
+        for (int i = 0; i < words.length - 1; i++) {
+            String word1 = words[i];
+            String word2 = words[i + 1];
+            // Check that word2 is not a prefix of word1.
+            if (word1.length() > word2.length() && word1.startsWith(word2)) {
+                return "";
+            }
+            // Find the first non match and insert the corresponding relation.
+            for (int j = 0; j < Math.min(word1.length(), word2.length()); j++) {
+                if (word1.charAt(j) != word2.charAt(j)) {
+                    reverseAdjList.get(word2.charAt(j)).add(word1.charAt(j));
+                    break;
+                }
+            }
+        }
+        
+        // Step 2: DFS to build up the output list.
+        for (Character c : reverseAdjList.keySet()) {
+            boolean result = dfs(c);
+            if (!result) return "";
+        }
+        
+        
+        if (output.length() < reverseAdjList.size()) {
+            return "";
+        }
+        return output.toString();
+    }
+    
+    // Return true iff no cycles detected.
+    private boolean dfs(Character c) {
+        if (seen.containsKey(c)) {
+            return seen.get(c); // If this node was grey (false), a cycle was detected.
+        }
+        seen.put(c, false);
+        for (Character next : reverseAdjList.get(c)) {
+            boolean result = dfs(next);
+            if (!result) return false;
+        }
+        seen.put(c, true);
+        output.append(c);
+        return true;
+    }    
+}
+/* // my solution
+class Solution {
+    
+      HashMap<Character,Set<Character>> graph;
+    StringBuilder alienSequence=new StringBuilder();
+     boolean[] visited=new boolean[26];
+    
+    public void buildGraph(char start, char child){
+        if(!this.graph.containsKey(start)){
+            this.graph.put(start,new HashSet<Character>());
+        }
+        this.graph.get(start).add(child);
+    }
+    
+        public void buildVertix(char vertix){
+        if(!this.graph.containsKey(vertix)){
+            this.graph.put(vertix,new HashSet<Character>());
+        }
+    }
+    public boolean isOrderCorrect(String prevWord, String currentWord){
+        boolean isDiffCorrect=false;
+        
+        int len=Math.min(prevWord.length(),currentWord.length());
+        
+        for(int i=0;i<len;i++){
+            if(prevWord.charAt(i)!=currentWord.charAt(i)){
+                //checks cycle
+                if(this.graph.containsKey(currentWord.charAt(i))&&
+                  this.graph.get(currentWord.charAt(i)).contains(prevWord.charAt(i))){
+                   return false;
+                }else{
+                buildGraph(prevWord.charAt(i),currentWord.charAt(i));
+                }
+               
+            }else{
+                 buildVertix(prevWord.charAt(i));
+            }
+        }
+        if(!isDiffCorrect){
+            if(prevWord.length()>currentWord.length()){
+                return false;
+            }
+        }
+   //     System.out.println("I am here1");
+        return true;
+    }
+    
+    //topological sort
+    public void FindAlienSequence(char currentChar){
+        if(visited[currentChar-'a']){
+            return;
+        }
+        if(graph.containsKey(currentChar)){
+            
+               Iterator<Character> children=graph.get(currentChar).iterator();
+        visited[currentChar-'a']=true;
+        
+        
+        while(children.hasNext()){
+            char child=children.next();
+             if(visited[child-'a']){
+                  continue;
+              }
+            FindAlienSequence(child);
+     }
+        }
+
+ /*       alienSequence.append(currentChar); //add elements to the list
+    }
+    
+    public String alienOrder(String[] words) {
+        if(words.length==1){
+            return words[0];
+        }
+        //get all letter
+       //make a graph
+        //find a cycle
+        // if no cycle then find topo order else return "";
+  /*      this.graph=new HashMap<Character,Set<Character>>();
+        for(int i=1;i<words.length;i++){
+            
+            if(!isOrderCorrect(words[i-1],words[i])){
+               return ""; 
+            }
+            
+        }
+        
+      //  if(isCyclePresentInGraph)
+        
+      //   for (Map.Entry<Character,Set<Character>> e : graph.entrySet()){
+      //        System.out.println("Key: " + e.getKey()+ " Value: " + e.getValue());
+             if(!visited[e.getKey()-'a']){
+                  FindAlienSequence(e.getKey()); //topological sort
+             }
+             
+         }
+           
+       //topological sort
+     //   System.out.println("I am here");
+        
+        Set<Character> setOfAllCharacters=new HashSet<>();
+        
+        for(String word: words){
+            for(char c: word.toCharArray()){
+                setOfAllCharacters.add(c);
+            }
+        }
+        
+        
+        
+        for(int i=0;i<alienSequence.length();i++){
+            if(setOfAllCharacters.contains(alienSequence.charAt(i))){
+                setOfAllCharacters.remove(alienSequence.charAt(i));
+            }
+        }
+     //   System.out.println(setOfAllCharacters);
+        Iterator<Character> it= setOfAllCharacters.iterator();
+        while(it.hasNext()){
+            char c=it.next();
+            alienSequence.append(c);
+        }
+        return alienSequence.reverse().toString();
+        
+    }
+    
+}
+
+
+*/
