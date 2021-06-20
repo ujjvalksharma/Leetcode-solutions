@@ -1,0 +1,42 @@
+/*
+Union and find we know that if there are two parent vertix that means all nodes aren't connected and we know parent vertix as their parent value is -1, so we can return the count of total -1.
+
+*/
+class Solution {
+    
+        int[] parent;
+    
+    public int findParent(int i){
+        if(parent[i]==-1){
+            return i;
+        }
+        return findParent(parent[i]);
+    }
+    
+    public int countComponents(int n, int[][] edges) {
+      
+       
+        this.parent=new int[n];
+        Arrays.fill(parent,-1);
+        int minCost=0;
+        for(int[] edge: edges){
+            
+            int X=edge[0];
+            int Y=edge[1];
+            
+            int parentX=findParent(X);
+            int parentY=findParent(Y);
+            
+            if(parentX!=parentY){
+                parent[parentY]=parentX;
+            }
+        }
+        int connectedComponents=0;
+        for(int v: this.parent){
+            if(v==-1){
+                connectedComponents++;
+            }
+        }
+        return connectedComponents;
+    }
+}
