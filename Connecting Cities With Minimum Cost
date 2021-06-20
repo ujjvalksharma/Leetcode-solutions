@@ -1,0 +1,47 @@
+/*
+Union and find we know that there two parent vertix that means all nodes aren't connected and we sort the array by weight, so we pick the lowest weight first.
+
+*/
+      
+class Solution {
+    
+    int[] parent;
+    
+    public int findParent(int i){
+        if(parent[i]==-1){
+            return i;
+        }
+        return findParent(parent[i]);
+    }
+    
+    public int minimumCost(int n, int[][] connections) {
+        
+        Arrays.sort(connections,(int[] connection1,int[] connection2)->{
+            return connection1[2]-connection2[2];
+        });
+        this.parent=new int[n+1];
+        Arrays.fill(parent,-1);
+        int minCost=0;
+        for(int[] connection: connections){
+            
+            int X=connection[0];
+            int Y=connection[1];
+            
+            int parentX=findParent(X);
+            int parentY=findParent(Y);
+            
+            if(parentX!=parentY){
+                parent[parentY]=parentX;
+                minCost+=connection[2];
+            }
+        }
+        int parentVertix=0;
+        for(int v: this.parent){
+            if(v==-1){
+                parentVertix++;
+            }
+        }
+        return parentVertix==2?minCost:-1;
+        
+    }
+}
