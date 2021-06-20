@@ -1,0 +1,116 @@
+// use trie data to add element and search words and use priority queue (heap) to order elements
+class AutocompleteSystem {
+
+    Node head;
+    PriorityQueue<Node> pq;
+    StringBuilder searchWord;
+    List<String> hotWords;
+     class Node{
+        boolean isSentenceEnd;
+        Node[] children;
+        String sentence;
+        int occourance;
+        public Node(String sentence,int occourance)
+        {
+            this.sentence=sentence;
+            this.occourance=occourance;
+            children= new Node[256];
+            for(int i=0;i<256;i++)
+                children[i]=null;
+        }
+         public Node(){
+             this.isSentenceEnd=false;
+             this.occourance=0;
+             children= new Node[256];
+            for(int i=0;i<256;i++)
+                children[i]=null;
+         }
+         public String toString(){
+             return " isSentenceEnd: "+isSentenceEnd+" sentence: "+sentence+" occourance: "+occourance+" :children: "+children;
+         }
+    }
+
+    public void addWordInSystem(String sentence,int occourance){
+        
+        Node temp=this.head;
+        for(int i=0;i<sentence.length();i++){
+         //   System.out.println("I am here");
+            if(temp.children[(int)sentence.charAt(i)]==null){
+                temp.children[(int)sentence.charAt(i)]=new Node();
+            }
+            temp=temp.children[(int)sentence.charAt(i)];
+            
+        }
+        temp.sentence=sentence;
+        temp.occourance+=occourance;
+        temp.isSentenceEnd=true;
+        
+    }
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        this.head=new Node();
+        this.pq=new PriorityQueue<Node>((Node n1, Node n2)->{
+            if(n1.occourance==n2.occourance){
+                return n1.sentence.compareTo(n2.sentence);
+            }
+            return n2.occourance-n1.occourance;
+        });
+        this.searchWord=new StringBuilder("");
+        this.hotWords=new ArrayList<String>();
+    for(int i=0;i<sentences.length;i++){
+        addWordInSystem(sentences[i],times[i]);
+    }
+        
+    }
+    
+    public void searchTop3Words(StringBuilder prefix, int index){
+        
+         Node temp=this.head;
+        for(int i=0;i<prefix.length();i++){
+            if(temp.children[(int)prefix.charAt(i)]==null){
+                return;
+            }
+            temp=temp.children[(int)prefix.charAt(i)];
+            
+        }
+        searchTop3WordsHelper(temp);
+    }
+    
+        
+    public void searchTop3WordsHelper(Node curr){
+        
+        if(curr==null){
+            return;
+        }
+             if(curr.isSentenceEnd){
+                this.pq.add(curr);
+            }
+        
+        Node temp=curr;
+        for(int i=0;i<256;i++){
+            Node child=temp.children[i];
+            searchTop3WordsHelper(child);
+        }
+        
+            
+        
+        
+    }
+    public List<String> input(char c) {
+        this.pq.clear();
+        this.hotWords.clear();
+        if(c!='#'){
+            searchWord.append(c); 
+            searchTop3Words(searchWord,0);
+        }else{
+            addWordInSystem(searchWord.toString(),1);
+            this.searchWord.setLength(0);
+        }
+        int count=0;
+        while(!this.pq.isEmpty()&&count<3){
+            this.hotWords.add(pq.poll().sentence);
+            count++;
+        }
+            
+        return this.hotWords;
+    }
+}
