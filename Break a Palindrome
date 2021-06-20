@@ -1,0 +1,47 @@
+class Solution {
+    
+    public boolean isPalindrome(String s,char newChar, int index, int size){
+        int oppositeIndex=size-1-index;
+        if(oppositeIndex==index){
+            return true;
+        }
+        return newChar==s.charAt(oppositeIndex);
+    }
+    public String breakPalindrome(String palindrome) {
+
+        int n=palindrome.length();
+        int changedIndex=n;
+        char newChar='a';
+        if(n==1){
+            return "";
+        }
+        for(int i=0;i<n;i++){
+            
+            char originalChar=palindrome.charAt(i);
+            for(char c='a';c<'z';c++){
+                
+                //first non palindrome found
+                if(!isPalindrome(palindrome,c,i,n)){
+             if(changedIndex==n){ //first time
+                 newChar=c;
+                 changedIndex=i;
+                 //if we are at same index and a smaller is found then we choose that
+             }else if(changedIndex==i&&c<newChar){
+                 newChar=c;
+                 changedIndex=i;
+                 // now we know our index is increasing, and to make lexicographically small string, if we know that our original char was smaller in new char that we replaced in past. that means we can have a smaller string
+             }else if(i>changedIndex&&palindrome.charAt(changedIndex)<newChar){
+                 newChar=c;
+                 changedIndex=i;
+             }
+                }
+                
+            }
+        }
+        
+         StringBuilder sb=new StringBuilder(palindrome);
+        sb.setCharAt(changedIndex,newChar);
+        return sb.toString();
+    }
+}
+//"aba"
