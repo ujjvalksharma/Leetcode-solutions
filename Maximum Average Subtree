@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    double maxAvg=Integer.MIN_VALUE;
+    
+    public int[] maximumAverageSubtreeHelper(TreeNode root){
+        if(root==null){
+            return new int[]{0,0};
+        }
+        int[] leftSubTree=maximumAverageSubtreeHelper(root.left);
+        int[] rightSubTree=maximumAverageSubtreeHelper(root.right);
+        
+        
+        int totalSum=leftSubTree[0]+rightSubTree[0]+root.val;
+        int totalNodes=leftSubTree[1]+rightSubTree[1]+1;
+        double totalAvg= (double) totalSum/totalNodes;
+        maxAvg=Math.max(maxAvg,totalAvg);
+        System.out.println("totalSum: "+totalSum+" totalNodes: "+totalNodes);
+        return new int[]{totalSum,totalNodes};
+    }
+    public double maximumAverageSubtree(TreeNode root) {
+        
+        maximumAverageSubtreeHelper(root);
+        return maxAvg;
+    }
+}
