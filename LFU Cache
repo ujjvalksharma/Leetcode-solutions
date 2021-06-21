@@ -1,0 +1,123 @@
+//Linkedled hashmap keeps element in order
+class LFUCache {
+
+    class Node{
+        int val;
+        int freq;
+        int key;
+        Node(int key, int val, int freq){
+            this.key=key;
+            this.freq=freq;
+            this.val=val;
+        }
+      
+        @Override
+        public String toString(){
+            return " key: "+key+" val: "+val+" freq: "+freq;
+        }
+    }
+    
+    HashMap<Integer,Node> cache;// key to value
+    HashMap<Integer,LinkedHashMap<Integer,Node>> hmFreqToKeyToNode;
+    int capacity;
+    int minFreq;
+    public LFUCache(int capacity) {
+        this.cache=new HashMap<Integer,Node>();
+        this.hmFreqToKeyToNode=new HashMap<Integer,LinkedHashMap<Integer,Node>> ();
+        this.capacity=capacity;
+        
+    }        
+    
+    public int get(int key) {
+        
+        if(cache.get(key)==null){
+            return -1;
+        }
+        
+        int freq=this.cache.get(key).freq;
+        updateCacheOnGet(freq,key);
+        return cache.get(key).val;
+        
+    }
+    
+    public void put(int key, int value) {
+        
+        if(this.capacity==0){
+            return;
+        }
+        //we have to make space for a new key
+        if(cache.size()>=capacity&&!this.cache.containsKey(key)){
+            
+            removeLeastFrequenctlyElement();
+        }
+        
+        if(this.cache.containsKey(key)){ // update frequency and val;
+            this.cache.get(key).val=value;
+            updateCacheOnGet(this.cache.get(key).freq,key);
+        }else{
+            Node node=new Node(key,value,1);
+            this.minFreq=1;
+            addElementInCache(node);
+        }
+   //     System.out.println(this.cache);
+     //    System.out.println(this.hmFreqToKeyToNode);
+       // System.out.println("---------------------------------");
+    }
+    
+    public void updateCacheOnGet(int freq,int key){
+        LinkedHashMap<Integer,Node> keyLinkedMap=this.hmFreqToKeyToNode.get(freq);
+        Node temp=keyLinkedMap.get(key);
+        int newFreq=freq+1;
+        temp.freq=newFreq;
+        keyLinkedMap.remove(key);
+        
+        if(keyLinkedMap.size()==0){
+            this.hmFreqToKeyToNode.remove(freq);
+            if(minFreq==freq){
+                minFreq=newFreq; //just incrementing min frequency
+            }
+        }
+        if(!this.hmFreqToKeyToNode.containsKey(newFreq)){
+            this.hmFreqToKeyToNode.put(newFreq, new LinkedHashMap<Integer,Node>());
+        }
+        
+        this.hmFreqToKeyToNode.get(newFreq).put(key,temp);
+    }
+    
+    public void removeLeastFrequenctlyElement(){
+        
+         LinkedHashMap<Integer,Node> keyLinkedMap=this.hmFreqToKeyToNode.get(this.minFreq);
+        
+        Iterator<Integer> it = keyLinkedMap.keySet().iterator();
+        int leastRecentlyUsedKey = it.next();
+        it.remove();
+         if(keyLinkedMap.isEmpty()){
+             this.hmFreqToKeyToNode.remove(this.minFreq);
+             this.minFreq++;
+         } 
+         this.cache.remove(leastRecentlyUsedKey);
+           
+    }
+    
+    public void addElementInCache(Node node){
+        final int currentFreq=1;
+        if(!this.hmFreqToKeyToNode.containsKey(currentFreq)){
+           this.hmFreqToKeyToNode.put(currentFreq, new LinkedHashMap<Integer,Node>());
+        }
+         this.hmFreqToKeyToNode.get(currentFreq).put(node.key,node);
+         this.cache.put(node.key,node);
+    }
+    
+}
+
+/*
+
+["LFUCache","get","put","get","put","put","get","get"]
+[   [2],     [2], [2,6], [1], [1,5], [1,2],[1],  [2]]
+*/
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache obj = new LFUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
