@@ -1,0 +1,75 @@
+//Pair object has time and website
+//store username and list of Pair Object
+// now if we iterative over hashmap, then we know all the wepage a user visited, so make make pair of 3 using //3 for loop
+// to seperate website in a string use a delimiter
+// put that in a hashmap we increment count of it as 3 website pair is seen again
+// finally, iterate over the 3 website hashmap and use the website pair which has the highest count and //return by spliting by delimiter
+class Solution {
+    class Pair {
+        private int time;
+        private String site;
+        public Pair(int time, String site) {
+            this.time = time;
+            this.site = site; 
+        }
+    }
+    class PairComparator implements Comparator<Pair> {
+        public int compare (Pair a, Pair b){
+            return a.time - b.time;
+        }
+    }
+    
+    public List<String> mostVisitedPattern(String[] username, int[] timestamp, String[] website) {
+        Map<String, List<Pair>> records = new HashMap<>();
+        Map<String, Integer> counts = new HashMap<>();
+        for (int i = 0; i < username.length; i++){
+            if(records.containsKey(username[i])){
+                records.get(username[i]).add(new Pair(timestamp[i], website[i]));
+            }
+            else{
+                List<Pair> newRecord = new ArrayList<>();
+                newRecord.add(new Pair(timestamp[i], website[i]));
+                records.put(username[i], newRecord);
+            }
+        }
+        
+        for(Map.Entry<String, List<Pair>> entry : records.entrySet()){
+            List<Pair> record = entry.getValue();
+            Collections.sort(record, new PairComparator());
+            Set<String> seen = new HashSet<>();
+            for(int i = 0; i < record.size(); i++){
+                for(int j = i+1; j < record.size(); j++){
+                    for(int k = j+1; k < record.size(); k++){//if user already has this, then skip, otherwise plus one
+                        StringBuilder tmp = new StringBuilder();
+                        tmp.append(record.get(i).site);
+                        tmp.append('#');
+                        tmp.append(record.get(j).site);
+                        tmp.append('#');
+                        tmp.append(record.get(k).site);
+                        String hashKey = tmp.toString();
+                        if(seen.contains(hashKey)) continue;
+                        else seen.add(hashKey);
+                        counts.put(hashKey, counts.getOrDefault(hashKey, 0) + 1);
+                    }
+                }
+            }
+        }
+        int max = 0;
+        String maxStr = null;
+        for(String k : counts.keySet()){
+            if (counts.get(k) > max){
+                max = counts.get(k);
+                maxStr = k;
+            }
+            else if(counts.get(k) == max){
+                if(k.compareTo(maxStr) < 0){
+                    maxStr = k;
+                }
+            }
+        }
+        String[] processed = maxStr.split("#");
+        List<String> result = new ArrayList<>();
+        for(String s : processed) result.add(s);
+        return result;
+    }
+}
