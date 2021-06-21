@@ -1,0 +1,145 @@
+class Solution {
+    public int calculate(String s) {
+        if (s == null || s.isEmpty()) return 0;
+        int length = s.length();
+        int currentNumber = 0;
+        int lastNumber = 0;
+        int result = 0;
+        char operation = '+';
+        for (int i = 0; i < length; i++) {
+            char currentChar = s.charAt(i);
+            if (Character.isDigit(currentChar)) {
+                currentNumber = (currentNumber * 10) + (currentChar - '0');
+            }
+            if (!Character.isDigit(currentChar) && !Character.isWhitespace(currentChar) || i == length - 1) {
+                if (operation == '+' || operation == '-') {
+                    result += lastNumber;
+                    lastNumber = (operation == '+') ? currentNumber : -currentNumber;
+                } else if (operation == '*') {
+                    lastNumber = lastNumber * currentNumber;
+                } else if (operation == '/') {
+                    lastNumber = lastNumber / currentNumber;
+                }
+                operation = currentChar;
+                currentNumber = 0;
+            }
+        }
+        result += lastNumber;
+        return result;
+    }
+}
+
+
+/*
+My Solution Not working:
+class Solution {
+    
+int index;
+String s;
+int size;
+    public int getNumber(){
+        int nextNum=0;
+        index++;
+        while(s.charAt(index)==' '){
+          index++;  
+        }
+           while(index<size&&s.charAt(index)!='*'
+                     &&s.charAt(index)!='+'&&s.charAt(index)!='-'
+                     &&s.charAt(index)!='/'&&s.charAt(index)!=' '){
+                    
+                  if(nextNum>0){
+                    nextNum=nextNum*10+Character.getNumericValue(s.charAt(index));
+                }else{
+                    nextNum=Character.getNumericValue(s.charAt(index));
+                }
+                    index++;
+                }
+                index--;
+        
+        return nextNum;
+    }
+    public int calculate(String s) {
+        this.s=s;
+        this.index=0;
+         this.size=s.length();
+        int prevVal=0;
+        int totalVal=0;
+        boolean[] prevOperator=new boolean[4];// 0->+,1->-,2->*,3->/
+        boolean sawOperator=false;
+        while(index<size){
+          //  System.out.println("index:"+index);
+            if(s.charAt(index)==' '){
+                index++; //continue missing below index++
+                continue;
+            }
+            
+            if(s.charAt(index)=='+'){
+                sawOperator=true;
+               int nextNum=getNumber();
+               totalVal+=nextNum;
+               prevVal=nextNum;
+                Arrays.fill(prevOperator,false);
+                prevOperator[0]=true;
+                
+                
+            }else if(s.charAt(index)=='-'){
+                 
+               sawOperator=true;
+               int nextNum=getNumber();
+               totalVal-=nextNum;
+               prevVal=nextNum; 
+                Arrays.fill(prevOperator,false);
+                 prevOperator[1]=true;
+                
+            }else if(s.charAt(index)=='*'){
+                
+                sawOperator=true;
+               int nextNum=getNumber();
+            
+                if(prevOperator[0]){
+                    totalVal=(totalVal-prevVal)+(nextNum*prevVal);
+                }else if(prevOperator[1]){
+                    totalVal=(totalVal+prevVal)-(nextNum*prevVal);
+                }else{
+                    totalVal=totalVal*nextNum;
+                }
+                prevVal=nextNum;
+               Arrays.fill(prevOperator,false);
+               prevOperator[2]=true;
+                
+            }else if(s.charAt(index)=='/'){
+                
+                sawOperator=true;
+                 int nextNum=getNumber();
+                 if(prevOperator[0]){
+                //     System.out.println(" totalVal:"+totalVal+" prevVal: "+prevVal+" nextNum: "+nextNum);
+                    totalVal=(totalVal-prevVal)+(prevVal/nextNum);
+                }else if(prevOperator[1]){
+                    totalVal=(totalVal+prevVal)-(prevVal/nextNum);
+                }else{
+                    totalVal=totalVal/nextNum;
+                }
+                 prevVal=nextNum;
+                 Arrays.fill(prevOperator,false);
+                 prevOperator[3]=true;
+                
+            }else if(!sawOperator){
+                if(totalVal>0){
+                    totalVal=totalVal*10+Character.getNumericValue(s.charAt(index));
+                }else{
+                    totalVal=Character.getNumericValue(s.charAt(index));
+                }
+                
+            }
+            index++;
+        }
+    return totalVal;
+    }
+}
+
+    
+    
+
+*/
+    
+    
