@@ -1,0 +1,99 @@
+//https://www.youtube.com/watch?v=JGN-7q-PUVM&t=1888s
+class Solution {
+    Pair[] numbers;
+    List<Integer> answer;
+    
+    class Pair{
+        int num;
+        int originalIndex;
+        int count=0;
+        Pair(int num, int originalIndex){
+            this.originalIndex=originalIndex;
+            this.num=num;
+        }
+        @Override
+        public String toString(){
+            return "num: "+num+" originalIndex: "+originalIndex+" count: "+count;
+        }
+    }
+    
+    public void countSmallerHelper(int l, int mid, int r){
+        Pair[] leftArr=new Pair[mid-l+1];
+        Pair[] rightArr=new Pair[(r-(mid+1))+1];
+        Pair[] sortedArr=new Pair[r-l+1];
+        int index=0;
+        for(int i=l;i<=mid;i++){
+            leftArr[index]=numbers[i];
+            index++;
+        }
+        index=0;
+         for(int i=mid+1;i<=r;i++){
+            rightArr[index]=numbers[i];
+             index++;
+        }
+
+        int leftIndex=0;
+        int rightIndex=0;
+        index=0;
+        while(leftIndex<leftArr.length&&rightIndex<rightArr.length){
+            
+            if(rightArr[rightIndex].num<leftArr[leftIndex].num){
+                sortedArr[index]=rightArr[rightIndex];
+                leftArr[leftIndex].count=rightIndex+1; //increment count as a smaller from right side move to left, so definity all the smaller before this smaller number has moved to left
+                rightIndex++;
+            }else{
+                 sortedArr[index]=leftArr[leftIndex];
+                leftArr[leftIndex].count=rightIndex; //we left side is moving to left, we should just know how many smaller numbers from right have moved before this left number.
+                leftIndex++;
+            }
+            index++;
+        }
+        
+    while(leftIndex<leftArr.length){
+         sortedArr[index]=leftArr[leftIndex];
+         leftArr[leftIndex].count=rightArr.length;
+         leftIndex++;
+         index++;
+    }
+          while(rightIndex<rightArr.length){
+          sortedArr[index]=rightArr[rightIndex];
+          rightIndex++;
+          index++;
+    }
+        index=0;
+        while(index<sortedArr.length){
+            
+            this.numbers[l]=sortedArr[index];
+            this.answer.set(sortedArr[index].originalIndex,
+                        this.answer.get(sortedArr[index].originalIndex)
+                            +sortedArr[index].count);
+            sortedArr[index].count=0;
+            l++;
+            index++;
+        }
+    }
+    public void divideNums(int l, int r){  
+        if(l>=r){
+            return;
+        }
+        int mid=l+(r-l)/2;
+        divideNums(l,mid);
+        divideNums(mid+1,r);
+        countSmallerHelper(l,mid,r);  
+    }
+    public List<Integer> countSmaller(int[] nums) {
+        
+        this.numbers=new Pair[nums.length];
+        this.answer=new ArrayList<Integer>();
+        for(int i=0;i<nums.length;i++){
+            
+            this.numbers[i]=new Pair(nums[i],i);
+            this.answer.add(0);
+        }
+        
+        divideNums(0,numbers.length-1);
+        return this.answer;
+    }
+}
+//[5,2,6,1]
+//[12,1,2,3,0,11,4]
