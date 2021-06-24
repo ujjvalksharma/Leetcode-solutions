@@ -14,3 +14,79 @@ class Solution {
         return maxSumOverAll;
     }
 }
+//divide and conquer
+
+    /*
+    IF we know that current element is grater than the subarray we will form till current element then we choose that element, else we add the current element in the subarray
+    
+    */
+/*class Solution {
+
+    public int maxSubArray(int[] nums) {
+        int maxSum=nums[0];
+        int maxSumOverAll=nums[0];
+        for(int i=1;i<nums.length;i++){
+        
+            maxSum=Math.max(maxSum+nums[i],nums[i]);
+            maxSumOverAll=Math.max(maxSum,maxSumOverAll);
+        }
+        return maxSumOverAll;
+    }
+}*/
+    /*
+    IF we know that current element is grater than the subarray we will form till current element then we choose that element, else we add the current element in the subarray
+    
+    */
+/*class Solution {
+
+    public int maxSubArray(int[] nums) {
+        int maxSum=nums[0];
+        int maxSumOverAll=nums[0];
+        for(int i=1;i<nums.length;i++){
+        
+            maxSum=Math.max(maxSum+nums[i],nums[i]);
+            maxSumOverAll=Math.max(maxSum,maxSumOverAll);
+        }
+        return maxSumOverAll;
+    }
+}*/
+/*
+Divide and concuqer
+//keep diving array like binary search and find sum from mid to l and mid to r and then calculate the max. since diviion is logn and finding sum is n for each mid, so time complexity is nlogn
+*/
+class Solution {
+
+    int[] nums;
+    public int maxSubArrayHelper(int l, int r){
+        if(l>r){
+            return Integer.MIN_VALUE;
+        }
+        int mid=l+(r-l)/2;
+        
+        int currLeftMax=0;
+        int currRightMax=0;
+        int currSum=0;
+        for(int i=mid-1;i>=l;i--){
+            currSum+=nums[i];
+           currLeftMax=Math.max(currLeftMax,currSum); 
+            
+        }
+        currSum=0;
+           for(int i=mid+1;i<=r;i++){
+            currSum+=nums[i];
+           currRightMax=Math.max(currRightMax,currSum); 
+            
+        }
+        
+        int totalMaxSum=this.nums[mid]+currRightMax+currLeftMax;
+        
+        int leftSum=maxSubArrayHelper(l,mid-1);
+        int rightSum=maxSubArrayHelper(mid+1,r);
+        
+        return Math.max(totalMaxSum,Math.max(leftSum,rightSum));
+    }
+    public int maxSubArray(int[] nums) {
+       this.nums=nums;
+        return maxSubArrayHelper(0,nums.length-1);
+    }
+}
