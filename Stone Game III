@@ -1,5 +1,40 @@
 //https://www.youtube.com/watch?v=HsY3jFyaePU
+// we are taking max of all the three choices because a player we make a choice if that can lead him to the highest score to defeat the other player
+
+//make recurisve dp to iterative by putting everthing in a while loop and start from end and use dp of size n+1 instead of hashmap to get corner default values
 class Solution {
+    int[] stoneValue;
+    public String stoneGameIII(int[] stoneValue) {
+        
+        
+        this.stoneValue=stoneValue;
+        int[] dp=new int[this.stoneValue.length+1];
+
+       int index=this.stoneValue.length-1;
+while(index>=0){
+            int maxScoreByCurr=Integer.MIN_VALUE;
+  maxScoreByCurr=Math.max(maxScoreByCurr,this.stoneValue[index]-dp[index+1]);
+        
+        if(index+1<this.stoneValue.length){        maxScoreByCurr=Math.max(maxScoreByCurr,this.stoneValue[index]+this.stoneValue[index+1]-dp[index+2]);  
+        }
+ if(index+2<this.stoneValue.length){
+            maxScoreByCurr=Math.max(maxScoreByCurr,                       this.stoneValue[index]+this.stoneValue[index+1]+this.stoneValue[index+2]-dp[index+3]); 
+        }
+        dp[index]=maxScoreByCurr;
+    index--;
+}
+        
+        if(dp[0]>0){
+            return "Alice";
+        }else if(dp[0]<0){
+            return "Bob";
+        }else{
+            return "Tie";
+        }
+    }
+}
+//memory+recursion
+/*class Solution {
     int[] stoneValue;
     HashMap<Integer,Integer> hmIndexToTotalScore=new HashMap<Integer,Integer>();
     public int stoneGameIIIHelper(int index){
@@ -36,6 +71,7 @@ class Solution {
         
     }
 }
+*/
 /*
 class Solution {
     int[] stoneValue;
