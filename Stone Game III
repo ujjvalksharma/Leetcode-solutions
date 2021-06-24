@@ -1,0 +1,74 @@
+//https://www.youtube.com/watch?v=HsY3jFyaePU
+class Solution {
+    int[] stoneValue;
+    HashMap<Integer,Integer> hmIndexToTotalScore=new HashMap<Integer,Integer>();
+    public int stoneGameIIIHelper(int index){
+        if(index>=this.stoneValue.length){
+                 return 0;
+             }
+        
+        if(hmIndexToTotalScore.containsKey(index)){
+            return hmIndexToTotalScore.get(index);
+        }
+            int maxScoreByCurr=Integer.MIN_VALUE;
+  maxScoreByCurr=Math.max(maxScoreByCurr,this.stoneValue[index]-stoneGameIIIHelper(index+1));
+        
+        if(index+1<this.stoneValue.length){        maxScoreByCurr=Math.max(maxScoreByCurr,this.stoneValue[index]+this.stoneValue[index+1]-stoneGameIIIHelper(index+2));  
+        }
+ if(index+2<this.stoneValue.length){
+            maxScoreByCurr=Math.max(maxScoreByCurr,                       this.stoneValue[index]+this.stoneValue[index+1]+this.stoneValue[index+2]-stoneGameIIIHelper(index+3)); 
+        }
+        hmIndexToTotalScore.put(index,maxScoreByCurr);
+        return maxScoreByCurr;
+    }
+    public String stoneGameIII(int[] stoneValue) {
+        
+        this.stoneValue=stoneValue;
+        int aliceScore =stoneGameIIIHelper(0);
+        if(aliceScore>0){
+            return "Alice";
+        }else if(aliceScore<0){
+            return "Bob";
+        }else{
+            return "Tie";
+        }
+        
+        
+    }
+}
+/*
+class Solution {
+    int[] stoneValue;
+    public int stoneGameIIIHelper(int index){
+        if(index>=this.stoneValue.length){
+                 return 0;
+             }
+        
+            int maxScoreByCurr=-1;
+  maxScoreByCurr=Math.max(maxScoreByCurr,this.stoneValue[index]-stoneGameIIIHelper(index+1));
+        if(index+1<this.stoneValue.length){        maxScoreByCurr=Math.max(maxScoreByCurr,this.stoneValue[index]+this.stoneValue[index+1]-stoneGameIIIHelper(index+2));  
+        }
+ if(index+2<this.stoneValue.length){
+            maxScoreByCurr=Math.max(maxScoreByCurr,                       this.stoneValue[index]+this.stoneValue[index+1]+this.stoneValue[index+2]-stoneGameIIIHelper(index+3)); 
+        }
+        
+        return maxScoreByCurr;
+    }
+    public String stoneGameIII(int[] stoneValue) {
+        
+        this.stoneValue=stoneValue;
+        int aliceScore =stoneGameIIIHelper(0);
+        if(aliceScore>0){
+            return "Alice";
+        }else if(aliceScore<0){
+            return "Bob";
+        }else{
+            return "Tie";
+        }
+        
+        
+    }
+}
+*/
+    
+    
