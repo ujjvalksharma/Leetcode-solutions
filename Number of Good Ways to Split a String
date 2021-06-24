@@ -1,0 +1,51 @@
+/*
+
+// aacaba
+// 112233 -> left to right
+// 333221
+
+Use to idea of prefix and suffix array to keep character count, as we know if we split the string the character count of that i (prefix array) should be same as suffix array (i+1)
+*/
+class Solution {
+    public int numSplits(String s) {
+        
+        int size=s.length();
+        int[] distinctCharFromLeft=new int[size];
+        int[] distinctCharFromRight=new int[size];
+        int[] charCount=new int[26];
+        
+        for(int i=0;i<size;i++){
+            charCount[s.charAt(i)-'a']++;
+            int count=0;
+            for(int k=0;k<26;k++){
+                if(charCount[k]>0){
+                    count++;
+                }
+            }
+            distinctCharFromLeft[i]=count;
+        }
+        
+           Arrays.fill(charCount,0);
+        
+        for(int i=size-1;i>=0;i--){
+            charCount[s.charAt(i)-'a']++;
+            int count=0;
+            for(int k=0;k<26;k++){
+                if(charCount[k]>0){
+                    count++;
+                }
+            }
+            distinctCharFromRight[i]=count;
+        }
+  //      System.out.println(Arrays.toString(distinctCharFromLeft));
+    //    System.out.println(Arrays.toString(distinctCharFromRight));
+        int totalEqualSplits=0;
+        for(int i=0;i<size-1;i++){
+            if(distinctCharFromLeft[i]==distinctCharFromRight[i+1]){
+                totalEqualSplits++;
+            }
+        }
+        return totalEqualSplits;
+    }
+}
+
