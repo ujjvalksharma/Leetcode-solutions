@@ -1,0 +1,130 @@
+    //largest histogram area
+class Solution {
+        //largest histogram area code for max Area
+        public int largestRectangleArea(int[] heights) {
+        
+        
+        
+        Stack<Integer> stk=new Stack<>();
+        int[] nextSamllerAtRight=new int[heights.length];
+        int[] nextSamllerAtLeft=new int[heights.length];
+        
+        // smallest element at right side. pop elements till we see a new smaller element
+        for(int i=0;i<heights.length;i++){
+            if(stk.isEmpty()){
+                stk.push(i);
+            }else{
+                if(heights[stk.peek()]>heights[i]){
+                    while(!stk.isEmpty()&&heights[stk.peek()]>heights[i]){
+                        nextSamllerAtRight[stk.pop()]=i;
+                    }
+                }
+                
+                stk.push(i);
+            }
+        }
+              // elements who did not have samller element at right side
+         while(!stk.isEmpty()){
+            nextSamllerAtRight[stk.pop()]=-1;
+        }
+        
+            // smallest element at left side. pop elements till we see a new smaller element
+         // code code as smaller next element at right except we start from end
+            for(int i=heights.length-1;i>=0;i--){
+            if(stk.isEmpty()){
+                stk.push(i);
+            }else{
+                if(heights[stk.peek()]>heights[i]){
+                    while(!stk.isEmpty()&&heights[stk.peek()]>heights[i]){
+                        nextSamllerAtLeft[stk.pop()]=i;
+                    }
+                }
+                
+                stk.push(i);
+            }
+        }
+        
+        // elements who did not have samller element at left side
+          while(!stk.isEmpty()){ 
+            nextSamllerAtLeft[stk.pop()]=-1;
+        }
+       int maxReactangleArea=0;
+        
+        /*
+        length= (currentIndex- nextSmallestIndexTolleft) // left range contribution to length
+             +(nextSmallestIndexTolRight - currentIndex) // right range contribution to lengh
+             + 1 // current index contribution to length
+             *heigts[i] //tallness of all bar
+        
+        */
+        for(int i=0;i<heights.length;i++){
+            int rangeOnLeft=nextSamllerAtLeft[i];
+             int rangeOnRight=nextSamllerAtRight[i];
+   
+            if(rangeOnLeft==-1&&rangeOnRight==-1){
+                maxReactangleArea=Math.max(maxReactangleArea,heights[i]*heights.length);
+            }else if(rangeOnLeft==-1){
+                    rangeOnRight=rangeOnRight-i-1;
+                  maxReactangleArea=Math.max(maxReactangleArea,heights[i]*(i+rangeOnRight+1));
+            }else if(rangeOnRight==-1){
+                   rangeOnLeft=i-rangeOnLeft-1;
+                  maxReactangleArea=Math.max(maxReactangleArea,heights[i]*
+                                             ((heights.length-1-i)+rangeOnLeft+1));
+            }else{
+                rangeOnLeft=i-rangeOnLeft-1;
+                rangeOnRight=rangeOnRight-i-1;
+                maxReactangleArea=Math.max(maxReactangleArea,heights[i]*(rangeOnLeft+rangeOnRight+1));
+                
+            }
+            
+            
+        }
+        
+        return maxReactangleArea;
+    }
+    
+    public int maximalRectangle(char[][] matrix) {
+        
+        if(matrix.length==0){
+            return 0;
+        }
+        int[][] dp=new int[matrix.length][matrix[0].length];
+        int maxArea=0;
+        for(int r=0;r<matrix.length;r++){
+            
+            for(int c=0;c<matrix[0].length;c++){
+                
+                if(r==0){
+                    if(matrix[r][c]=='1'){
+                        dp[r][c]=1;
+                    }else{
+                          dp[r][c]=0;
+                    }
+                }else{
+                    
+                      if(matrix[r][c]=='1'){
+                       //  System.out.println("r: "+r+" c: "+c);
+                          if(dp[r-1][c]>0){
+                           //    System.out.println("I am here");
+                        dp[r][c]=dp[r-1][c]+1;
+                          }else{
+                            dp[r][c]=1;  
+                          }
+                      }else{
+                          dp[r][c]=0;
+                    }
+                     
+                }
+                
+            }
+        }
+        
+        
+         for(int r=0;r<dp.length;r++){
+             System.out.println(Arrays.toString(dp[r]));
+             maxArea=Math.max(maxArea,largestRectangleArea(dp[r]));
+         }
+        
+        return maxArea;
+    }
+}
