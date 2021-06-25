@@ -1,0 +1,143 @@
+//https://www.youtube.com/watch?v=GqXlEbFVTXY
+class Solution {
+public List<String> fullJustify(String[] words, int maxWidth) {
+	List<String> res = new ArrayList<>();
+	int i = 0;
+	while (i < words.length) {
+		List<String> curLine = new ArrayList<>();
+		int num = 0, curLen = 0;
+		// start building current string line 
+		while (i < words.length && (curLen + words[i].length() + num <= maxWidth)) {
+			curLen += words[i].length();
+			curLine.add(words[i]);
+			num++;
+			i++;
+		}
+		// left justify
+		if (num == 1 || i == words.length) {
+			res.add(leftJustifyBuild(curLine, maxWidth));
+		}
+		// regular build with more space on the left side
+		else {
+			res.add(regularBuild(maxWidth - curLen, num, curLine));
+		}
+	}
+	return res;
+}
+public String leftJustifyBuild(List<String> curLine, int maxWidth) {
+	StringBuilder sb = new StringBuilder();
+	int rest = maxWidth;
+	for (int j = 0; j < curLine.size(); j++) {
+		String str = curLine.get(j);
+		rest -= str.length();
+		sb.append(str);
+		if (rest != 0) {
+			sb.append(" ");
+			rest--;
+		}
+	}
+	// append rest of spaces
+	while (rest != 0) {
+		sb.append(" ");
+		rest--;
+	} 
+	return new String(sb);
+}
+public String regularBuild(int space, int num, List<String> curLine) {
+	StringBuilder sb = new StringBuilder();
+	int extra = space % (num - 1);
+	int each = space / (num - 1);
+	for (int j = 0; j < curLine.size(); j++) {
+		String str = curLine.get(j);
+		sb.append(str);
+		if (j == curLine.size() - 1) continue;
+		for (int k = 1; k <= each; k++) {
+			sb.append(" ");
+		}
+		if (extra > 0) {
+			sb.append(" ");
+			extra--;
+		}
+	}
+	return new String(sb);
+}
+}
+
+/*class Solution {
+    List<String> result;
+    String[] words;
+    int maxWidth;
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        
+        int start=0;
+        this.result=new ArrayList<String>();
+        this.words=words;
+        this.maxWidth=maxWidth;
+       while(start<words.length){
+          
+           int currLineLength=words[start].length();
+           int j=start+1; //words to add
+           while(j<words.length&&(currLineLength+words[j].length()+(j-start))<maxWidth){
+               currLineLength+=words[j].length();
+              j++;
+           }
+        //   System.out.println("start word: "+words[start]+" j: "+j);
+           int end=j-1;
+           //only word or last sentence for left justified
+           if(j>=words.length||start==end){
+               setLeftJustified(start,end,currLineLength);
+           }else{
+               setMiddleJustified(start,end,currLineLength); 
+           }
+           start=j;
+
+           
+       }
+        return result;
+    }
+    
+    public void setLeftJustified(int start, int end, int currLineLength){
+        
+        int extraSpacesNeeded=maxWidth-currLineLength;
+        StringBuilder sb=new StringBuilder("");
+        for(int i=start;i<=end;i++){
+            
+            sb.append(this.words[i]);
+            if(extraSpacesNeeded>0){
+                sb.append(" ");
+                extraSpacesNeeded--;
+            }
+        }
+        sb.append(" ".repeat(extraSpacesNeeded));
+        this.result.add(sb.toString());
+    }
+    
+    public void setMiddleJustified(int start, int end, int currLineLength){
+        
+       
+        int totalSpacesNeeded=this.maxWidth-currLineLength;
+        int totalWords=end-start+1;
+        int totalSpacesBetweenWords=totalSpacesNeeded/(totalWords-1);
+        int extraSpaces=totalSpacesNeeded%(totalWords-1);
+         System.out.println("start: "+words[start]+" -> end: "+words[end]);
+         System.out.println("currLineLength: "+currLineLength);
+         System.out.println("totalWords: "+totalWords);
+         System.out.println("totalSpacesBetweenWords: "+totalSpacesBetweenWords);
+         System.out.println("extraSpaces: "+extraSpaces);
+        System.out.println("totalSpacesNeeded: "+totalSpacesNeeded);
+         StringBuilder sb=new StringBuilder("");
+        for(int i=start;i<end;i++){
+            int totalSpacesToApply=totalSpacesBetweenWords;
+            if(extraSpaces>0){
+                totalSpacesToApply++;
+                extraSpaces--;
+            }
+            sb.append(this.words[i]);
+            sb.append(" ".repeat(totalSpacesToApply));
+            
+        }
+           sb.append(this.words[end]);
+           System.out.println(sb.length());
+          this.result.add(sb.toString());
+    }
+}*/
