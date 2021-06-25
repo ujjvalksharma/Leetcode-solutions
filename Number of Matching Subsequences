@@ -1,0 +1,55 @@
+//https://www.youtube.com/watch?v=Vch3pFgmKD8
+class Solution {
+    class Node{
+        int index;
+        String word;
+        int size;
+        Node(String word,int index){
+            this.index=index;
+            this.word=word;
+            this.size=word.length();
+        }
+        
+        public String toString(){
+            return " word: "+word+" index: "+index+" size: "+size;
+        }
+        
+    }
+    public int numMatchingSubseq(String s, String[] words) {
+        
+        HashMap<Character,List<Node>> hmCharToStartWord=new HashMap<Character,List<Node>>();
+        int ctnMatchingSubsequence=0;
+        for(char c: s.toCharArray()){
+            if(!hmCharToStartWord.containsKey(c)){
+                hmCharToStartWord.put(c,new ArrayList<Node>());
+            }
+        }
+        
+        for(String word: words){
+            if(hmCharToStartWord.containsKey(word.charAt(0))){
+                Node node=new Node(word,0);
+                hmCharToStartWord.get(word.charAt(0)).add(node);
+            }
+        }
+         for(char c: s.toCharArray()){
+             List<Node> nodes=hmCharToStartWord.get(c);
+        hmCharToStartWord.put(c,new ArrayList<Node>());
+             for(int i=0;i<nodes.size();i++){
+                 Node node=nodes.get(i);
+                 node.index=node.index+1;
+                 if(node.index>=node.size){
+                     ctnMatchingSubsequence++;
+                     continue;
+                 }
+                 if(hmCharToStartWord.containsKey(node.word.charAt(node.index))){
+                     hmCharToStartWord.get(node.word.charAt(node.index)).add(node);
+                 }
+             }
+                       //   hmCharToStartWord.get(c).clear();
+             
+         }
+        
+        
+        return ctnMatchingSubsequence;
+    }
+}
