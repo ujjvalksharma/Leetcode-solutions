@@ -1,0 +1,186 @@
+class RangeModule {
+
+ TreeMap<Integer, Integer> map;
+    
+public RangeModule() {
+	map = new TreeMap<>();    
+}
+
+    //take the leftmost key value and rightmost val and make a new interval of it and remove it
+public void addRange(int left, int right) {
+	//see if left variable can be expanded
+	Integer prevInteval = map.floorKey(left);
+	if(prevInteval!=null && left <= map.get(prevInteval)){
+		left = Math.min(prevInteval,left); //get minimum among both intervals
+	}
+
+	//see if right variable can be expanded
+	Integer nextInteval = map.floorKey(right);
+	if(nextInteval!=null && map.get(nextInteval) > right){
+		right = map.get(nextInteval); //get max among both intervals
+	}
+
+	map.put(left,right);
+
+	//remove all except (left,right)
+	map.subMap(left,false,right,false).clear();
+}
+
+public boolean queryRange(int left, int right) {
+	//since we know that we are storing condensed(merged) intervals so just check prev
+	Integer prevInterval = map.floorKey(left);
+	if(prevInterval != null){
+		return map.get(prevInterval) >= right;
+	}
+	return false;
+}
+
+public void removeRange(int left, int right) {
+	//see if intersection with next (Do this step first to avoid changing the map) 
+	Integer nextInteval = map.floorKey(right);
+	if(nextInteval!=null && map.get(nextInteval) > right){
+		map.put(right,map.get(nextInteval));//reset nextInteval
+	}
+
+	//see if intersection with prev
+	Integer prevInteval = map.floorKey(left);
+	if(prevInteval!=null && left < map.get(prevInteval)){
+		map.put(Math.min(prevInteval,left),Math.max(prevInteval,left));//reset prevInterval
+	}
+
+	//remove all the other things in between
+	map.subMap(left,true,right,false).clear();
+}
+    
+}
+
+/*
+["RangeModule","addRange","removeRange","queryRange","queryRange","queryRange"]
+[[],[10,20],[14,16],[10,14],[13,15],[16,17]]
+
+["RangeModule","addRange","removeRange"]
+[[],[10,20],[14,16]]
+*/
+
+
+/**
+ * Your RangeModule object will be instantiated and called as such:
+ * RangeModule obj = new RangeModule();
+ * obj.addRange(left,right);
+ * boolean param_2 = obj.queryRange(left,right);
+ * obj.removeRange(left,right);
+ */
+
+/*
+//to many condition using treemap
+
+class RangeModule {
+
+     TreeMap<Integer, Integer> map;
+    public RangeModule() {
+        map=new TreeMap<Integer,Integer>();
+    }
+    
+  
+    public void addRange(int left, int right) {
+        
+          Integer leftRangeVal1=map.floorKey(left);
+          Integer leftRangeVal2=map.floorKey(right);
+          
+        if(leftRangeVal1==null){ //curr is the leftmost, so just add it
+            map.put(left,right-1);
+            System.out.println(map);
+            return;
+        }
+        int rightRange=map.get(leftRangeVal1);
+         if(leftRangeVal>=left&&right<=rightRange){ //range is present in it
+            //do nothing, as numbers are already present in the current range
+             return;
+        }
+        if(leftRangeVal1==leftRangeVal2){
+             map.put(leftRangeVal,Math.max(rightRange,right));
+        }
+         else{
+            int rightMaxRange=map.get(leftRangeVal2);
+            map.remove(leftRangeVal1);
+            map.remove(leftRangeVal2);
+            map.put(leftRangeVal1,rightMaxRange);
+        }
+        
+        System.out.println(map);
+    }
+    
+
+    public boolean queryRange(int left, int right) {
+        
+        Integer leftRangeVal=map.floorKey(left);
+        if(leftRangeVal==null){
+            return false;
+        }
+        int rightRange=map.get(leftRangeVal);
+        if(leftRangeVal>=left&&right<=rightRange){
+            return true;
+        }
+        return false;
+        
+    }
+       
+    //  [ id:1 ]  [ id:2 ] [ id:3 ]
+    public void removeRange(int left, int right) {
+        right--;
+        if(map.floorKey(left)==null&&map.floorKey(right)==null){
+            //removing before id1
+            return;
+        }
+        //right side is inside id and left side is outside to the left of id1
+        if(map.floorKey(left)==null&&map.floorKey(right)!=null){
+            int leftRange=map.floorKey(right);
+            int rightRange=map.get(leftRange);
+            map.remove(leftRange);
+            map.put(right+1,rightRange);
+            return;
+        }
+        //whole range is present inside a range
+          if(map.floorKey(left)!=null&&map.floorKey(right)!=null
+             &&map.floorKey(left)==map.floorKey(right)){
+            int leftRange=map.floorKey(left);
+            int rightRange=map.get(leftRange);
+              
+            map.remove(leftRange);
+            map.put(leftRange,left-1);
+            map.put(right+1,rightRange);
+              return;
+        }
+        if(map.floorKey(left)!=null){
+            int leftRange=map.floorKey(left);
+            int rightRange=map.get(leftRange);
+            map.remove(leftRange);
+            map.put(leftRange,left-1);
+        }
+        
+        if(map.floorKey(right)!=null){
+            int leftRange=map.floorKey(right);
+            int rightRange=map.get(leftRange);
+            map.remove(leftRange);
+            map.put(right+1,rightRange);
+        }
+    }
+}
+
+/*
+["RangeModule","addRange","removeRange","queryRange","queryRange","queryRange"]
+[[],[10,20],[14,16],[10,14],[13,15],[16,17]]
+
+["RangeModule","addRange","removeRange"]
+[[],[10,20],[14,16]]
+*/
+
+
+/**
+ * Your RangeModule object will be instantiated and called as such:
+ * RangeModule obj = new RangeModule();
+ * obj.addRange(left,right);
+ * boolean param_2 = obj.queryRange(left,right);
+ * obj.removeRange(left,right);
+ */
+
