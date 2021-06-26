@@ -1,0 +1,69 @@
+/*
+LIS using binary search and Dp
+in this problem, we add element to list if it is greater than the previous element else we add the lower element to index in the list where we find the fist greater element from left to right using binary and at the end, we have a list with increasing sequence.
+*/
+class Solution {
+    
+    int getLastFirstGreaterNumber(List<Integer> nums, int low, int high, int key){
+        
+        int index=high;
+        while(low<=high){
+            int mid=low+(high-low)/2;
+            if(nums.get(mid)>=key){
+                index=Math.min(index,mid);
+                high=mid-1;
+            }else{
+                   low=mid+1;
+            }
+        }
+        
+        return index;
+    }
+    public int lengthOfLIS(int[] nums) {
+        
+        List<Integer> increasingSequence=new ArrayList<Integer>();
+        for(int num: nums){
+            if(increasingSequence.size()==0){
+                increasingSequence.add(num);
+            }else if(num>increasingSequence.get(increasingSequence.size()-1)){
+                increasingSequence.add(num);
+            }else{
+                int  index=getLastFirstGreaterNumber(increasingSequence,0,increasingSequence.size()-1,num);
+                increasingSequence.set(index,num);
+            }
+        }
+        return increasingSequence.size();
+        
+    }
+}
+// Using Dp On2
+
+ /*public int lengthOfLIS(int[] nums) {
+        
+        if(nums.length==0)
+            return 0;
+        
+        int dp[]= new int[nums.length];
+        Arrays.fill(dp,1);
+        int i=1;
+        int j=0;
+        int max_len=1;
+        while(i<nums.length)
+        {
+            if(nums[j]<nums[i])
+            {
+                 dp[i]=Math.max(dp[i],dp[j]+1);
+            max_len=Math.max(max_len,dp[i]);
+            }
+             j++;   
+            
+            if(j==i)
+            {
+                i++;
+                j=0;
+            }
+           
+        }
+        
+        return max_len;
+    }*/
