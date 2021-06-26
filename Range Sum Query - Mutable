@@ -1,0 +1,117 @@
+//segment tree
+//https://www.youtube.com/watch?v=2bSS8rtFym4&t=732s
+//https://www.youtube.com/watch?v=Ic7OO3Uw6J0
+class NumArray {
+
+    class Node{
+        int start;
+        int end;
+        int sum;
+        Node left;
+        Node right;
+        Node(int start, int end){
+            this.start=start;
+            this.end=end;
+            this.sum=0;
+            this.left=null;
+            this.right=null;
+        }
+        @Override
+        public String toString(){
+            return "start: "+start+" end: "+end+" sum: "+sum;
+        }
+    }
+    Node head;
+    int[] nums;
+    int rangeSum=0;
+    public Node constructSegmentTree(int left, int right){
+        if(left>right){
+            return null;
+        }
+        Node curr=new Node(left,right);
+        int mid=left+(right-left)/2;
+        if(left==right){
+          curr.sum=this.nums[left];// or curr.sum=this.nums[right];
+        }else{
+             curr.left=constructSegmentTree(left,mid);
+             curr.right=constructSegmentTree(mid+1,right);
+            curr.sum=curr.left.sum+curr.right.sum;
+        }
+        
+     //    System.out.println(curr);
+           return curr;
+    }
+    public void updateSegmentTreeHelper(int index,Node head, int diff){
+        
+        if(head==null){
+            return;
+        }
+        
+        if(index>=head.start&&index<=head.end){
+            head.sum+=diff;
+            updateSegmentTreeHelper(index,head.left,diff);
+            updateSegmentTreeHelper(index,head.right,diff);
+        }
+        
+    }
+    
+    public void sumRangeHelper(Node head, int left, int right){
+        
+        if(head==null){
+            return;  
+        }
+        if(head.end<left||head.start>right){ // [0,1] (2,4) (5,6)
+            return;
+        }
+     //   System.out.println(head);
+        if(left<=head.start&&right>=head.end){
+         //   System.out.println(head); //1,2  ----- 0,2
+            
+            this.rangeSum+=head.sum;
+        }else{
+            sumRangeHelper(head.left,left,right);
+            sumRangeHelper(head.right,left,right);
+        }
+        
+    }
+    public NumArray(int[] nums) {
+        
+        this.nums=nums;
+        this.head=constructSegmentTree(0,this.nums.length-1);
+        
+        
+    }
+    
+    public void update(int index, int val) {
+        
+        int oldVal=this.nums[index];
+        int diff=val-oldVal; //add diff to segment for a range
+        this.nums[index]=val;
+        updateSegmentTreeHelper(index,this.head,diff);
+        
+    }
+    
+    public int sumRange(int left, int right) {
+        
+        this.rangeSum=0;
+        sumRangeHelper(this.head,left,right);
+        
+        return this.rangeSum;
+    }
+}
+
+/*
+
+   0-2
+   
+0-1    2
+  
+0  1
+   
+*/
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * obj.update(index,val);
+ * int param_2 = obj.sumRange(left,right);
+ */
