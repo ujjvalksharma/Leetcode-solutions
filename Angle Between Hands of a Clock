@@ -1,0 +1,68 @@
+// angle is calculated from 12 
+//30 min- > 180, in 30 mins the minitue hand moves 180 degree from 12
+// 1 min-> 6 d (minitue hand)
+// 60 min -> 30 d  (hour hand) and 60 mins the hour hands from by 30 degree for instance from 12 to 1 in 60 mins.
+// 1 min -> 0.5
+// 180-15=165
+class Solution {
+    public double angleClock(int hour, int minutes) {
+        
+        
+        TreeMap<Integer,Integer> tmTimeToClockAngle=new  TreeMap<Integer,Integer>();
+        TreeMap<Integer,Integer> tmTimeToAntiClockAngle=new  TreeMap<Integer,Integer>();
+        
+        tmTimeToClockAngle.put(1,30);
+        tmTimeToClockAngle.put(2,60);
+        tmTimeToClockAngle.put(3,90);
+        tmTimeToClockAngle.put(4,120);
+        tmTimeToClockAngle.put(5,150);
+        tmTimeToClockAngle.put(6,180);
+        tmTimeToClockAngle.put(7,210);
+        tmTimeToClockAngle.put(8,240);
+        tmTimeToClockAngle.put(9,270);
+        tmTimeToClockAngle.put(10,300);
+        tmTimeToClockAngle.put(11,330);
+        tmTimeToClockAngle.put(12,0);
+        
+        tmTimeToAntiClockAngle.put(1,330);
+        tmTimeToAntiClockAngle.put(2,300);
+        tmTimeToAntiClockAngle.put(3,270);
+        tmTimeToAntiClockAngle.put(4,240);
+        tmTimeToAntiClockAngle.put(5,210);
+        tmTimeToAntiClockAngle.put(6,180);
+        tmTimeToAntiClockAngle.put(7,150);
+        tmTimeToAntiClockAngle.put(8,120);
+        tmTimeToAntiClockAngle.put(9,90);
+        tmTimeToAntiClockAngle.put(10,60);
+        tmTimeToAntiClockAngle.put(11,30);
+        tmTimeToAntiClockAngle.put(12,0);
+        
+        
+        double clockWiseHourAngle=tmTimeToClockAngle.get(tmTimeToClockAngle.floorKey(hour))+0.5*minutes;
+        
+        double clockWiseMinitueAngle=minutes*6;
+        
+        double antiClockWiseHourAngle=360-tmTimeToClockAngle.get(tmTimeToClockAngle.floorKey(hour))-0.5*minutes;
+        
+         double antiClockWiseMinitueAngle=360-minutes*6;
+        
+        System.out.println("clockWiseHourAngle: "+clockWiseHourAngle+"clockWiseMinitueAngle:"+clockWiseMinitueAngle);
+        
+          System.out.println("antiClockWiseHourAngle: "+antiClockWiseHourAngle+"antiClockWiseMinitueAngle:"+antiClockWiseMinitueAngle);
+     //   return 0;
+        
+        
+          //case 1 hour angle is clockwise and minitue clockwise
+        double case1=Math.abs(clockWiseHourAngle-clockWiseMinitueAngle);
+        //case 2 hour is anticlockwise and minitue anticlockwise
+         //addition as  angle angle direction is opposite we difference is addition for instance speed in opposide is added, for instance angle between 11 and 1 is addtion of angle between 11 and 12 and angle between 12 and 1 as we calculating from opposite side for either hour or minitue
+        //case 4 hour is anti-clock and minitue is clock wise
+        double case2=Math.abs(antiClockWiseHourAngle-antiClockWiseMinitueAngle);
+        //case 3 hour is clock and minitue anit-clock
+        double case3=clockWiseHourAngle+antiClockWiseMinitueAngle;
+        //case 4 hour is anti-clock and minitue is clock wise
+        double case4=antiClockWiseHourAngle+clockWiseMinitueAngle;
+        
+        return Math.min(case1,Math.min(case2,Math.min(case3,case4)));
+    }
+}
