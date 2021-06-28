@@ -1,0 +1,128 @@
+//https://www.youtube.com/watch?v=3iONGQqlj_I
+/*class TicTacToe {
+
+    class Player{
+        int p1;
+        int p2;
+        Player(){
+            this.p1=0;
+            this.p2=0;
+        }
+    }*/
+    /** Initialize your data structure here. */
+    //diag1 is from top left to top bottom right
+    //diag2 is from top right to top bottom left
+/*    int p1Diag1=0; 
+    int p2Diag1=0;
+    
+    int p1Diag2=0;
+    int p2Diag2=0;
+    
+    Player[] rowPlayerCount;
+    Player[] colPlayerCount;
+    int size;
+    public TicTacToe(int n) {
+        
+        rowPlayerCount=new Player[n];
+        colPlayerCount=new Player[n];
+        this.size=n;
+    }*/
+    
+    /** Player {player} makes a move at ({row}, {col}).
+        @param row The row of the board.
+        @param col The column of the board.
+        @param player The player, can be either 1 or 2.
+        @return The current winning condition, can be either:
+                0: No one wins.
+                1: Player 1 wins.
+                2: Player 2 wins. */
+ /*   public int move(int row, int col, int player) {
+        
+        if(row==col){
+            if(player==1){
+               p1Diag1++; 
+            }else{
+                p2Diag1++;
+            }
+        }
+        
+          if(Math.abs(row-col)==this.size-1){
+            if(player==1){
+               p1Diag2++; 
+            }else{
+                p2Diag2++;
+            }
+        }
+        if(rowPlayerCount[row]==null){
+           rowPlayerCount[row]=new Player(); 
+        }
+          if(colPlayerCount[col]==null){
+           colPlayerCount[col]=new Player(); 
+        }
+        
+         if(player==1){
+               rowPlayerCount[row].p1++; 
+               colPlayerCount[col].p1++; 
+            }else{
+                rowPlayerCount[row].p2++; 
+                colPlayerCount[col].p2++; 
+            }
+        
+        if(rowPlayerCount[row].p1==this.size||
+           colPlayerCount[col].p1==this.size||
+           p1Diag1==this.size||this.p1Diag2==this.size){
+            return 1;
+        }
+        
+         if(rowPlayerCount[row].p2==this.size||
+            colPlayerCount[col].p2==this.size||
+           p2Diag1==this.size||this.p2Diag2==this.size){
+            return 2;
+        }
+        
+        return 0;
+    }
+}
+*/
+/**
+ * Your TicTacToe object will be instantiated and called as such:
+ * TicTacToe obj = new TicTacToe(n);
+ * int param_1 = obj.move(row,col,player);
+ */
+
+public class TicTacToe {
+    int[] rows;
+    int[] cols;
+    int diagonal;
+    int antiDiagonal;
+
+    public TicTacToe(int n) {
+        rows = new int[n];
+        cols = new int[n];
+    }
+
+    public int move(int row, int col, int player) {
+        int currentPlayer = (player == 1) ? 1 : -1;
+        // update currentPlayer in rows and cols arrays
+        rows[row] += currentPlayer;
+        cols[col] += currentPlayer;
+        // update diagonal
+        if (row == col) {
+            diagonal += currentPlayer;
+        }
+        //update anti diagonal
+        if (col == (cols.length - row - 1)) {
+            antiDiagonal += currentPlayer;
+        }
+        int n = rows.length;
+        // check if the current player wins
+        if (Math.abs(rows[row]) == n ||
+                Math.abs(cols[col]) == n ||
+                Math.abs(diagonal) == n ||
+                Math.abs(antiDiagonal) == n) {
+            return player;
+        }
+        // No one wins
+        return 0;
+    }
+}
