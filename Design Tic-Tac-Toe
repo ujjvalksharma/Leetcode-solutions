@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=3iONGQqlj_I
-/*class TicTacToe {
+class TicTacToe {
 
     class Player{
         int p1;
@@ -8,11 +8,11 @@
             this.p1=0;
             this.p2=0;
         }
-    }*/
+    }
     /** Initialize your data structure here. */
     //diag1 is from top left to top bottom right
     //diag2 is from top right to top bottom left
-/*    int p1Diag1=0; 
+    int p1Diag1=0; 
     int p2Diag1=0;
     
     int p1Diag2=0;
@@ -26,7 +26,7 @@
         rowPlayerCount=new Player[n];
         colPlayerCount=new Player[n];
         this.size=n;
-    }*/
+    }
     
     /** Player {player} makes a move at ({row}, {col}).
         @param row The row of the board.
@@ -36,7 +36,7 @@
                 0: No one wins.
                 1: Player 1 wins.
                 2: Player 2 wins. */
- /*   public int move(int row, int col, int player) {
+    public int move(int row, int col, int player) {
         
         if(row==col){
             if(player==1){
@@ -46,7 +46,7 @@
             }
         }
         
-          if(Math.abs(row-col)==this.size-1){
+          if(Math.abs(row+col)==this.size-1){
             if(player==1){
                p1Diag2++; 
             }else{
@@ -83,46 +83,21 @@
         return 0;
     }
 }
-*/
+
 /**
  * Your TicTacToe object will be instantiated and called as such:
  * TicTacToe obj = new TicTacToe(n);
  * int param_1 = obj.move(row,col,player);
  */
 
-public class TicTacToe {
-    int[] rows;
-    int[] cols;
-    int diagonal;
-    int antiDiagonal;
 
-    public TicTacToe(int n) {
-        rows = new int[n];
-        cols = new int[n];
-    }
+/*                    3,0
+[ (0,1) (0,0)  (0,0)  (1,0) ]
+               1,2
+[ (0,0) (0,0)  (1,0)  (0,0) ]
+         2,1
+[ (0,0) (1,0)  (0,1)  (0,0) ]
+  3,0
+[ (1,0) (0,0)  (0,0)  (0,1) ]
 
-    public int move(int row, int col, int player) {
-        int currentPlayer = (player == 1) ? 1 : -1;
-        // update currentPlayer in rows and cols arrays
-        rows[row] += currentPlayer;
-        cols[col] += currentPlayer;
-        // update diagonal
-        if (row == col) {
-            diagonal += currentPlayer;
-        }
-        //update anti diagonal
-        if (col == (cols.length - row - 1)) {
-            antiDiagonal += currentPlayer;
-        }
-        int n = rows.length;
-        // check if the current player wins
-        if (Math.abs(rows[row]) == n ||
-                Math.abs(cols[col]) == n ||
-                Math.abs(diagonal) == n ||
-                Math.abs(antiDiagonal) == n) {
-            return player;
-        }
-        // No one wins
-        return 0;
-    }
-}
+*/
