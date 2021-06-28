@@ -1,0 +1,97 @@
+//https://www.youtube.com/watch?v=ISir207RuKQ
+class MyHashMap {
+
+    class Entry{
+        int val;
+        int key;
+        Entry(int key, int val){
+            this.key=key;
+            this.val=val;
+        }
+        
+    }
+    /** Initialize your data structure here. */
+    
+    final int SIZE=769;
+    LinkedList<Entry>[] map;
+    public MyHashMap() {
+        this.map=new LinkedList[SIZE];
+    }
+    
+    int getBucketId(int key){
+        return key%SIZE;
+    }
+    /** value will always be non-negative. */
+    public void put(int key, int value) {
+        
+        int bucketId=getBucketId(key);
+        if(this.map[bucketId]==null){
+            this.map[bucketId]=new LinkedList<Entry>();
+        }
+         
+        int keyIndex=-1;
+
+         for (int i = 0; i < this.map[bucketId].size(); i++) {
+             if(this.map[bucketId].get(i).key==key){
+                 keyIndex=i;
+                 break;
+             } 
+        }
+        if(keyIndex==-1){
+            this.map[bucketId].add(new Entry(key,value));
+        }else{
+            //  list.remove(4);
+            this.map[bucketId].get(keyIndex).val=value;
+        }
+    }
+    
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    public int get(int key) {
+        
+          int bucketId=getBucketId(key);
+        if(this.map[bucketId]==null){
+            return -1;
+        }
+        
+            for (int i = 0; i < this.map[bucketId].size(); i++) {
+             if(this.map[bucketId].get(i).key==key){
+                 return this.map[bucketId].get(i).val;
+             } 
+        }
+        return -1;
+        
+    }
+    
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    public void remove(int key) {
+        
+           int bucketId=getBucketId(key);
+        if(this.map[bucketId]==null){
+            return;
+        }
+         
+        int keyIndex=-1;
+
+         for (int i = 0; i < this.map[bucketId].size(); i++) {
+             if(this.map[bucketId].get(i).key==key){
+                 keyIndex=i;
+                 break;
+             } 
+        }
+        if(keyIndex==-1){
+           return;
+        }else{
+              this.map[bucketId].remove(keyIndex);
+        }
+        
+        
+    }
+}
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap obj = new MyHashMap();
+ * obj.put(key,value);
+ * int param_2 = obj.get(key);
+ * obj.remove(key);
+ */
