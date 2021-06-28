@@ -1,0 +1,44 @@
+/*
+In this question, we keep count in prioirtyQueue (heap) and we poll the greatest element and keep poll till we find element equal to it. If we find an element to it we know two frequency are same, so we just decrement its frequency in put in the prioirty queue and keep repeating till prioirt queue isn't empty
+*/
+class Solution {
+    /*
+    Three options since word is minimum: Bfs, greedy, binary search
+    */
+    public int minDeletions(String s) {
+        
+        int[] charCount=new int[26];
+      //  Arrays.fill(charCount,-1); //this means no character were present
+         int minDeletion=0;
+        for(char c: s.toCharArray()){
+            charCount[c-'a']++;
+        }
+        
+        PriorityQueue<Integer> pq=new PriorityQueue<Integer>((Integer a, Integer b)->{
+            return b-a;
+        });
+        
+        for(int count: charCount){
+            if(count>0){
+                pq.add(count);
+            }
+            
+        }
+        
+        while(!pq.isEmpty()){
+            int currNum=pq.poll();
+            while(!pq.isEmpty()&&pq.peek()==currNum){
+                int nextNum=pq.poll();
+                nextNum--;
+                minDeletion++;
+                if(nextNum>0){ //this means character are still present, and we have not removed all the characters.
+                    pq.add(nextNum);
+                } 
+            }
+        }
+     //   System.out.println(Arrays.toString(charCount));
+
+        
+        return minDeletion;
+    }
+}
