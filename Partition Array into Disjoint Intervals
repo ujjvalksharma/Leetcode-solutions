@@ -1,0 +1,47 @@
+/*
+
+The idea is to find min from right to left and max from left to right, so now at an index we know the maximum element from left to right and minimum from right to left, so if we know the minimum element is greater than the maximum element, then we know all the element till that index will be less than all element after than index as we compared the overall minimum and maximum element of both sides.
+*/
+    
+    
+class Solution {
+    public int partitionDisjoint(int[] nums) {
+        
+        int size=nums.length;
+        int[] minFromRightToLeft=new int[size];
+        int[] maxFromLeftToRight=new int[size];
+        
+        int min=nums[size-1];
+        minFromRightToLeft[size-1]=-1;
+        
+         int max=-1;
+        
+        for(int i=size-2;i>=0;i--){
+            minFromRightToLeft[i]=min;
+             min=Math.min(min,nums[i]);
+        }
+        
+        
+          for(int i=0;i<size;i++){ 
+            max=Math.max(max,nums[i]);
+            maxFromLeftToRight[i]=max;
+        }
+        
+     //   int index=-1;
+        
+        for(int i=0;i<size;i++){
+            if(minFromRightToLeft[i]>=maxFromLeftToRight[i]){
+                return i+1;
+            }
+        }
+        return size;
+  //      System.out.println(Arrays.toString(minFromRightToLeft));
+    //    System.out.println(Arrays.toString(maxFromLeftToRight));
+      //  return 0;
+        
+    }
+}
+                         //[5,0,3,8,6]
+//min from right to left:   0 3 6 6 -1
+//max from left to right:   5 5 5 5  8
+           
