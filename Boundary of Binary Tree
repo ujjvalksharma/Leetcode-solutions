@@ -1,0 +1,93 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
+    List<Integer> leftBoundary=new ArrayList<Integer>();
+    List<Integer> rightBoundary=new ArrayList<Integer>();
+    List<Integer> leafBoundary=new ArrayList<Integer>();
+    public void leftBoundaryHelper(TreeNode root){
+ if(root!=null){
+     
+     leftBoundary.add(root.val);
+     if(root.left!=null){
+         leftBoundaryHelper(root.left);
+     }else{
+          leftBoundaryHelper(root.right);
+     }
+ }
+    }
+    
+     public void rightBoundaryHelper(TreeNode root){
+ if(root!=null){
+     
+       rightBoundary.add(root.val);
+     if(root.right!=null){
+         rightBoundaryHelper(root.right);
+     }else{
+          rightBoundaryHelper(root.left);
+     }
+ }
+    }
+    
+       public void leafBoundaryHelper(TreeNode root){
+ if(root!=null){
+   
+
+          leafBoundaryHelper(root.left);
+     if(root.left==null&&root.right==null){
+           leafBoundary.add(root.val);
+     }
+          leafBoundaryHelper(root.right);
+     }
+ }
+    
+    
+    public List<Integer> boundaryOfBinaryTree(TreeNode root) {
+        
+       // if(root==)
+        if(root==null){
+            return leftBoundary;
+        }
+       
+        if(root.left==null&&root.right==null){
+          leftBoundary.add(root.val);
+            return leftBoundary;
+        }
+           leftBoundary.add(root.val);
+        leftBoundaryHelper(root.left); //start from left for left boundary
+        
+         if(leftBoundary.size()>1){ //remove last leaf in common with leaf list
+            leftBoundary.remove(leftBoundary.size()-1);
+        }
+        
+        rightBoundaryHelper(root.right); //start from right for right boundary
+        
+        if(rightBoundary.size()>0){ //remove last leaf in common with leaf list
+            rightBoundary.remove(rightBoundary.size()-1);
+        }
+  
+        Collections.reverse(rightBoundary); //boundary is from bottom to top in right hand side and top to bottom in left handside
+        leafBoundaryHelper(root); //inorder traversal to get leaf
+        System.out.println(leftBoundary);
+        System.out.println(leafBoundary);
+        System.out.println(rightBoundary);
+        leftBoundary.addAll(leafBoundary);
+        leftBoundary.addAll(rightBoundary);
+        return leftBoundary;
+        
+    }
+}
+//[1,2,3,4,5,6,null,null,null,7,8,9,11,10]
