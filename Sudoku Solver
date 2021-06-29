@@ -1,1 +1,89 @@
 
+//https://www.youtube.com/watch?v=JzONv5kaPJM
+class Solution{
+    
+      Set<Character>[] rowSet=new HashSet[9];
+    Set<Character>[] colSet=new HashSet[9];
+    TreeSet<Integer> blockId=new TreeSet<Integer>();
+    char[][] board;
+    HashMap<String,Set<Character>> hmIdToBlock=new HashMap<String,Set<Character>>();
+    
+        public String getBlockKey(int i, int j){
+        return this.blockId.floor(i/3)+","+this.blockId.floor(j/3);
+    }
+    
+ public void solveSudoku(char[][] board) {
+     
+     
+          blockId.add(0);
+        blockId.add(1);
+        blockId.add(2);
+        this.board=board;
+        for(int i=0;i<board.length;i++){
+           
+             for(int j=0;j<board[0].length;j++){
+                 
+                 String blockKey=getBlockKey(i,j);
+                 if(rowSet[i]==null){
+                     rowSet[i]=new HashSet<Character>();
+                 }
+                   if(colSet[j]==null){
+                    colSet[j]=new HashSet<Character>();
+                       
+                   }
+                 if(!hmIdToBlock.containsKey(blockKey)){
+                     hmIdToBlock.put(blockKey,new HashSet<Character>());
+                 }
+                 if(board[i][j]!='.'){
+                 rowSet[i].add(board[i][j]);
+                 colSet[j].add(board[i][j]);
+                 hmIdToBlock.get(blockKey).add(board[i][j]);
+                 }   
+        }
+            
+        }
+     
+        backtrack(board, 0, 0);
+    }
+        
+    boolean backtrack(char[][] board, int row, int col) {
+        if(col == board.length) {
+            row++;
+            col = 0;
+        }
+        
+        if(row >= board.length)
+            return true; 
+        
+        if(board[row][col] != '.')
+            return backtrack(board, row, col + 1);
+        
+        for(char i = '1'; i <= '9'; i++) 
+            if(isValidFill(board, row, col, i)) {
+                board[row][col] = i;
+                this.rowSet[row].add(i);
+                this.colSet[col].add(i);
+                this.hmIdToBlock.get(this.getBlockKey(row,col)).add(i);
+                
+                if(backtrack(board, row, col + 1)){
+                    return true;
+                } 
+                
+                this.rowSet[row].remove(i);
+                this.colSet[col].remove(i);
+                this.hmIdToBlock.get(this.getBlockKey(row,col)).remove(i);
+                board[row][col] = '.';
+            }
+        
+        return false; 
+    }
+    
+    public boolean isValidFill(char[][] b, int i, int j, char fill){
+        
+        return !this.rowSet[i].contains(fill)
+               &&!this.colSet[j].contains(fill)
+               &&!this.hmIdToBlock.get(this.getBlockKey(i,j)).contains(fill);
+        
+    }
+
+}
