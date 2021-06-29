@@ -1,0 +1,85 @@
+class Solution {
+    //smaller string is nums2, and bigger is nums1
+    List<Integer> listOdDigits=new ArrayList<Integer>();
+    
+    public void multiplyHelper(char num,String nums, int startIndex){
+        
+       
+        int carry=0;
+        int iNum=Character.getNumericValue(num);
+        for(int i=nums.length()-1;i>=0;i--){
+            
+        if(listOdDigits.size()<=startIndex){
+            listOdDigits.add(0);
+        }
+         int curr=Character.getNumericValue(nums.charAt(i));
+         int mul= iNum*curr+carry+listOdDigits.get(startIndex); //add prev number too
+         listOdDigits.set(startIndex,mul%10);
+         carry=mul/10;
+            startIndex++;
+        }
+        
+        if(carry>0){
+        
+            if(listOdDigits.size()==startIndex){
+            listOdDigits.add(0);
+        }
+            listOdDigits.set(startIndex,carry);
+       }
+        
+    }
+    
+
+    
+  //  12/10=2
+    
+    public String multiply(String num1, String num2) {
+        
+        if("0".equals(num1)||"0".equals(num2)){
+            return "0";
+        }
+        if(num2.length()>num1.length()){
+            return multiply(num2,num1);
+        }
+        //smaller -> nums2
+        //bigger -> nums1
+        int size2=num2.length();
+        int size1=num1.length();
+
+        int startIndex=0;
+        for(int i=num2.length()-1;i>=0;i--){
+            
+            multiplyHelper(num2.charAt(i),num1,startIndex);
+         //   System.out.println(listOdDigits);
+            startIndex++;
+        }
+            
+            Collections.reverse(listOdDigits);
+        StringBuilder sb=new StringBuilder("");
+        
+        for(int i=0;i<listOdDigits.size();i++){
+            sb.append(listOdDigits.get(i));
+        }
+        return sb.toString();
+    }
+} 
+//123
+// 56
+//738
+// 615
+// 6888
+
+/*
+
+   1 2
+   1 2
+   ---
+   2 4
+   2
+
+*/
+    
+    
+    
+   
+     
