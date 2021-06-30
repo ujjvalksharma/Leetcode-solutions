@@ -1,0 +1,57 @@
+/*
+// Definition for an Interval.
+class Interval {
+    public int start;
+    public int end;
+
+    public Interval() {}
+
+    public Interval(int _start, int _end) {
+        start = _start;
+        end = _end;
+    }
+};
+*/
+/*
+Put all the intervals in a prioirty queue, then get the earlist start event compare it with other events if their start time lies with current intervals, we take the maximum end time. like this we found one non-overlapping interval, now we put that interval in tempAnswer and find time between two non-overlapping interval and that is our free time.
+
+*/
+class Solution {
+    public List<Interval> employeeFreeTime(List<List<Interval>> schedule) {
+        
+          List<Interval> answer=new  ArrayList<Interval>();
+          List<Interval> tempAnswer=new  ArrayList<Interval>();
+        PriorityQueue<Interval> pq=new PriorityQueue<Interval>((Interval a,Interval b)->{
+            if(a.start==b.start){
+                return a.end-b.end;
+            }
+            return a.start-b.start;
+        });
+        
+        for(int i=0;i<schedule.size();i++){
+            
+            for(int j=0;j<schedule.get(i).size();j++){
+                pq.add(schedule.get(i).get(j));
+            }
+        }
+        
+        while(!pq.isEmpty()){
+            
+            Interval curr=pq.poll();
+            
+            while(!pq.isEmpty()&&curr.start<=pq.peek().start&&pq.peek().start<=curr.end){
+                Interval temp=pq.poll();
+                curr.start=Math.min(curr.start,temp.start);
+                curr.end=Math.max(curr.end,temp.end);
+            }
+        //    System.out.
+            tempAnswer.add(curr);
+        }
+        
+        for(int i=1;i<tempAnswer.size();i++){
+            answer.add(new Interval(tempAnswer.get(i-1).end,tempAnswer.get(i).start));
+        }
+      return answer;
+    }
+}
+ 
