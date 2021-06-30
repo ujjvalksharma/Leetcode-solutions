@@ -1,0 +1,43 @@
+
+
+-- my solution 1
+
+
+
+
+
+
+
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+ DECLARE temp INT;
+ SET temp = N-1;
+  RETURN (
+      # Write your MySQL query statement below.
+      
+          SELECT DISTINCT Salary FROM Employee ORDER BY Salary DESC 
+        LIMIT 1 OFFSET temp
+      
+      #offset means number of rows to skip from bottom
+      
+  );
+END
+
+
+
+-- My solution 2
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+  RETURN (
+      # Write your MySQL query statement below.
+      
+      SELECT IF((Select Count(distinct Salary) from Employee )>=N,
+               ( Select Salary 
+      from
+      (Select Salary from Employee order by Salary desc limit N) as temp
+      order by temp.Salary asc 
+      limit 1)
+                , null)
+      
+  );
+END
