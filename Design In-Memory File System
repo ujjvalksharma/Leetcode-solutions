@@ -1,0 +1,153 @@
+class FileSystem {
+
+ class Node{
+     boolean isDir;
+     String name;
+     String content;
+     HashMap<String,Node> children;
+     
+     Node(String name){
+         this.name=name;
+         this.isDir=true;
+         this.content="";
+         this.children=new HashMap<String,Node>();
+     }
+     
+     @Override
+     public String toString(){
+         return "name: "+name+" children: "+children;
+     }
+ }
+    
+    Node head;
+    
+    public void findFilesAndDirFromStart(Node root,List<String> files,String[] path, int index){
+        
+        if(root==null){
+            return;
+        }
+        if(index==path.length-1){
+            
+             for (Map.Entry<String,Node> child :
+             root.children.entrySet()) {
+                 files.add(child.getValue().name);
+        }
+            return;
+        }
+        
+     if(root.children.containsKey(path[index])){
+         findFilesAndDirFromStart(root.children.get(path[index]),files,path,index+1);
+     }   
+  
+    }
+    
+      public void mkdirHelper(Node root,String[] path, int index){
+        
+        if(root==null||index>=path.length){
+            return;
+        }
+        
+     if(!root.children.containsKey(path[index])){
+         root.children.put(path[index],new Node(path[index]));
+     }
+         mkdirHelper(root.children.get(path[index]),path,index+1);
+       
+  
+    }
+    
+    
+      public String readContentFromFileHelper(Node root,String[] path, int index){
+        
+        if(root==null){
+            return "";
+        }
+         
+        if(index>=path.length){
+            return root.content;
+        }
+      return readContentFromFileHelper(root.children.get(path[index]),path,index+1);
+    }
+    
+      public void addContentToFileHelper(Node root,String[] path, int index,String content){
+        
+        if(root==null){
+            return;
+        }
+     /*   if(index>=path.length){
+          //  System.out.println("I am here");
+             root.content+=content;
+            
+            return;
+        }*/
+        
+     if(index==path.length-1&&!root.children.containsKey(path[index])){
+         Node node= new Node(path[index]);
+         node.isDir=false;
+         root.children.put(path[index],node);
+         node.content+=content;
+      //   System.out.println("I am here: "+node.name);
+      return;
+     }
+         addContentToFileHelper(root.children.get(path[index]),path,index+1,content);
+       
+  
+    }
+    
+    
+    public FileSystem() {
+        
+        head=new Node("");
+    }
+    
+    public List<String> ls(String path) {
+        
+        String[] dir=path.split("/");
+        List<String> files=new ArrayList<String>();
+        if(dir.length==0){
+            
+            findFilesAndDirFromStart(head,files,new String[]{""},0);
+        }else{
+             findFilesAndDirFromStart(head,files,Arrays.copyOfRange(dir,1,dir.length),0);
+        }
+        return files;
+    }
+    
+    public void mkdir(String path) {
+        if("/".equals(path)){
+            return;
+        }
+         String[] dir=path.split("/");
+     //   System.out.println(Arrays.toString(dir));
+      //  System.out.println(head)
+        mkdirHelper(head,Arrays.copyOfRange(dir,1,dir.length),0);
+    //    System.out.println(head);
+    }
+    
+    public void addContentToFile(String filePath, String content) {
+        
+          String[] dir=filePath.split("/");
+        
+         addContentToFileHelper(head,Arrays.copyOfRange(dir,1,dir.length),0,content);
+    }
+    
+    public String readContentFromFile(String filePath) {
+        
+                String[] dir=filePath.split("/");
+        
+        return readContentFromFileHelper(head,Arrays.copyOfRange(dir,1,dir.length),0);
+    }
+}
+
+/*
+["FileSystem","mkdir","addContentToFile","ls","readContentFromFile"]
+[[],["/a/b/c"],["/a/b/c/d","hello"],["/"],["/a/b/c/d"]]
+
+*/
+/**
+ * Your FileSystem object will be instantiated and called as such:
+ * FileSystem obj = new FileSystem();
+ * List<String> param_1 = obj.ls(path);
+ * obj.mkdir(path);
+ * obj.addContentToFile(filePath,content);
+ * String param_4 = obj.readContentFromFile(filePath);
+ */
