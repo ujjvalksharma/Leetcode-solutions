@@ -1,0 +1,68 @@
+class Solution {
+    private Map<String, Integer> memo = new HashMap<>();
+
+    private int dfs(int x, int y) {
+        String key = x + "," + y;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+
+        if (x + y == 0) {
+            return 0;
+        } else if (x + y == 2) {
+            return 2;
+        } else {
+            Integer ret = Math.min(dfs(Math.abs(x - 1), Math.abs(y - 2)),
+                    dfs(Math.abs(x - 2), Math.abs(y - 1))) + 1;
+            memo.put(key, ret);
+            return ret;
+        }
+    }
+
+    public int minKnightMoves(int x, int y) {
+        return dfs(Math.abs(x), Math.abs(y));
+    }
+}
+/*class Solution {
+    
+    
+    private boolean isSafe(int x,int y){
+    if (x < 0 || y < 0 || x >300 || y >300)
+		return false;
+	return true;
+}
+    
+    public int minKnightMoves(int x, int y) {
+        
+        int[][] dir=new int[][]{{-2,1},{-2,1},{-1,2},{-1,-2}
+                               ,{2,1},{2,1},{1,2},{1,-2}};
+        
+        Queue<int[]> bfsQ=new LinkedList<int[]>();
+        
+        bfsQ.add(new int[]{0,0,0});
+        Set<String> visited=new HashSet<String>();
+              visited.add("0,0");
+        while(!bfsQ.isEmpty()){
+        
+            int[] curr=bfsQ.poll();
+            
+            if(curr[0]==x&&curr[1]==y){
+                return curr[2];
+            }
+      
+            
+            for(int[] tempDir: dir){
+                int newX=tempDir[0]+curr[0];
+                int newY=tempDir[1]+curr[1];
+                int steps=curr[2]+1;
+                
+                if(isSafe(newX,newY)&&!visited.contains(newX+","+newY)){
+                   visited.add(newX+","+newY); 
+                    bfsQ.add(new int[]{newX,newY,steps});
+                }
+            }
+        }
+        
+        return -1;
+    }
+}*/
