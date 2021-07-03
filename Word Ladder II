@@ -1,0 +1,93 @@
+/*
+Store the prev words in the form of a linklist and in visited words we store word and how many transformation it took to get there as if we see a word with larger trasformation, then we don't take it, as we know the path already
+
+F****K internship interview question
+*/
+class Solution {
+    
+    class Word{
+        
+        Word prevWord;
+        StringBuilder curr;
+        int prevWordCount=0;
+        Word(StringBuilder curr,Word prevWord,int prevWordCount){
+            this.curr=curr;
+            this.prevWord=prevWord;
+            this.prevWordCount=prevWordCount;
+        }
+        
+    }
+    
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        
+        Set<String> dict=new HashSet<String>();
+        
+        for(String word: wordList){
+            dict.add(word);
+        }
+        
+        Queue<Word> bfs=new LinkedList<Word>();
+        bfs.add(new Word(new StringBuilder(beginWord),null,0));
+        List<List<String>> allWord=new ArrayList<>();
+        int minTransLen=-1;
+        HashMap<String,Integer> visitedWords=new HashMap<String,Integer>();
+        visitedWords.put(beginWord,0);
+        while(!bfs.isEmpty()){
+            
+            Word word=bfs.poll();
+            
+            if(minTransLen!=-1&&word.prevWordCount>minTransLen){
+                continue;
+            }
+            
+            if(endWord.equals(word.curr.toString())){
+                
+                minTransLen=word.prevWordCount;
+                Word temp=word;
+                List<String> sequence=new ArrayList<String>();
+                while(temp!=null){
+                    
+                    sequence.add(temp.curr.toString());
+                    temp=temp.prevWord;
+                }
+                Collections.reverse(sequence);
+                allWord.add(sequence);
+                    
+            }
+            
+            for(int i=0;i<word.curr.length();i++){
+                
+                for(char c='a';c<='z';c++){
+                    
+                    if(c!=word.curr.charAt(i)){
+                        
+                   StringBuilder nextWordStr=new StringBuilder(word.curr);
+                    nextWordStr.setCharAt(i,c);
+                        
+                    if(
+                       dict.contains(nextWordStr.toString())
+                      ){
+                        
+                        if(visitedWords.containsKey(nextWordStr.toString())
+                          &&visitedWords.get(nextWordStr.toString())<word.prevWordCount+1){
+                            continue;
+                        }
+                        
+                        if(!endWord.equals(nextWordStr.toString())){
+                            visitedWords.put(nextWordStr.toString(),word.prevWordCount+1);
+                        }
+                        bfs.add(new Word(nextWordStr,word,word.prevWordCount+1));
+                    }
+                        
+                    }
+                }
+            }
+            
+            
+        }
+        
+        return allWord;
+        
+        
+    }
+}
