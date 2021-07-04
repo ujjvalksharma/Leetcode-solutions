@@ -1,0 +1,145 @@
+/*
+
+In this question, we make two classes one for user and other for tweet. In userdetails class, we store user details like followee and tweet_head which is linklist in descending order of time. we map userid to userdetails object. when we want to get user top 10 tweets we basically do merge k sorted list as we linklist of each followee for the user in descedning order, we can just merge till result size is 10 and return it.
+https://www.youtube.com/watch?v=6je5osXSwOU
+
+*/
+    
+    
+class Twitter {
+
+    public static int timestamp=0;
+    
+    class Tweet{
+        int tweetId;
+        int timeOfTweet;
+        Tweet next;
+        Tweet(int tweetId){
+            this.tweetId=tweetId;
+            this.timeOfTweet=timestamp++;
+            this.next=null;
+        }
+        
+    }
+    
+    class UserDetails{
+        Set<Integer> followee;
+        Tweet tweetHead;
+        UserDetails(){
+            followee=new HashSet<Integer>();
+            this.tweetHead=null;
+        }
+        
+    }
+    
+    HashMap<Integer,UserDetails> mapUserDetails=new HashMap<>();
+    /** Initialize your data structure here. */
+    public Twitter() {
+        
+    }
+    
+    /** Compose a new tweet. */
+    public void postTweet(int userId, int tweetId) {
+        
+        UserDetails userDetails=null;
+        if(!mapUserDetails.containsKey(userId)){
+            mapUserDetails.put(userId,new UserDetails());
+        }
+        
+        userDetails=mapUserDetails.get(userId);
+        
+        Tweet tweet=new Tweet(tweetId);
+        
+        tweet.next=userDetails.tweetHead;
+        userDetails.tweetHead=tweet;
+    }
+    //****** Merge k sorted list (merge k (number of followee) sorted tweets for a user)***
+    
+    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    public List<Integer> getNewsFeed(int userId) {
+       
+        List<Integer> recentTweets=new ArrayList<Integer>();
+        
+        if(!mapUserDetails.containsKey(userId)){
+            return recentTweets;
+        }
+        
+        PriorityQueue<Tweet> pq=new PriorityQueue<Tweet>((Tweet t1, Tweet t2)->{
+            return t2.timeOfTweet-t1.timeOfTweet;
+        });
+        
+        UserDetails userDetails=mapUserDetails.get(userId);
+        if(userDetails.tweetHead!=null){
+            pq.add(userDetails.tweetHead);
+        }
+        Iterator<Integer> it=userDetails.followee.iterator();
+        while(it.hasNext()){
+        int followeeId=it.next();
+        if(mapUserDetails.containsKey(followeeId)){
+            UserDetails followeeUserDetails=mapUserDetails.get(followeeId);
+              if(followeeUserDetails.tweetHead!=null){
+            pq.add(followeeUserDetails.tweetHead);
+              }
+        }
+     }
+      int sizeOfPQ=10;
+        
+        while(!pq.isEmpty()&&sizeOfPQ>0){
+            
+            Tweet latestTweet=pq.poll();
+            
+            recentTweets.add(latestTweet.tweetId);
+            
+            latestTweet=latestTweet.next;
+            if(latestTweet!=null){
+                pq.add(latestTweet);
+            }
+            sizeOfPQ--;
+        }
+        
+      return recentTweets;
+    }
+    
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    public void follow(int followerId, int followeeId) {
+      
+          if(!mapUserDetails.containsKey(followerId)){
+            mapUserDetails.put(followerId,new UserDetails());
+        }
+        
+           if(!mapUserDetails.containsKey(followeeId)){
+            mapUserDetails.put(followeeId,new UserDetails());
+        }
+        
+        UserDetails follower=mapUserDetails.get(followerId);
+        follower.followee.add(followeeId);
+        
+    }
+    
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    public void unfollow(int followerId, int followeeId) {
+      
+        
+        
+          if(!mapUserDetails.containsKey(followerId)){
+            mapUserDetails.put(followerId,new UserDetails());
+        }
+        
+           if(!mapUserDetails.containsKey(followeeId)){
+            mapUserDetails.put(followeeId,new UserDetails());
+        }
+        
+        UserDetails follower=mapUserDetails.get(followerId);
+        follower.followee.remove(followeeId);
+        
+    }
+}
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter obj = new Twitter();
+ * obj.postTweet(userId,tweetId);
+ * List<Integer> param_2 = obj.getNewsFeed(userId);
+ * obj.follow(followerId,followeeId);
+ * obj.unfollow(followerId,followeeId);
+ */
