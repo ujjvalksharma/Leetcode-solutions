@@ -1,0 +1,130 @@
+/*In this question, the idea is that if we a bit map of word and puzzle and we make an AND between them,the result will be bit map of word if all the word charactrs are present in puzzle, so reduce time complexity, we store character and set of words that have that character, and we get set of words for 0th character of puzzle and then perform bit operation on the set to know which word can be made using the puzzle.
+
+https://www.youtube.com/watch?v=9jV0CC_C26s&t=1286s
+*/
+class Solution {
+    public List<Integer> findNumOfValidWords(String[] words, String[] puzzles) {
+        // create a map with key as character value as list of word with that key. convered into bitMask
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        for (String word: words) {
+            addUniqueCharofWordToMap(map, word);
+        }
+        
+        List<Integer> result = new ArrayList<>();
+        
+        // check for each puzzle get values for first char in puzzle
+        for (String puzzle: puzzles) {
+            result.add(totalOfPuzzle(map, puzzle));
+        }
+        return result;
+    }
+    
+    private int totalOfPuzzle(HashMap<Integer, List<Integer>> map, String puzzle) {
+        int result = 0;
+        int firstCh = puzzle.charAt(0) - 'a';
+        int pMask = getBitMask(puzzle);
+        if (map.containsKey(firstCh)) {
+            // 1st condition 1st puzzle char should be in word.
+            for(int wBitMask: map.get(firstCh)) {
+                // check if all char of work are in puzzle
+                if ((wBitMask & pMask) == wBitMask) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+    
+    private void addUniqueCharofWordToMap(HashMap<Integer, List<Integer>> map, String word) {
+        HashSet<Integer> unique = new HashSet<>();
+        int bitMask = getBitMask(word);
+         for (int i = 0; i< word.length(); i++) {
+             int ch = word.charAt(i) - 'a';
+            if (!unique.contains(ch)) {
+               unique.add(ch);
+               if (!map.containsKey(ch)) {
+                   map.put(ch, new ArrayList<>());
+               }  
+               map.get(ch).add(bitMask);
+            }
+        }
+    }
+    
+    private int getBitMask(String word) {
+        int bitMask = 0;
+        for (int i = 0; i< word.length(); i++) {
+            bitMask = (bitMask | (1 << (word.charAt(i) - 'a')));
+        }
+        return bitMask;
+    }
+}
+
+/*
+//my solution
+class Solution {
+    
+    private int getBitNum(String str){
+        
+        int num=0;
+        
+        for(int i=0;i<str.length();i++){
+           num=num|(1<<(str.charAt(i)-'a')); 
+        }
+        return num;
+    }
+    public List<Integer> findNumOfValidWords(String[] words, String[] puzzles) {
+        
+        HashMap<String,Integer> hmPuzzleToBit=new HashMap<String,Integer>();
+        HashMap<String,Integer> hmWordToBit=new HashMap<String,Integer>();
+        HashMap<Character,Set<String>> hmCharToWord=new HashMap<Character,Set<String>>();
+        List<Integer> answer=new ArrayList<Integer>();
+        for(String puzzle : puzzles){
+            hmPuzzleToBit.put(puzzle,getBitNum(puzzle));
+        }
+        
+          for(String word : words){
+            hmWordToBit.put(word,getBitNum(word));
+        }
+        
+        for(String word : words){
+            
+                   for(int i=0;i<word.length();i++){
+                       if(!hmCharToWord.containsKey(word.charAt(i))){
+                           hmCharToWord.put(word.charAt(i),new HashSet<String>());
+                       }
+                       hmCharToWord.get(word.charAt(i)).add(word);
+                   }
+        }
+        
+             for(String puzzle : puzzles){
+                 
+                 Set<String> setOfWords=hmCharToWord.get(puzzle.charAt(0));
+                 
+                 
+                 int puzzleBit=hmPuzzleToBit.get(puzzle);
+                 int countOfWordsInPuzzle=0;   
+                 if(setOfWords!=null){
+                     
+                     
+                      Iterator<String> it=setOfWords.iterator();
+                 while(it.hasNext()){
+                     int wordBit=hmWordToBit.get(it.next());
+                     if((wordBit&puzzleBit)==wordBit){
+                         countOfWordsInPuzzle++;
+                     }
+                     
+                 }
+                     
+                 }
+                
+                     
+                
+                 answer.add(countOfWordsInPuzzle);
+             }
+        
+        System.out.println(hmCharToWord);
+        
+        return answer;
+        
+    }
+}*/
