@@ -1,0 +1,99 @@
+/*
+Approach1:
+Find the starting point of each word of dict in S, then we know the interval, finally we can just merge the intervals and those intervals contain the word that should be bolded.
+Approach2:
+Find all the substring of S in hashmap using StringBuilder, then check substring presence and its intervals from dictionary and use merge interval logic.
+*/
+class Solution {
+    public String addBoldTag(String s, String[] dict) {
+        return addTag(s, dict);
+    }
+    
+    // accepted 12 ms, faster than 44.73%
+    private String addTag(String word, String[] dict) {
+        List<Interval> intervals = getAllIntervals(word, dict);
+        if (intervals.isEmpty()) {
+            return word;
+        }
+        
+        Collections.sort(intervals, (a,b)->(a.start-b.start));
+        
+        Queue<Integer> open = new LinkedList<>();
+        Queue<Integer> close = new LinkedList<>();
+        
+		// merge intervals, generate open and close positions for bold tag
+        Interval cur = new Interval(intervals.get(0));
+        for(int i = 1; i < intervals.size(); i++) {
+            if (intervals.get(i).start <=  cur.end+1) {
+                cur.end = Math.max(cur.end, intervals.get(i).end);
+            } else {
+                open.offer(cur.start);
+                close.offer(cur.end);
+                cur = new Interval(intervals.get(i));
+            }
+        }
+        
+		// handle last interval
+        open.offer(cur.start);
+        close.offer(cur.end);
+        
+		// build result string
+        StringBuilder res = new StringBuilder();
+        for(int i = 0; i < word.length(); i++) {
+            if (!open.isEmpty() && open.peek() == i) {
+                res.append("<b>");
+                open.poll();
+            } 
+            
+            res.append(word.charAt(i));
+            
+            if (!close.isEmpty() && close.peek() == i) {
+                res.append("</b>");
+                close.poll();
+            } 
+        }
+        
+        return res.toString();
+    }
+    
+	// get all intervals for all substrings in dictionary
+    private List<Interval> getAllIntervals(String word, String[] dict) {
+        List<Interval> intervals = new ArrayList<>();
+        for(String pattern : dict) {
+            intervals.addAll(getIntervals(word, pattern));
+        }
+        
+        return intervals;
+    }
+    
+	// get intervals for one substring
+    private List<Interval> getIntervals(String word, String pattern) {
+        List<Interval> intervals = new ArrayList<>();
+        int index, start = 0;
+        while(true) {
+            index = word.indexOf(pattern, start);
+            if (index == -1) {
+                break;
+            }
+            intervals.add(new Interval(index, index+pattern.length()-1));
+            start = index+1;
+        }
+        
+        return intervals;
+    }
+    
+    class Interval {
+        int start;
+        int end;
+        
+        public Interval(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+        
+        public Interval(Interval another) {
+            this.start = another.start;
+            this.end = another.end;
+        }
+    }
+}
