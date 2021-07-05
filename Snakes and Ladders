@@ -1,0 +1,81 @@
+/*
+Simple BFS, there are Id like 1,2,3...n^2 mapped to row and col, we insert the id in Bfs and then we can find the corresponding row and col for that id. We counting starts from left to right for the bottom most row nad then righ to left 2nd bottom and vice verse for 3rd bottom.
+Bfs is a array is moves and id.
+
+*/
+    
+    
+class Solution {
+    HashMap<Integer,int[]> idToRC;
+    int R;
+    int C;
+    public int snakesAndLadders(int[][] board) {
+         this.idToRC=new HashMap<Integer,int[]>();
+         this.R=board.length;
+         this.C=board[0].length;
+        int count=1;
+        int rowCount=0;
+        for(int i=R-1;i>=0;i--){
+            
+            if(rowCount%2==0){
+                
+                 for(int j=0;j<C;j++){
+              this.idToRC.put(count,new int[]{i,j});  
+                  count++;
+            }
+                
+            }else{
+                
+                    for(int j=C-1;j>=0;j--){
+              this.idToRC.put(count,new int[]{i,j});  
+                  count++;
+            }
+                
+            }
+            rowCount++;
+           
+        }
+        int lastId=R*C;
+        Queue<int[]> bfs=new LinkedList<int[]>();
+        Set<Integer> visited=new HashSet<Integer>();
+        bfs.add(new int[]{1,0});//id,moves
+        visited.add(1);
+        while(!bfs.isEmpty()){
+            
+            int[] curr=bfs.poll();
+            
+            if(curr[0]==lastId){
+                return curr[1];
+            }
+            for(int i=1;i<=6;i++){
+                int newPoint=curr[0]+i;
+                if(!visited.contains(newPoint)
+                  &&idToRC.containsKey(newPoint)){
+                    
+                    visited.add(newPoint);
+                    int[] newPointCoor=idToRC.get(newPoint);
+                    
+                    if(board[newPointCoor[0]][newPointCoor[1]]!=-1){
+                        newPoint=board[newPointCoor[0]][newPointCoor[1]];
+                    }
+                    
+                    bfs.add(new int[]{newPoint,curr[1]+1});
+                }
+          }
+            
+            
+        }
+        return -1;
+        
+        
+    }
+}
+/*
+
+[[-1,-1],
+ [-1,1]]
+
+*/
+    
+    
+    
