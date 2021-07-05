@@ -1,0 +1,91 @@
+/*
+
+In this question, we store score in a treemap as key and value is the number of id that have that score and get top k score in O(k) times as treemap is in descending order. Moreover, me maintain an id to score hashmap, so that we we can track score for each id and insert into treemap while maintaining score count
+*/
+
+class Leaderboard {
+
+    HashMap<Integer,Integer> hmIdToScore;
+    TreeMap<Integer,Integer> tmScoreToCount;
+    public Leaderboard() {
+        hmIdToScore=new HashMap<Integer,Integer>();
+        tmScoreToCount=new TreeMap<Integer,Integer>((Integer a, Integer b)->{
+            return b-a;
+        });
+    }
+    
+    public void addScore(int playerId, int score) {
+        
+        if(!hmIdToScore.containsKey(playerId)){
+            hmIdToScore.put(playerId,0);
+        }
+        int prevScore=hmIdToScore.get(playerId);
+        int newScore=prevScore+score;
+        if(tmScoreToCount.containsKey(prevScore)){
+        int count=tmScoreToCount.get(prevScore);
+            count--;
+            if(count<=0){
+                tmScoreToCount.remove(prevScore);
+            }else{
+                tmScoreToCount.put(prevScore,count);
+            }
+        }
+        tmScoreToCount.put(newScore,tmScoreToCount.getOrDefault(newScore,0)+1);
+        hmIdToScore.put(playerId,newScore);
+        
+        
+        
+    }
+    
+    public int top(int K) {
+
+        int totalSum=0;
+        
+             for (Map.Entry<Integer, Integer> entry: this.tmScoreToCount.entrySet()) {
+                 
+               int sum=entry.getKey();
+               int countOfSum=entry.getValue();
+                 /*if our k-current count of sum (Id count)<0, we know we have only left K value otherwise we can take full countOfSum*/
+                 totalSum+=K-countOfSum>=0?sum*countOfSum:sum*K;
+                 K-=countOfSum;
+                 if(K<=0){
+                     break;
+                 }
+             }
+        
+        return totalSum;
+    }
+    
+    public void reset(int playerId) {
+        
+     int prevScore=hmIdToScore.get(playerId);
+        
+        if(tmScoreToCount.containsKey(prevScore)){
+            
+             int count=tmScoreToCount.get(prevScore);
+            count--;
+            if(count<=0){
+                tmScoreToCount.remove(prevScore);
+            }else{
+                tmScoreToCount.put(prevScore,count);
+            }
+            
+        }
+        hmIdToScore.remove(playerId);
+      //   System.out.println("reset");
+      //    System.out.println(tmScoreToCount);
+    }
+}
+
+
+
+    
+    
+
+/**
+ * Your Leaderboard object will be instantiated and called as such:
+ * Leaderboard obj = new Leaderboard();
+ * obj.addScore(playerId,score);
+ * int param_2 = obj.top(K);
+ * obj.reset(playerId);
+ */
