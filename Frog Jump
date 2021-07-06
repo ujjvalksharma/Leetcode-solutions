@@ -1,0 +1,44 @@
+/*
+Simple Dp problem: we explore all possibilies and store changing variables in hashmap like stone value and steps as key to get repetitive state value. we also check steps-1+stone>stone so that we are always moving forward and going back or staying at the same place
+
+*/
+class Solution {
+    
+    Set<Integer> setOfStones=new HashSet<Integer>();
+    int lastStone=0;
+    HashMap<String,Boolean> dp=new HashMap<String,Boolean>();
+    private boolean canCrossHelper(int stone, int steps){
+        
+        if(stone==lastStone){
+            return true;
+        }
+        if(!setOfStones.contains(stone)){
+            return false;
+        }
+        String key=stone+","+steps;
+        if(dp.containsKey(key)){
+           // System.out.println("I am here");
+            return dp.get(key);
+        }
+        boolean isReachable=false;
+        if(steps-1+stone>stone){
+           isReachable=isReachable|canCrossHelper(steps-1+stone,steps-1);
+        }
+         isReachable=isReachable|canCrossHelper(steps+stone,steps)
+                                |canCrossHelper(steps+1+stone,steps+1);
+        
+        dp.put(key,isReachable);
+        return isReachable;
+    }
+    public boolean canCross(int[] stones) {
+        
+        if(stones[1]>stones[0]+1){ //isn't able to reach 1st stone
+            return false;
+        }
+   for(int stone: stones){
+       setOfStones.add(stone);
+   }
+       lastStone= stones[stones.length-1];
+        return canCrossHelper(stones[1],1); //assumes we reached the first stone
+    }
+}
