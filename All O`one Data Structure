@@ -1,0 +1,251 @@
+class AllOne {
+
+ class DNode {
+        DNode prev, next;
+        int value;
+        Set<String> keySet;
+        
+        public DNode() {
+            keySet = new HashSet<>();
+            value = 1;
+            prev = null;
+            next = null;
+        }
+    }
+
+    private void initDList() {
+        head = new DNode();
+        tail = new DNode();
+        head.value = -1;
+        tail.value = -1;
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    private void deleteNode(DNode node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+    
+    private void insertBefore(DNode cur, DNode node) {
+        cur.prev = node.prev;
+        cur.prev.next = cur;
+        
+        cur.next = node;
+        node.prev = cur;
+    }
+    
+    DNode head, tail;
+    Map<String, DNode> map;
+
+    /** Initialize your data structure here. */
+    public AllOne() {
+        initDList();
+        map = new HashMap<>();
+    }
+    
+    /** Inserts a new key <Key> with value 1. Or increments an existing key by 1. */
+    public void inc(String key) {
+        if(!map.containsKey(key)) {
+            DNode node = head.next.value == 1 ? head.next : new DNode();
+            if( head.next.value != 1) {
+                insertBefore(node, head.next);
+            }
+            node.keySet.add(key);
+            map.put(key, node);
+        } else {
+            DNode cur = map.get(key);
+            int cur_value = cur.value;
+            
+            DNode next = cur.next.value == cur_value + 1 ? cur.next : new DNode();
+            if(cur.next.value != cur_value + 1) {
+                next.value = cur_value + 1;
+                insertBefore(next, cur.next);
+            }
+            
+            cur.keySet.remove(key);
+            if(cur.keySet.size() == 0) deleteNode(cur);
+            
+            next.keySet.add(key);
+            map.put(key, next);
+        }
+    }
+    
+    /** Decrements an existing key by 1. If Key's value is 1, remove it from the data structure. */
+    public void dec(String key) {
+        if(!map.containsKey(key)) return;
+
+        DNode cur = map.get(key);
+        int cur_value = cur.value;
+        
+        if(cur.value == 1) {
+            map.remove(key);
+        } else {
+            DNode prev = cur.prev.value == cur_value - 1 ? cur.prev : new DNode();
+            if(cur.prev.value != cur_value - 1) {
+                prev.value = cur_value - 1;
+                insertBefore(prev, cur);
+            }
+            prev.keySet.add(key);
+            map.put(key, prev);
+        }
+
+        cur.keySet.remove(key);
+        if(cur.keySet.size() == 0) deleteNode(cur);
+    }
+    
+    /** Returns one of the keys with maximal value. */
+    public String getMaxKey() {
+         return tail.prev.value == -1 ? "" : tail.prev.keySet.iterator().next();
+    }
+    
+    /** Returns one of the keys with Minimal value. */
+    public String getMinKey() {
+        return head.next.value == -1 ? "" : head.next.keySet.iterator().next();
+    }
+}
+
+
+
+
+/**
+ * Your AllOne object will be instantiated and called as such:
+ * AllOne obj = new AllOne();
+ * obj.inc(key);
+ * obj.dec(key);
+ * String param_3 = obj.getMaxKey();
+ * String param_4 = obj.getMinKey();
+ */
+
+
+
+
+/**
+ * Your AllOne object will be instantiated and called as such:
+ * AllOne obj = new AllOne();
+ * obj.inc(key);
+ * obj.dec(key);
+ * String param_3 = obj.getMaxKey();
+ * String param_4 = obj.getMinKey();
+ */
+
+
+/*
+
+class AllOne {
+    
+    class Node{
+        
+        int freq;
+        Set<String> keys;
+        Node next;
+        Node prev;
+        Node(int freq){
+            this.freq=freq;
+            this.keys=new HashSet<String>();
+        }
+    }
+    
+    HashMap<String,Integer> keyToCount;
+    HashMap<Integer,Node> freqToNode;
+    Node head;  // min count
+    Node tail; //max count
+    public AllOne() {
+        
+        this.keyToCount=new HashMap<String,Integer>();
+        this.freqToNode=new HashMap<Integer,Node>();
+        this.head=new Node(0);
+        this.tail=new Node(-1);
+        this.head.next=tail;
+        this.tail.prev=head;
+        this.freqToNode.put(0,head);
+    }
+    
+    public void inc(String key) {
+             
+        int prevCount=-1;
+        if(!keyToCount.containsKey(key)){
+           prevCount=0; 
+        }else{
+            prevCount=keyToCount.get(key);
+        }
+        
+        Node prevNode=this.freqToNode.get(prevCount);
+        int newCount=prevCount+1;
+       Node newNode=freqToNode.containsKey(newCount)==true?freqToNode.get(newCount):
+        new Node(newCount);
+        
+        prevNode.remove(key);
+        newNode.keys.add(key);
+        insertNodeAfterPrev(prevNode,newNode);
+        
+        if(!freqToNode.containsKey(newCount)){
+            newCount.put(newCount,newNode);
+        }
+        keyToCount.put(key,keyToCount.getOrDefault(key,0)+1);
+        
+     if(prevCount!=0&&prevNode.keys.size()==0){
+         deleteNode(prevNode);
+         freqToNode.remove(prevCount);
+     }
+        
+  
+    }
+    
+    public void dec(String key) {
+        
+        
+           int prevCount=-1;
+        if(!keyToCount.containsKey(key)){
+           prevCount=0; 
+        }else{
+            prevCount=keyToCount.get(key);
+        }
+        
+        Node nextNode=this.freqToNode.get(prevCount);
+        int newCount=prevCount-1;
+       Node newNode=freqToNode.containsKey(newCount)==true?freqToNode.get(newCount):
+        new Node(newCount);
+        
+        prevNode.remove(key);
+        newNode.keys.add(key);
+        insertNodeBeforeNextNode(prevNode,newNode);
+        
+        if(!freqToNode.containsKey(newCount)){
+            newCount.put(newCount,newNode);
+        }
+        keyToCount.put(key,keyToCount.getOrDefault(key,0)+1);
+        
+     if(prevCount!=0&&prevNode.keys.size()==0){
+         deleteNode(prevNode);
+         freqToNode.remove(prevCount);
+     }
+        
+        
+    }
+    
+    public String getMaxKey() {
+        
+        return head.next.keys.iterator().next();//count starts from 1
+    }
+    public String getMinKey() {
+        
+         return tail.prev.keys.iterator().next();
+    }
+    
+    public void insertNodeAfterPrev(Node prev,Node curr){
+        
+        Node nextNode=prev.next;  
+        curr.next=nextNode;
+        nextNode.prev=curr;
+        prev.next=curr;
+        curr.prev=prev;
+        
+    }
+    
+    public void deleteNode(Node node){
+         node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+}
+*/
