@@ -1,0 +1,122 @@
+class Solution {
+    
+    boolean[][] isPacificReachable;
+    boolean[][] isAtlanticReachable;
+    Set<String> visited;
+    int[][] heights;
+    final int[][] dir=new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
+    
+    public boolean isValid(int x, int y){
+        if(x<0||y<0||x>=this.heights.length||y>=this.heights[0].length){
+            return false;
+        }
+        return true;
+    }
+    public void findPacificReachablePoints(int x, int y){
+        if(!isValid(x,y)){
+            return;
+        }
+       // System.out.println("I am here");
+        isPacificReachable[x][y]=true;
+        this.visited.add(x+","+y);
+        for(int[] D: dir){
+            
+            int newX=x+D[0];
+            int newY=y+D[1];
+             if(!isValid(newX,newY)||this.visited.contains(newX+","+newY)
+                ||this.heights[newX][newY]<this.heights[x][y]){
+            continue;
+           }
+            this.visited.add(newX+","+newY);
+            findPacificReachablePoints(newX,newY);
+        }
+  
+    }
+    
+    
+       public void findAtlanticReachablePoints(int x, int y){
+        if(!isValid(x,y)){
+            return;
+        }
+        
+        isAtlanticReachable[x][y]=true;
+          this.visited.add(x+","+y);
+        for(int[] D: dir){
+            
+            int newX=x+D[0];
+            int newY=y+D[1];
+             if(!isValid(newX,newY)||this.visited.contains(newX+","+newY)
+                ||this.heights[newX][newY]<this.heights[x][y]){
+            continue;
+           }
+            this.visited.add(newX+","+newY);
+            findAtlanticReachablePoints(newX,newY);
+        }
+  
+    }
+    
+    
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        
+        this.isPacificReachable=new boolean[heights.length][heights[0].length];
+        this.isAtlanticReachable=new boolean[heights.length][heights[0].length];
+        this.heights=heights;
+        List<List<Integer>> answer=new ArrayList<>();
+        this.visited=new HashSet<String>();
+        
+        for(int col=0;col<heights[0].length;col++){
+            String key="0,"+col;
+            this.visited.clear();
+            if(!visited.contains(key)){
+                findPacificReachablePoints(0,col);
+            } 
+        }
+        
+      /*      for(int i=0;i<heights.length;i++){
+             System.out.println(Arrays.toString(isPacificReachable[i]));
+       }*/
+        
+         for(int row=0;row<heights.length;row++){
+            String key=row+","+0;
+            this.visited.clear();
+            if(!visited.contains(key)){
+                findPacificReachablePoints(row,0);
+            } 
+        }
+        
+        
+          for(int col=0;col<heights[0].length;col++){
+            String key=(heights.length-1)+","+col;
+            this.visited.clear();
+            if(!visited.contains(key)){
+                findAtlanticReachablePoints(heights.length-1,col);
+            } 
+        }
+        
+        
+        
+          for(int row=0;row<heights.length;row++){
+            String key=row+","+(heights[0].length-1);
+            this.visited.clear();
+            if(!visited.contains(key)){
+                findAtlanticReachablePoints(row,heights[0].length-1);
+            } 
+        }
+        
+       for(int i=0;i<heights.length;i++){
+           for(int j=0;j<heights[0].length;j++){
+               if(isPacificReachable[i][j]&&isAtlanticReachable[i][j]){
+                   List<Integer> coor=new ArrayList<Integer>();
+                   coor.add(i);
+                   coor.add(j);
+                   answer.add(coor);
+               }
+
+           }
+       }
+        
+        return answer;
+        
+        
+    }
+}
