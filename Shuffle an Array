@@ -1,0 +1,104 @@
+//https://www.youtube.com/watch?v=4zx5bM2OcvA
+class Solution {
+    private int[] nums;
+    private int[] originalNums;
+
+    public Solution(int[] nums) {
+        this.nums = nums;
+        this.originalNums = Arrays.copyOf(nums, nums.length);
+    }
+
+    /**
+     * Resets the array to its original configuration and return it.
+     */
+    public int[] reset() {
+        return this.originalNums;
+    }
+
+    /**
+     * Returns a random shuffling of the array.
+     */
+    public int[] shuffle() {        
+        Random random = new Random();
+        for(int i = nums.length - 1; i >0; i --){
+            int index = random.nextInt(i + 1);
+            int temp = nums[index];
+            nums[index] = nums[i];
+            nums[i] = temp;
+        }
+        
+        return nums;
+    }
+
+}
+
+/*
+
+O(nlogn)
+
+Generate random numbers for each numbers then sort by random numbers, you will get random numbers at random indexs
+class Solution {
+
+    class Number{
+        int randVal;
+        int originalVal;
+        Number(int originalVal,int randVal){
+            this.originalVal=originalVal;
+            this.randVal=randVal;
+        }
+    }
+    int[] nums;
+    Random random;
+    public Solution(int[] nums) {
+        
+        random=new Random();
+        random.setSeed(2);
+        this.nums=nums;
+        
+    }
+    
+
+    public int[] reset() {
+        return nums;
+    }
+    
+
+    public int[] shuffle() {
+        
+        Number[] numbers=new Number[nums.length];
+        int[] answer=new int[nums.length];
+        
+        for(int i=0;i<numbers.length;i++){
+            numbers[i]=new Number(nums[i],getRandomNum(1,Integer.MAX_VALUE));
+        }
+        
+        Arrays.sort(numbers,(Number a, Number b)->{
+            return a.randVal-b.randVal;
+        });
+        
+        for(int i=0;i<numbers.length;i++){
+            answer[i]=numbers[i].originalVal;
+        }
+        
+        return answer;
+    }
+    
+    
+public int getRandomNum(int min, int max) {
+
+    return random.nextInt(max - min) + min;
+}
+    
+}
+
+
+
+*/
+    
+    
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(nums);
+ * int[] param_1 = obj.reset();
+ * int[] param_2 = obj.shuffle();
+ */
