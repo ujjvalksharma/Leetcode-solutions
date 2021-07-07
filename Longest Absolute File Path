@@ -1,0 +1,83 @@
+/*
+
+Make a simple Tree like structure where each node/directoru contains the child directory, name, files, we move to the child dir where our currIndex is because we know we inserting files sequentially,so we don't require previous index. out root dir is "" (empty string) and we substract 2 from answer (maxLen) because we we file path becomes //<actual path>, so we remove previous 2 /.
+*/
+class Solution {
+    
+    int maxLen=0;
+    class Dir{
+        List<String> files;
+        List<Dir> childDir;
+        int currIndex;
+        String name;
+        Dir(String name){
+            this.name=name;
+            this.currIndex=-1;
+            this.files=new ArrayList<String>();
+            this.childDir=new ArrayList<Dir>();
+        }
+    }
+    
+    public void createDir(String fileName,int currLevel,Dir head){
+        
+        if(currLevel==0){
+            
+if(fileName.contains(".")){ //file
+    head.files.add(fileName);
+}else{
+    
+ head.childDir.add(new Dir(fileName));
+ head.currIndex=head.currIndex+1;
+}
+            return;
+        }
+        
+        
+        createDir(fileName,currLevel-1,head.childDir.get(head.currIndex));
+    }
+    
+    
+    public void findMaxLen(Dir head,String filePath){
+        
+        if(head==null){
+            return;
+        }
+        
+         filePath=filePath+"/"+head.name;
+        
+         for(int i=0;i<head.files.size();i++){
+            String temp=filePath+"/"+head.files.get(i);
+             System.out.println(temp);
+             maxLen=Math.max(maxLen,temp.length());
+        }
+        
+        for(int i=0;i<head.childDir.size();i++){
+            findMaxLen(head.childDir.get(i),filePath);
+        }
+    }
+    public int lengthLongestPath(String input) {
+        
+        String lines[] = input.split("\\r?\\n");
+        Dir head=new Dir("");
+        for(int i=0;i<lines.length;i++){
+            
+            String[] levels=lines[i].split("\t", -1);
+            int currLevel=levels.length-1;
+            String fileName=levels[levels.length-1]; //this can be folder or file name;
+            createDir(fileName,currLevel,head);
+        }
+        
+        findMaxLen(head,"");
+        return maxLen-2>0?maxLen-2:0;
+    }
+}
+
+/*
+
+"dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext"
+
+*/
+    
+    
+    
+   
