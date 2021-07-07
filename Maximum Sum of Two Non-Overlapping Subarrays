@@ -1,0 +1,94 @@
+/*
+
+The idea is store the prefixMaxSum before ith point of size L and suffix max max sum after ith, so we when our subrray is size M ends at ith we know we can find the max subarray of size L before i-M index and max subarray size of after i+1, we can find the max non over lapping subrray sum of size L and M
+
+
+*/
+    
+    
+class Solution {
+    public int maxSumTwoNoOverlap(int[] A, int L, int M) {
+        
+        if(L>A.length||M>A.length){
+            return 0;
+        }
+        
+        int[] maxPrefixSumOfL=new int[A.length];
+        int[] maxSuffixSumOfL=new int[A.length];
+        int start=0;
+        int end=0;;
+        int prefixSum=0;
+        int maxSum=0;
+        while(end<A.length){
+            
+            if(end-start==L){
+               prefixSum-=A[start];
+                start++;
+            }
+            
+            prefixSum+=A[end];
+            
+            if(end-start==L-1){
+                if(end-1>=0){
+                     maxPrefixSumOfL[end]=Math.max(maxPrefixSumOfL[end-1],prefixSum);
+                }else{
+                    maxPrefixSumOfL[end]=prefixSum;
+                }
+            }
+         
+              end++;
+        }
+        
+        end=A.length-1;
+        start=A.length-1;
+        prefixSum=0;
+              while(start>=0){
+            
+            if(Math.abs(end-start)==L){
+               prefixSum-=A[end];
+                end--;
+            }
+            
+            prefixSum+=A[start];
+            
+            if(Math.abs(end-start)==L-1){
+                if(start+1<A.length){
+                     maxSuffixSumOfL[start]=Math.max(maxSuffixSumOfL[start+1],prefixSum);
+                }else{
+                    maxSuffixSumOfL[start]=prefixSum;
+                }
+            }
+         
+              start--;
+        }
+        
+       
+        
+         start=0;
+         end=0;;
+         prefixSum=0;
+        while(end<A.length){
+            
+            if(end-start==M){
+               prefixSum-=A[start];
+                start++;
+            }
+            
+            prefixSum+=A[end];
+            
+            if(end-start==M-1){
+                
+                if(end-M>=0){
+                    maxSum=Math.max(maxSum,prefixSum+maxPrefixSumOfL[end-M]);
+                }
+                if(end+1<A.length){
+                    maxSum=Math.max(maxSum,prefixSum+maxSuffixSumOfL[end+1]);
+                }
+            }
+         
+              end++;
+        }
+        
+        return maxSum;
+    }
+}
