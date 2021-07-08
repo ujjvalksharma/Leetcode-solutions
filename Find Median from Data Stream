@@ -1,4 +1,4 @@
-class MedianFinder {
+
 
     /*
     https://www.youtube.com/watch?v=1LkOrc-Le-Y
@@ -6,62 +6,86 @@ class MedianFinder {
     We keep track of maxheap from left subarray and min heap from right subarry and middle elemet is mean. for our convience we take maxheap>=minheap+1
     
     */
+
+class MedianFinder {
+
     /** initialize your data structure here. */
-    
-    PriorityQueue<Integer> maxHeap; // for left sub-array
-    PriorityQueue<Integer> minHeap; // fro right sub-array
+    PriorityQueue<Integer> leftArr; //max heap
+    PriorityQueue<Integer> rightArr; //min heap
     public MedianFinder() {
-        maxHeap=new  PriorityQueue<Integer>((a,b)-> b-a);
-        minHeap=new  PriorityQueue<Integer>();
         
+        leftArr=new PriorityQueue<Integer>((Integer a, Integer b)->{
+            return b-a;
+        });
+        rightArr=new PriorityQueue<Integer>((Integer a, Integer b)->{
+            return a-b;
+        });
     }
-   // [1  |  2]
+    
     public void addNum(int num) {
-        if(maxHeap.isEmpty()&&minHeap.isEmpty()){
-            maxHeap.add(num);
-        }else{
+        
+        if(rightArr.isEmpty()){ 
+            rightArr.add(num);//first time insert in right
+        }else if(leftArr.isEmpty()){
             
-            if(minHeap.size()<maxHeap.size()){
-                
-            int maxFromLeftSubarray=maxHeap.peek();
-            if(maxFromLeftSubarray>num){
-                maxHeap.poll();
-                maxHeap.add(num);
-                minHeap.add(maxFromLeftSubarray);
+            if(num<=rightArr.peek()){ //insert in left as element lies in left side
+                leftArr.add(num);
             }else{
-                minHeap.add(num);
+                //right side has less element so we take it out and insert in left and put greater in right
+                   int rightMaxNum=rightArr.poll();
+                    rightArr.add(num);
+                    leftArr.add(rightMaxNum); 
             }
+        
+            
+        } else{
+            
+        int rightSize=rightArr.size();
+        int leftSize=leftArr.size(); 
+            //in this since size was equal/even, the new element will sum of subrray arr or right and left becomes odd, so we right subrray has a extra element than left
+            if(rightSize==leftSize){
+                
+                //take out max from left and insert into right and insert small one left
+                 if(num<=leftArr.peek()){
+                     
+                    int leftMaxNum=leftArr.poll(); 
+                    leftArr.add(num);
+                    rightArr.add(leftMaxNum);
+                     
+                 }else{ //element is large, so directly insert in right arr
+                     rightArr.add(num); //insert in right as it lies in right
+                 }
                 
             }else{
                 
-                 int minFromRightSubarray=minHeap.peek();
-            if(minFromRightSubarray<num){
-                minHeap.poll();
-                minHeap.add(num);
-                maxHeap.add(minFromRightSubarray);
-            }else{
-                maxHeap.add(num);
-            }
-                
-                
+                //we insert at left array as we know element lies of left hand side and if we insert in right then right side size becomes greater by 2
+                if(num<=rightArr.peek()){
+                    leftArr.add(num);
+                }else{ //element from right min is taken and insert to left, as we have to make size equal between left and right 
+                    
+                    int rightMaxNum=rightArr.poll();
+                    rightArr.add(num);
+                    leftArr.add(rightMaxNum);
+                }
             }
         }
         
-        
     }
-    
     
     public double findMedian() {
-             double median;
         
-        if(maxHeap.size()==minHeap.size()){
-             median=(maxHeap.peek()+minHeap.peek());
-            return median/2;
-        }else{
-                    median=maxHeap.peek();
-        }
+        int rightSize=rightArr.size();
+        int leftSize=leftArr.size();
 
-          return median;
+        if(rightSize==leftSize){
+            
+            int sum=rightArr.peek()+leftArr.peek();
+            double median= (double) sum/2;
+            return median;
+        }else{
+            return (double) rightArr.peek();
+        }
+        
     }
 }
 
