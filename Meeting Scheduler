@@ -1,0 +1,31 @@
+class Solution {
+    public List<Integer> minAvailableDuration(int[][] slots1, int[][] slots2, int duration) {
+        
+        //heap by earlist time slot
+        PriorityQueue<int[]> timeslots = new PriorityQueue<>((slot1, slot2) -> slot1[0] - slot2[0]);
+
+        //valid timeslot whose size is aleast the duration
+        for (int[] slot: slots1) {
+            if (slot[1] - slot[0] >= duration) timeslots.offer(slot);
+        }
+         //valid timeslot whose size is aleast the duration
+        for (int[] slot: slots2) {
+            if (slot[1] - slot[0] >= duration) timeslots.offer(slot);
+        }
+
+        /*
+        It is guaranteed that no two availability slots of the same person intersect with each   other. That is, for any two time slots [start1, end1] and [start2, end2] of the same person, either start1 > end2 or start2 > end1.
+        
+        So, we know that top 2 time slots belong to different person.
+        
+        */
+        while (timeslots.size() > 1) {
+            int[] slot1 = timeslots.poll();
+            int[] slot2 = timeslots.peek();
+            if (slot1[1] >= slot2[0] + duration) {
+                return new ArrayList<Integer>(Arrays.asList(slot2[0], slot2[0] + duration));
+            }
+        }
+        return new ArrayList<Integer>();
+    }
+}
