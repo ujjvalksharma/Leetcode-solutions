@@ -1,0 +1,110 @@
+/*
+
+Idea is that we make a subarray of ones of size=number of ones present in data array because when we make a group of ones we know we are gonna have a subarray of ones, we know swaps is basically number of diff of ones and zeros. so we maintain we silding window of number of ones in data and see the diff to find swaps needed to make ones subarray.
+
+*/
+
+
+class Solution {
+    public int minSwaps(int[] data) {
+        
+     //   int[] onesSubarray=new int[data.length]; since we know there is only 1, we check by hardcoding it 
+        
+        int onesCount=0;
+        
+        for(int num: data){ 
+            onesCount+=num;  //total ones
+        }
+        
+        int minSwaps=onesCount;
+        
+ /*       for(int i=0;i<onesCount;i++){
+            onesSubarray[i]=1; //make subarray array of size onesCount all ones
+        }
+        */
+        int start=0;
+        int end=0;
+        int diff=0;
+        
+        while(end<data.length){
+            
+            if(data[end]!=1){ // 1 is hardcoded instead of onesSubarray[end]
+                diff++;
+            }
+            
+            if(end-start+1==onesCount){
+                
+                minSwaps=Math.min(minSwaps,diff);
+             /*   if(end+1<data.length){
+                   onesSubarray[end+1]=1; 
+                }*/
+                if(data[start]!=1){// 1 is hardcoded instead of data[start]
+                    diff--;
+                }
+             //   onesSubarray[start]=0;
+                    start++;
+            }
+         
+            end++;
+        }
+        
+        return minSwaps;
+        
+    }
+}
+
+    
+  /*  
+    
+class Solution {
+    public int minSwaps(int[] data) {
+        
+        int[] onesSubarray=new int[data.length]; 
+        
+        int onesCount=0;
+        
+        for(int num: data){ 
+            onesCount+=num;  //total ones
+        }
+        
+        int minSwaps=onesCount;
+        
+        for(int i=0;i<onesCount;i++){
+            onesSubarray[i]=1; //make subarray array of size onesCount all ones
+        }
+        
+        int start=0;
+        int end=0;
+        int diff=0;
+        
+        while(end<data.length){
+            
+            if(onesSubarray[end]!=data[end]){
+                diff++;
+            }
+            
+            if(end-start+1==onesCount){
+                
+                minSwaps=Math.min(minSwaps,diff);
+                if(end+1<data.length){
+                   onesSubarray[end+1]=1; 
+                }
+                if(onesSubarray[start]!=data[start]){
+                    diff--;
+                }
+                onesSubarray[start]=0;
+                    start++;
+            }
+         
+            end++;
+        }
+        
+        return minSwaps;
+        
+    }
+}*/
+//[1,0,1,0,1]
+//[0,0,1,1,1]
+
+//[1,0,1,0,1]
+//[1,1,1,0,0]
