@@ -1,0 +1,47 @@
+/*
+This is a divide and conquer problem, we know for a string s, if an character doesn't have total frequency>=k it can't be includes, so those become to division points for the whole string. then these substring are further called into recursibe function like post order traversal and answer (size of valid substring) is returned from the leaf nodes and leaf nodes contain the valid string.
+
+https://www.youtube.com/watch?v=YSQVDVRQyA4
+*/
+
+class Solution {
+    public int longestSubstring(String s, int k) {
+        
+        int[] overAllCount=new int[26];
+        for(char c: s.toCharArray()){
+            overAllCount[c-'a']++;
+        }
+        
+        int maxLen=0;
+        int start =0;
+        int end=0;
+        int sSize=s.length();
+        boolean isValid=true;
+        while(end<sSize){
+            
+            if(overAllCount[s.charAt(end)-'a']<k&&overAllCount[s.charAt(end)-'a']>0){
+                
+                maxLen=Math.max(maxLen,longestSubstring(s.substring(start,end),k));
+                start=end+1;
+                isValid = false;
+            }
+                
+                end++;
+        }
+        
+        if(isValid){
+            return sSize; //only valid string size will be returned
+        }
+        // longestSubstring(s.substring(start), k) function call is the 
+        // last division of the final string s
+        return  Math.max(maxLen, longestSubstring(s.substring(start), k));
+        
+    }
+}
+
+/*
+
+            s="bbaaa c b d" k=3
+            /
+           bb|aaa 
+*/
