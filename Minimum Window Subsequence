@@ -1,0 +1,42 @@
+//https://www.youtube.com/watch?v=W2DvQcDPD9A
+//https://www.youtube.com/watch?v=8UtHFf3R6TE
+/*
+We find a longest substring in S from left to right and then in the longest substring we find a shorter one from right to left and then again from left to right.
+Time complexity O(m*n)
+
+*/
+class Solution {
+    public String minWindow(String s1, String s2) {
+        
+
+        String windowStr="";
+        int minLen=s1.length()+1;
+        int j = 0;
+        for(int i=0;i<s1.length();i++){
+            
+            if(s2.charAt(j)==s1.charAt(i)){
+                j++;
+                if(j==s2.length()){
+                    
+                    int end=i+1;
+                    j--;
+                    while(j>=0){
+                     
+                           if(s2.charAt(j)==s1.charAt(i)){
+                               j--;   
+                           }
+                        i--;
+                    }
+                    j++;// j becomes 0
+                    i++;//i and j are equal there
+                    if (end - i < minLen) {
+                        minLen = end - i;
+                        windowStr = s1.substring(i, end);
+                    }
+                }
+            }
+        }
+        
+        return windowStr;
+    }
+}
