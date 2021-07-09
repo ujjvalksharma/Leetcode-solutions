@@ -1,0 +1,95 @@
+class Solution {
+    
+    // Dictionary that we will use for memoization
+    private HashMap<String, Integer> memo;
+    String s;
+    String t;
+    int sSize;
+    int tSize;
+    private int recurse(int i, int j) {
+        
+        // Base case
+      /*  if (i == M || j == N || M - i < N - j) {
+            return j == t.length() ? 1 : 0;
+        }*/
+        if(j>=tSize){
+            return 1;
+        }
+        
+        if(i>=sSize){
+            return 0;
+        }
+        
+    //    Pair<Integer, Integer> key = new Pair<Integer, Integer>(i, j);
+        String key=i+","+j;
+        
+        // Check to see if the result for this recursive
+        // call is already cached
+        if (this.memo.containsKey(key)) {
+            return this.memo.get(key);
+        }
+        
+        // Always calculate this result since it's
+        // required for both the cases
+        int ans =0; 
+        
+        
+        // If the characters match, then we make another
+        // recursion call and add the result to "ans"
+        if (s.charAt(i) == t.charAt(j)) {
+            ans += this.recurse(i + 1, j + 1);
+        }
+        
+        ans+=this.recurse(i + 1, j);
+        // Cache the result
+        this.memo.put(key, ans);
+        return ans;
+    }
+    
+    public int numDistinct(String s, String t) {
+        
+        this.s=s;
+        this.t=t;
+        this.sSize=s.length();
+        this.tSize=t.length();
+        this.memo = new HashMap<String, Integer>();        
+        return this.recurse( 0, 0);
+    }
+}
+/*
+class Solution {
+    
+    String s;
+    String t;
+    int sSize=0;
+    int tSize=0;
+    public int numDistinctHelper(int sIndex, int tIndex){
+        
+        if(tIndex>=tSize){
+            return 1;
+        }
+        if(sIndex>=sSize){
+            return 0;
+        }
+        
+        int distinctSubsequence=0;
+        
+        if(this.s.charAt(sIndex)==this.s.charAt(tIndex)){
+            distinctSubsequence+=numDistinctHelper(sIndex+1,tIndex+1);
+        }
+          distinctSubsequence+=numDistinctHelper(sIndex+1,tIndex);
+        
+        return distinctSubsequence;
+    }
+    public int numDistinct(String s, String t) {
+        
+        this.s=s;
+        this.t=t;
+        this.sSize=s.length();
+        this.tSize=t.length();
+        
+        return numDistinctHelper(0,0);
+    }
+}
+
+*/
