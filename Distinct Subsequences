@@ -1,3 +1,11 @@
+/*
+
+We can convert recursive into iterate by starting for 2 loop from 
+S.length()-1...0 and t.length()-1....0, then 
+ans += this.recurse(i + 1, j + 1); => ans+=dp[i+1][j+1]
+ans+=this.recurse(i + 1, j); => ans+=dp[i+1][j]
+ return ans; => dp[i][j]=ans
+*/
 class Solution {
     
     // Dictionary that we will use for memoization
@@ -74,7 +82,7 @@ class Solution {
         
         int distinctSubsequence=0;
         
-        if(this.s.charAt(sIndex)==this.s.charAt(tIndex)){
+        if(this.s.charAt(sIndex)==this.t.charAt(tIndex)){
             distinctSubsequence+=numDistinctHelper(sIndex+1,tIndex+1);
         }
           distinctSubsequence+=numDistinctHelper(sIndex+1,tIndex);
