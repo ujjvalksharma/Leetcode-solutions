@@ -1,0 +1,38 @@
+//https://www.youtube.com/watch?v=BTObFnHbD4U
+class Solution {
+    public int eraseOverlapIntervals(int[][] intervals) {
+        
+        Arrays.sort(intervals,(int[] a, int[] b)->{
+            if(a[0]==b[0]){
+                return a[1]-b[1];
+            }
+            return a[0]-b[0];
+        });
+        
+        int left=0;
+        int right=1;
+        int removedIntervals=0;
+        
+        while(right<intervals.length){
+            
+            if(intervals[right][0]>=intervals[left][1]){
+                  left=right;
+                  right++;
+                
+            }else if(intervals[right][1]>=intervals[left][1]
+                    &&intervals[right][0]>=intervals[left][0]){
+                right++;
+                removedIntervals++;
+                
+            }else{
+                 left=right;
+                  right++;
+                removedIntervals++;
+                
+            }
+        }
+        //[[1,2],[2,3],[3,4],[1,3]]
+        //[1,2],[1,3],[2,3],[3,4]
+        return removedIntervals;
+    }
+}
