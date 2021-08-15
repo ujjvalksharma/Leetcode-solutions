@@ -1,41 +1,53 @@
 class Solution {
-  ArrayDeque<Integer> deq = new ArrayDeque<Integer>();
-  int [] nums;
-
-  public void clean_deque(int i, int k) {
-    // remove indexes of elements not from sliding window
-    if (!deq.isEmpty() && deq.getFirst() == i - k){
-      deq.removeFirst();
-    }
-
-    // remove from deq indexes of all elements 
-    // which are smaller than current element nums[i]
-    while (!deq.isEmpty() && nums[i] > nums[deq.getLast()]) {
-        deq.removeLast();
-    }
-  }
-/*
-Solution1: Dequeue, we try to maintain queue in increasing order and we pop invalid index from the left and pop small element from the right by comparing with the current elements. and we know we the subarray is of size k, then we enter elements in output array.
-*/
-  public int[] maxSlidingWindow(int[] nums, int k) {
-    int n = nums.length;
-    if (n * k == 0) return new int[0];
-    if (k == 1) return nums;
-
-    this.nums = nums;
-
-    int [] output = new int[n - k + 1];
-    int outputIndex=0;
-    for (int i  = 0; i < n; i++) {
-      clean_deque(i, k);
-      deq.addLast(i);
-        if(i - k + 1>=0){
-      output[outputIndex] = nums[deq.getFirst()];
-      outputIndex++;
+    
+    class Node{
+        int val;
+        int index;
+        Node(int val, int index){
+            this.val=val;
+            this.index=index;
         }
+        
     }
-    return output;
-  }
+    
+    /*
+    
+    The basic Idea to usea ArrayDequeue as you can remove element from front and back in O(1). The logic behind inserting is that if we see can up coming element then we remove from right to left as we know that element is going to be in range and there is no point of keeping elements from the left. and while getting the max element remove element from left if we index outdated and we know the left most element must be highest element as we were maintaing a increasing order.
+    
+    */
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        
+        Deque<Node> dq = new ArrayDeque<Node>();
+        int[] ans=new int[nums.length-k+1];
+        int totalVisitedElements=0;
+        int indexOfAns=0;
+        
+        for(int i=0;i<nums.length;i++){
+            
+            totalVisitedElements++;
+            
+            while(!dq.isEmpty()&&dq.peekLast().val<=nums[i]){
+                dq.pollLast();
+            }
+            
+            dq.addLast(new Node(nums[i],i));
+            
+            if(totalVisitedElements==k){
+             
+                  while(!dq.isEmpty()&&dq.peekFirst().index<Math.abs(k-1-i)){
+                  dq.pollFirst();
+               }
+                
+                ans[indexOfAns]=dq.peekFirst().val;
+                totalVisitedElements--;
+                indexOfAns++;
+            }
+            
+        }
+        
+        return ans;
+        
+    }
 }
 /*
 Solution2: 
