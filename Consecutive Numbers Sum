@@ -22,3 +22,36 @@ class Solution {
         return totalCombinations;
     }
 }
+
+//Solution 2
+/*
+Simple arthemic solution:
+
+n/2*[2a + (n-1)d] = Sum ; where
+n - number of terms and
+a - starting term and
+d - difference between the numbers.
+terms*[2a + terms - 1] = 2N
+
+so basiclly we iterate over numbers of terms rather than starting point which is a as if we iterate over a then we know terms would give a quadratic equation.
+
+*/
+class Solution {
+    
+    public int remainder(int a, int b){
+        return a%b;
+    }
+    int consecutiveNumbersSum(int N) {
+	int count=1;
+	int numberOfTerms=2;
+	while((2*N+numberOfTerms-numberOfTerms*numberOfTerms)>0)
+	{
+		if(remainder(2*N+numberOfTerms-numberOfTerms*numberOfTerms,2*numberOfTerms)==0){
+          count++;  
+        }
+			
+		numberOfTerms++;
+	}
+	return count;
+}
+}
