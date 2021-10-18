@@ -1,0 +1,39 @@
+class Solution {
+    public int countBinarySubstrings(String s) {
+        
+        int numberOfOnes=0;
+        int numberOfZeros=0;
+        int totalSubstring=0;
+        int prevNum=-1;
+        for(int i=0;i<s.length();i++){
+            
+            if(s.charAt(i)=='0'){
+                
+                   if(prevNum==1){
+                    numberOfZeros=0;
+                }
+                
+                numberOfZeros++;
+                prevNum=0;
+                if(numberOfOnes>0&&numberOfZeros<=numberOfOnes){
+                    totalSubstring++;
+                }
+                
+            }else if(s.charAt(i)=='1'){
+                
+                if(prevNum==0){
+                    numberOfOnes=0;
+                }
+                numberOfOnes++;
+                prevNum=1;
+                if(numberOfZeros>0&&numberOfOnes<=numberOfZeros){
+                    totalSubstring++;
+                }
+            }
+            
+            
+        }
+        
+        return totalSubstring;
+    }
+}
