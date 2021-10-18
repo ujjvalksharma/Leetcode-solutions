@@ -1,4 +1,9 @@
 class Solution {
+    /*
+    Since we need to find substring of 0/1 we just need to keep track of prev count of 0/1 and current count of 0/1 and then increment substring and also make number of zero/ones=0 after we have visited that group.
+    
+    if a substring of 0000011 it form as many substring as Math.min(countOFzero,CountOfOnes) as 01,0011.
+    */
     public int countBinarySubstrings(String s) {
         
         int numberOfOnes=0;
