@@ -1,0 +1,57 @@
+import java.util.HashMap;
+
+public class MatrixChainMultiplication {
+    // Matrix Ai has dimension p[i-1] x p[i] for i = 1..n
+	static class MatrixOrder{
+		String sequence;
+		int prod;
+		
+		public MatrixOrder(String sequence, int prod){
+			this.prod=prod;
+			this.sequence=sequence;
+			
+		}
+		
+		public String toString() {
+			return "sequence: "+sequence+" prod: "+prod;
+		}
+		
+	}
+	static HashMap<String,Integer> mem=new HashMap<String,Integer>();
+	
+    static int MatrixChainOrder(int p[], int i, int j)
+    {
+        if (i == j)
+            return 0;
+        String key=i+"-"+j;
+        if(mem.containsKey(key)) {
+        	return mem.get(key);
+        }
+        int min = Integer.MAX_VALUE;
+        String sequence="";
+        for (int k = i; k < j; k++)
+        {
+        	int m1= MatrixChainOrder(p, i, k);
+        	int m2= MatrixChainOrder(p, k + 1, j);
+            int count= m1+m2+ p[i - 1] * p[k] * p[j];
+ 
+            if (count < min) {
+            	min = count;
+            }  
+        }
+        mem.put(key,min);
+        return min;
+    }
+ 
+    // Driver code
+    public static void main(String args[])
+    {
+      //  int arr[] = new int[] { 1, 2, 3, 4, 3 }; s h5; 10; 3; 12; 5; 50; 6i.
+    	int arr[] = new int[] { 5 ,10 ,3 ,12 ,5 ,50 ,6 };
+        int n = arr.length;
+ 
+        System.out.println(
+            "Minimum number of multiplications is "
+            + MatrixChainOrder(arr, 1, n - 1));
+    }
+}
