@@ -1,0 +1,113 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class MatrixChainMultiplication {
+	static class MatrixOrder{
+		 String sequence;
+		int prod;
+		
+		public MatrixOrder(String sequence, int prod){
+			this.prod=prod;
+			this.sequence=sequence;
+			
+		}
+		
+		public String toString() {
+			return "sequence: "+sequence+" prod: "+prod;
+		}
+		
+	}
+    static List<MatrixOrder> MatrixChainOrder(int p[], int i, int j)
+    {
+
+        if (i == j) {
+        	MatrixOrder m1=new MatrixOrder("(M"+i+")",0);
+        	List<MatrixOrder> m1Temp=new ArrayList<MatrixOrder>();
+        	m1Temp.add(m1);
+        	return m1Temp;
+        	
+        }
+        int min = Integer.MAX_VALUE;
+        String sequence="";
+        List<MatrixOrder> MatrixOrders=new ArrayList<MatrixOrder>();
+        for (int k = i; k < j; k++)
+        {
+        	List<MatrixOrder> m1= MatrixChainOrder(p, i, k);
+        	List<MatrixOrder> m2= MatrixChainOrder(p, k + 1, j);
+      //      int currProd= m1.prod+m2.prod+ p[i - 1] * p[k] * p[j];
+  //sequence="("+m1.sequence+"*"+m2.sequence+")";
+        //    sequences.add(e)
+            
+            for(MatrixOrder m1Temp: m1) {
+            	
+            	 for(MatrixOrder m2Temp: m2) {
+            		 int currProd= m1Temp.prod+m2Temp.prod+ p[i - 1] * p[k] * p[j];
+            		 MatrixOrders.add(new MatrixOrder("("+m1Temp.sequence+"*"+m2Temp.sequence+")", currProd));
+                 	
+                 }
+            	 
+            }
+            
+        }
+
+        return MatrixOrders;
+    }
+ 
+    // Driver code
+    public static void main(String args[])
+    {
+      //  int arr[] = new int[] { 1, 2, 3, 4, 3 }; s h5; 10; 3; 12; 5; 50; 6i.
+    	int arr[] = new int[] { 5 ,10 ,3 ,12 ,5 ,50 ,6 };
+        int n = arr.length;
+ 
+        System.out.println(
+            "Minimum number of multiplications is "
+            + MatrixChainOrder(arr, 1, n - 1));
+    }
+}
+
+/*
+Minimum number of multiplications is [sequence:
+ ((M1)*((M2)*((M3)*((M4)*((M5)*(M6)))))) prod: 2556, 
+ sequence: ((M1)*((M2)*((M3)*(((M4)*(M5))*(M6))))) prod: 7296,
+  sequence: ((M1)*((M2)*(((M3)*(M4))*((M5)*(M6))))) prod: 2250,
+   sequence: ((M1)*((M2)*(((M3)*((M4)*(M5)))*(M6)))) prod: 6180, 
+   sequence: ((M1)*((M2)*((((M3)*(M4))*(M5))*(M6)))) prod: 2310, 
+   sequence: ((M1)*(((M2)*(M3))*((M4)*((M5)*(M6))))) prod: 3240,
+    sequence: ((M1)*(((M2)*(M3))*(((M4)*(M5))*(M6)))) prod: 7980, 
+    sequence: ((M1)*(((M2)*((M3)*(M4)))*((M5)*(M6)))) prod: 2430,
+     sequence: ((M1)*((((M2)*(M3))*(M4))*((M5)*(M6)))) prod: 3060, 
+     sequence: ((M1)*(((M2)*((M3)*((M4)*(M5))))*(M6))) prod: 9600,
+      sequence: ((M1)*(((M2)*(((M3)*(M4))*(M5)))*(M6))) prod: 5730,
+       sequence: ((M1)*((((M2)*(M3))*((M4)*(M5)))*(M6))) prod: 12660,
+        sequence: ((M1)*((((M2)*((M3)*(M4)))*(M5))*(M6))) prod: 6130, 
+        sequence: ((M1)*(((((M2)*(M3))*(M4))*(M5))*(M6))) prod: 6760, 
+        sequence: (((M1)*(M2))*((M3)*((M4)*((M5)*(M6))))) prod: 2316, 
+        sequence: (((M1)*(M2))*((M3)*(((M4)*(M5))*(M6)))) prod: 7056, 
+        sequence: (((M1)*(M2))*(((M3)*(M4))*((M5)*(M6)))) prod: 2010, 
+        sequence: (((M1)*(M2))*(((M3)*((M4)*(M5)))*(M6))) prod: 5940,
+         sequence: (((M1)*(M2))*((((M3)*(M4))*(M5))*(M6))) prod: 2070, 
+         sequence: (((M1)*((M2)*(M3)))*((M4)*((M5)*(M6)))) prod: 3180,
+          sequence: (((M1)*((M2)*(M3)))*(((M4)*(M5))*(M6))) prod: 7920,
+           sequence: ((((M1)*(M2))*(M3))*((M4)*((M5)*(M6)))) prod: 2550, 
+           sequence: ((((M1)*(M2))*(M3))*(((M4)*(M5))*(M6))) prod: 7290, 
+           sequence: (((M1)*((M2)*((M3)*(M4))))*((M5)*(M6))) prod: 2230, 
+           sequence: (((M1)*(((M2)*(M3))*(M4)))*((M5)*(M6))) prod: 2860,
+            sequence: ((((M1)*(M2))*((M3)*(M4)))*((M5)*(M6))) prod: 2055, 
+            sequence: ((((M1)*((M2)*(M3)))*(M4))*((M5)*(M6))) prod: 2910, 
+            sequence: (((((M1)*(M2))*(M3))*(M4))*((M5)*(M6))) prod: 2280,
+             sequence: (((M1)*((M2)*((M3)*((M4)*(M5)))))*(M6)) prod: 10300, 
+             sequence: (((M1)*((M2)*(((M3)*(M4))*(M5))))*(M6)) prod: 6430, 
+             sequence: (((M1)*(((M2)*(M3))*((M4)*(M5))))*(M6)) prod: 13360,
+              sequence: (((M1)*(((M2)*((M3)*(M4)))*(M5)))*(M6)) prod: 6830, 
+              sequence: (((M1)*((((M2)*(M3))*(M4))*(M5)))*(M6)) prod: 7460, 
+              sequence: ((((M1)*(M2))*((M3)*((M4)*(M5))))*(M6)) prod: 7200, 
+              sequence: ((((M1)*(M2))*(((M3)*(M4))*(M5)))*(M6)) prod: 3330, 
+              sequence: ((((M1)*((M2)*(M3)))*((M4)*(M5)))*(M6)) prod: 8460, 
+              sequence: (((((M1)*(M2))*(M3))*((M4)*(M5)))*(M6)) prod: 7830, 
+              sequence: ((((M1)*((M2)*((M3)*(M4))))*(M5))*(M6)) prod: 3330, 
+              sequence: ((((M1)*(((M2)*(M3))*(M4)))*(M5))*(M6)) prod: 3960, 
+              sequence: (((((M1)*(M2))*((M3)*(M4)))*(M5))*(M6)) prod: 3155, 
+              sequence: (((((M1)*((M2)*(M3)))*(M4))*(M5))*(M6)) prod: 4010, 
+              sequence: ((((((M1)*(M2))*(M3))*(M4))*(M5))*(M6)) prod: 3380]
+*/
