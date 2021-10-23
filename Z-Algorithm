@@ -1,0 +1,54 @@
+class Solution {
+    
+    public void fillZTable(int[] Ztable, String str){
+        
+        int L=0;
+        int R=0;
+        int n=str.length();
+        for(int i=1;i<str.length();i++){
+            
+            if(i<=R){
+                
+                Ztable[i]=Math.min(Ztable[0+i-L],R-i+1); // we do R-i+1 because we are storing length and 0+i-L cause we care about index
+                
+            }
+            
+            while(Ztable[i]+i<n&&str.charAt(Ztable[i])==str.charAt(Ztable[i]+i)){
+                Ztable[i]++;
+            }
+            
+            if(i+Ztable[i]-1>R){
+                L=i;
+                R=i+Ztable[i]-1;
+                
+            }
+        }
+    }
+    public int strStr(String haystack, String needle) {
+        
+        
+        if("".equals(haystack)&&"".equals(needle)){
+            return 0;
+        }
+        
+        int needleLength=needle.length();
+        String Zstr=needle+haystack;
+        
+        int[] Ztable=new int[Zstr.length()];
+        
+        fillZTable(Ztable,Zstr);
+      //  System.out.println("Zstr: "+Zstr+" Ztable: "+Arrays.toString(Ztable));
+        
+        int minIndex=0;
+        
+        for(int i=0;i<Ztable.length;i++){
+            if(Ztable[i]==needleLength){
+                return i-needleLength-1;
+                
+            }
+        }
+        
+        return -1;
+        
+    }
+}
