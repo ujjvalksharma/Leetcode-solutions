@@ -1,41 +1,30 @@
 class Solution {
     
-    List<List<Integer>> answer=new ArrayList<>();
-    Set<String> setOfPermutation=new HashSet<String>();
-    public void findAllPermutation(int start,int[] nums){
-        
-        if(start>=nums.length){
-            return;
-        }
-        List<Integer> list = new ArrayList<Integer>();
-        
-        if(!setOfPermutation.contains(Arrays.toString(nums))){
-            setOfPermutation.add(Arrays.toString(nums));
-            for(int num: nums){
-            list.add(num);
-        }
-                    answer.add(list);
-        }
-        
-        
-        for(int i=start;i<nums.length;i++){
-            
-            int temp=nums[start];
-            nums[start]=nums[i];
-            nums[i]=temp;
-                
-            findAllPermutation(start+1,nums);
-            
-            temp=nums[start];
-            nums[start]=nums[i];
-            nums[i]=temp;
-            
-        }
+    List<List<Integer>> output=new ArrayList<>();
+    
+  public void backtrack(List<Integer> nums,int first) {
+    // if all integers are used up
+    if (first >= nums.size()){
+      output.add(new ArrayList<Integer>(nums)); //leaf nodes will have all the numbers
     }
-    public List<List<Integer>> permute(int[] nums) {
-        
-        findAllPermutation(0,nums);
-        return answer;
-        
+      
+    for (int i = first; i < nums.size(); i++) {
+      Collections.swap(nums, first, i);
+      backtrack(nums, first + 1);
+      Collections.swap(nums, first, i);
     }
+      
+  }
+
+  public List<List<Integer>> permute(int[] nums) {
+
+    List<Integer> numsList = new ArrayList<Integer>();
+    for (int num : nums){
+      numsList.add(num);
+    }
+
+    int n = nums.length;
+    backtrack(numsList, 0);
+    return output;
+  }
 }
