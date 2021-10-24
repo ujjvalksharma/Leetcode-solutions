@@ -1,0 +1,41 @@
+class Solution {
+    
+    List<List<Integer>> answer=new ArrayList<>();
+    Set<String> setOfPermutation=new HashSet<String>();
+    public void findAllPermutation(int start,int[] nums){
+        
+        if(start>=nums.length){
+            return;
+        }
+        List<Integer> list = new ArrayList<Integer>();
+        
+        if(!setOfPermutation.contains(Arrays.toString(nums))){
+            setOfPermutation.add(Arrays.toString(nums));
+            for(int num: nums){
+            list.add(num);
+        }
+                    answer.add(list);
+        }
+        
+        
+        for(int i=start;i<nums.length;i++){
+            
+            int temp=nums[start];
+            nums[start]=nums[i];
+            nums[i]=temp;
+                
+            findAllPermutation(start+1,nums);
+            
+            temp=nums[start];
+            nums[start]=nums[i];
+            nums[i]=temp;
+            
+        }
+    }
+    public List<List<Integer>> permute(int[] nums) {
+        
+        findAllPermutation(0,nums);
+        return answer;
+        
+    }
+}
