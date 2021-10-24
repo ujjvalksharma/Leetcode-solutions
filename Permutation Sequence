@@ -60,4 +60,44 @@ class Solution {
         }
         
     }
+    
+    
+       public String getPermutation(int n, int k) {
+
+        LinkedList<Integer> linklist = new LinkedList<Integer>();
+        StringBuilder kthSequence=new StringBuilder("");
+        for(int i=1;i<=n;i++){
+            linklist.add(i);
+        }
+        
+        while(true){
+            
+             int size=linklist.size();
+            int currentGroupSize=factorial(size-1);
+            int totalVisitedNumbers=0;
+            int deletedIndex=-1;
+            
+            for(int i=0;i<linklist.size();i++){
+                totalVisitedNumbers+=currentGroupSize;
+                
+                  if(totalVisitedNumbers>=k){
+                    k=k- (totalVisitedNumbers-currentGroupSize);
+                    kthSequence.append(""+linklist.get(i));
+                     deletedIndex=i;
+                    break;
+                }
+             
+            }
+                linklist.remove(deletedIndex);
+                 if(kthSequence.length()==n){
+                return kthSequence.toString();
+            }
+               
+            
+            
+        }
+        
+   
+        
+    }
 }
