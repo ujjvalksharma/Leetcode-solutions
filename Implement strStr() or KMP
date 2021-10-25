@@ -4,6 +4,15 @@ https://www.youtube.com/watch?v=BXCEFAzhxGY
 https://www.youtube.com/watch?v=GTJr8OvyEVQ&t=644s
 
 */
+
+/*
+txt: ABCxxxxxxABCD
+pat: ABCxxxxxxABCE -- mistach at e
+So we can see that suffix ABC is same as prefix ABC in pat, so now we can also see that prefix ABC is same as prefix ABC in text, so we can compare next as: 
+txt: ABCxxxxxxABCD
+pat:          ABCxxxxxxABCE.  we move only the pat pointer and not the txt pointer
+*/
+
 class Solution {
     public void fillLpsTable(int[] lpsTable,String subStr){
         
