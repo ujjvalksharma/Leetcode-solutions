@@ -46,3 +46,41 @@ class Solution {
          return longestPalindromeSubseqHelper(0,0,s,input1.toString(),s.length(),s.length());
     }
 }
+
+
+//Solution 2
+class Solution {
+    HashMap<String,Integer> mem=new HashMap<String,Integer>();
+    
+    public int longestPalindromeSubseqHelper(String s, int l,int h){
+        
+        if(l>h){
+            return 0;
+        }
+        if(l==h){
+            return 1;
+        }
+        String key=l+","+h;
+        if(mem.containsKey(key)){
+            return mem.get(key);
+        }
+        int maxPalindromeLen=0;
+        
+        if(s.charAt(l)==s.charAt(h)){
+            maxPalindromeLen=maxPalindromeLen+2;
+            maxPalindromeLen+=longestPalindromeSubseqHelper(s,l+1,h-1);
+        }else{
+            maxPalindromeLen+=Math.max(longestPalindromeSubseqHelper(s,l+1,h),
+                                      longestPalindromeSubseqHelper(s,l,h-1));
+        }
+        
+        
+        mem.put(key,maxPalindromeLen);
+        
+        return maxPalindromeLen;
+    }
+    public int longestPalindromeSubseq(String s) {
+        
+        return longestPalindromeSubseqHelper(s,0,s.length()-1);
+    }
+}
