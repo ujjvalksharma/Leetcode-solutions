@@ -1,0 +1,52 @@
+package sorting;
+
+import java.util.Arrays;
+
+public class CoutingSort {
+	
+	
+	private void sort(int[] arr, int minNum, int maxNum) {
+		
+		int[] count=new int[maxNum+1];
+		int[] numIndex=new int[maxNum+1];
+		int[] tempArr=new int[arr.length];
+		
+		for(int num: arr) {
+			count[num]++;
+		}
+		numIndex[0]=count[0];
+		
+		for(int i=1;i<count.length;i++) {
+			numIndex[i]=count[i]+numIndex[i-1];
+		}
+		for(int i=arr.length-1;i>=0;i--) {
+			
+			int num=arr[i];
+			int index=numIndex[num];
+			index--;
+			numIndex[num]=index;
+			tempArr[index]=num;
+		}
+		
+		
+		for(int i=0;i<tempArr.length;i++) {
+			arr[i]=tempArr[i];
+		}
+		
+		
+	}
+	
+	public static void main(String args[]) {
+		
+		int[] arr=new int[] {0,9,1,0,2,4,3};
+		CoutingSort coutingSort=new CoutingSort();
+		System.out.println("Before sorting: "+Arrays.toString(arr));
+		coutingSort.sort(arr,0,9);
+		System.out.println("After sorting: "+Arrays.toString(arr));
+		
+		
+	}
+
+
+
+}
