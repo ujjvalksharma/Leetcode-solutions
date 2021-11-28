@@ -1,0 +1,66 @@
+package sorting;
+
+import java.util.Arrays;
+
+public class RadixSort {
+	
+	public void sort(String[] nums) {
+		
+		String[] tempNums=new String[nums.length];
+		int[] countArray=new int[10]; //store frequency
+		int[] indexOfNums=new int[10];//updated based on frequency
+		
+		int maxDigit=Integer.MIN_VALUE;
+		
+		for(String num:nums) {
+			maxDigit=Math.max(maxDigit,num.length());
+		}
+		
+		int currIndex=maxDigit-1;
+		while(currIndex>=0) {
+			
+			
+			for(String num: nums) {
+				countArray[num.charAt(currIndex)-'0']++;
+			}
+	
+			int prevCount=0;
+			indexOfNums[0]=countArray[0];
+			for(int i=1;i<countArray.length;i++) {
+				
+				indexOfNums[i]=indexOfNums[i-1]+countArray[i];
+			}
+			
+	  System.out.println("countArray: "+Arrays.toString(countArray));		
+	  System.out.println("indexOfNums: "+Arrays.toString(indexOfNums));
+	  
+			for(int i=nums.length-1;i>=0;i--) {
+				
+				indexOfNums[nums[i].charAt(currIndex)-'0']--;
+				int index=indexOfNums[nums[i].charAt(currIndex)-'0'];
+				tempNums[index]=nums[i];
+				
+			}
+			
+			for(int i=0;i<tempNums.length;i++) {
+				
+				nums[i]=tempNums[i];
+			}
+			
+			Arrays.fill(countArray,0);
+			currIndex--;
+		}
+		
+		
+	}
+	
+	public static void main(String args[]) {
+		
+		RadixSort radixSort=new RadixSort();
+		String[] nums=new String[]{"993","110","123","765"};
+		radixSort.sort(nums);
+		
+		
+	}
+
+}
