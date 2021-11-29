@@ -1,0 +1,51 @@
+class Solution {
+    
+    public boolean longestRepeatingSubstringHelper(String s, int len){
+        
+        Set<Integer> seenSubString=new HashSet<Integer>();
+        
+        int start=0;
+        int lenOfS=s.length();
+        while(start+len<=lenOfS){
+            
+            int tempSubString=s.substring(start,start+len).hashCode();
+            
+            if(seenSubString.contains(tempSubString)){
+                
+                return true;
+                
+            }else{
+                
+                seenSubString.add(tempSubString);
+                
+            }
+            start++;
+        }
+        
+        return false;
+    }
+    public int longestRepeatingSubstring(String s) {
+        
+        int start=0;
+        int end=s.length();
+        int maxRepeatingLen=0;
+         while(start<end){
+            
+             int mid = start + (end - start) / 2;
+            boolean foundRepeatingSubstring=longestRepeatingSubstringHelper(s,mid);
+            if(foundRepeatingSubstring){
+                
+                start=mid+1;
+                maxRepeatingLen=Math.max(maxRepeatingLen,mid);
+                
+            }else{
+                end=mid;
+                
+            }
+            
+        }
+        
+        return maxRepeatingLen;
+        
+    }
+}
