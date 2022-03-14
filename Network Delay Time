@@ -1,0 +1,38 @@
+class Solution {
+    //bellman-ford algo
+    //visit all edges and mark desitination of an edje with minimum distance and mark the source edges distance=0 
+    // visit all edges n-1 times
+    public int networkDelayTime(int[][] times, int n, int k) {
+        
+
+        HashMap<Integer,Integer> hmNodeToDistance=new HashMap<Integer,Integer>();
+                for(int[] time: times){
+                    hmNodeToDistance.put(time[0],Integer.MAX_VALUE);
+                     hmNodeToDistance.put(time[1],Integer.MAX_VALUE);
+                }
+        hmNodeToDistance.put(k,0);
+        int ans=0;
+        while(n>=0){
+            
+            for(int[] time: times){
+                
+                if(hmNodeToDistance.get(time[0])!=Integer.MAX_VALUE
+                  &&hmNodeToDistance.get(time[0])+time[2]<hmNodeToDistance.get(time[1])){
+                    hmNodeToDistance.put(time[1],hmNodeToDistance.get(time[0])+time[2]);
+                }
+            }
+            
+            n--;
+        }
+        
+        
+        for(int value: hmNodeToDistance.values()){
+            if(value==Integer.MAX_VALUE){
+                return -1;
+            }
+            ans=Math.max(ans,value);
+        }
+        
+        return ans;
+    }
+}
