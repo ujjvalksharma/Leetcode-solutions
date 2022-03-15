@@ -1,0 +1,52 @@
+class Solution {
+    // floyd marshall all pair shortest path slaogirthm
+    public int findTheCity(int n, int[][] edges, int distanceThreshold) {
+        
+        int[][] dp=new int[n][n];
+        for(int i=0;i<n;i++){
+            Arrays.fill(dp[i],Integer.MAX_VALUE);
+        }
+          for(int i=0;i<n;i++){
+              dp[i][i]=0;
+          }
+        
+        for(int[] edge: edges){
+              dp[edge[0]][edge[1]]=edge[2];
+              dp[edge[1]][edge[0]]=edge[2];
+        }
+        
+for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (
+                    (dp[k][j] != Integer.MAX_VALUE
+                        && dp[i][k] != Integer.MAX_VALUE) &&
+                   ( dp[i][j] > (dp[i][k] + dp[k][j]) )
+                    )
+                    dp[i][j] = dp[i][k] + dp[k][j];
+            }
+        }
+    }
+        
+
+        int minConnectingNodes=Integer.MAX_VALUE;
+        int node=-1;
+            for (int i = 0; i < n; i++) {
+        int connectingNodes=0;
+              for (int j = 0; j < n; j++) {
+                if(dp[i][j]<=distanceThreshold&&dp[i][j]!=0){
+                    connectingNodes++;
+                }
+            }
+                 if(connectingNodes<=minConnectingNodes){
+                    minConnectingNodes=connectingNodes;
+                    node=Math.max(node,i);
+                }
+                
+                
+        }
+        
+        return node;
+        
+    }
+}
