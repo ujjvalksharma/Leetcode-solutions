@@ -8,13 +8,20 @@ Map < String, String > hmEmailToName = new HashMap < > ();
         }
         return find(hmEmailToParent.get(email));
     }
+    /*
+    Map email to name
+    union and find all the adjacent emails to make emails fall in the same connected component
+    make another map hmEmailToFinalParent so we can find final parent of each email and attach children together for each email
+    
+    
+    */
     public List<List<String>> accountsMerge(List < List < String >> accounts) {
 
        List<List<String>> answer=new ArrayList<>();
         for (int i = 0; i <accounts.size(); i++) {
             for (int j = 1; j < accounts.get(i).size(); j++) {
                 hmEmailToName.put(accounts.get(i).get(j), accounts.get(i).get(0));
-                hmEmailToParent.put(accounts.get(i).get(j), accounts.get(i).get(j));
+                hmEmailToParent.put(accounts.get(i).get(j), accounts.get(i).get(1));
             }
         }
 
