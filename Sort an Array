@@ -83,51 +83,54 @@
 */
 /*
 class Solution {
-    public int[] sortArray(int[] nums) {
-        sort(0, nums.length-1, nums);
-        return nums;
-    }
     
-    private void sort(int lo, int hi, int[] nums) {
-        if (lo >= hi) return;
-        int j = partition(lo, hi, nums);
-        sort(lo,j-1,nums);
-        sort(j+1,hi,nums);
-    }
-    
-    private int partition(int lo, int hi, int[] nums) {
-        int i = lo; int j = hi;
-        while (i<j) {
-            while(nums[i] <= nums[lo]){
-             
+    public int partition(int[] nums, int l, int h){
+        
+        int pivot=nums[l];
+        int i=l;
+        int j=h;
+        
+        while(i<j){
+            
+            while(i<=h&&nums[i]<=pivot){
                 i++;
-                if (i == hi){
-                    break;
-                } 
-            } 
-            while(nums[j] > nums[lo]){
+            }
             
+               while(j>=l && nums[j]>pivot){
                 j--;
-                if (j == lo){
-                    break;
-                } 
-            } 
+            }
             
-            if (i >= j) break;
-            swap(i,j,nums);
+            if(i<j){
+                swap(nums,i,j);
+            }
         }
-        swap(lo,j,nums);                
+          swap(nums,j,l);
         return j;
     }
     
-    private void swap(int i, int j, int[] nums) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
+    public void swap(int[] nums, int i,int j){
+        int temp=nums[i];
+        nums[i]=nums[j];
+        nums[j]=temp;
+    }
+    
+    public void quickSort(int[] nums, int l, int h){
+        
+       
+    if (l < h)
+    {
+        int pi = partition(nums, l, h);
+        quickSort(nums, l, pi - 1);
+        quickSort(nums, pi + 1, h);
+    }
+        
+    }
+    public int[] sortArray(int[] nums) {
+     
+        quickSort(nums,0,nums.length-1);
+        return nums;
     }
 }
-
-
 */
 // heap sort
 class Solution {
