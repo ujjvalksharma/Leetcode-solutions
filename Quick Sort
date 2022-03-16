@@ -1,0 +1,49 @@
+class Solution {
+    
+    public int partition(int[] nums, int l, int h){
+        
+        int pivot=nums[l];
+        int i=l;
+        int j=h;
+        
+        while(i<j){
+            
+            while(i<=h&&nums[i]<=pivot){
+                i++;
+            }
+            
+               while(j>=l && nums[j]>pivot){
+                j--;
+            }
+            
+            if(i<j){
+                swap(nums,i,j);
+            }
+        }
+          swap(nums,j,l);
+        return j;
+    }
+    
+    public void swap(int[] nums, int i,int j){
+        int temp=nums[i];
+        nums[i]=nums[j];
+        nums[j]=temp;
+    }
+    
+    public void quickSort(int[] nums, int l, int h){
+        
+       
+    if (l < h)
+    {
+        int pi = partition(nums, l, h);
+        quickSort(nums, l, pi - 1);
+        quickSort(nums, pi + 1, h);
+    }
+        
+    }
+    public int[] sortArray(int[] nums) {
+     
+        quickSort(nums,0,nums.length-1);
+        return nums;
+    }
+}
