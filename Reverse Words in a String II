@@ -1,0 +1,53 @@
+/*
+First reverse the entire string and then reverse each word in the string.
+
+*/
+
+class Solution {
+    
+    public void swap(char[] s, int start, int end){
+        
+        char temp=s[start];
+        s[start]=s[end];
+        s[end]=temp;
+    }
+    
+    public void reverseWordsHelper(char[] s, int start, int end){
+        
+        
+        while(start<end){
+            
+            swap(s,start,end);
+            
+            start++;
+            end--;
+        }
+    }
+    public void reverseWords(char[] s) {
+        
+        //reverse entire string
+     reverseWordsHelper(s,0,s.length-1);
+        
+        
+    int start=0;
+      // reverse each word in the string
+        while(start<s.length){
+            
+            
+            while(start<s.length&&s[start]==' '){
+                start++;
+            }
+            int end=start+1;
+            
+             while(end<s.length&&s[end]!=' '){
+                end++;
+            }
+            end--;
+             reverseWordsHelper(s,start,end);
+            start=end+2;      
+            
+        }
+        
+       // System.out.println(Arrays.toString(s));
+    }
+}
