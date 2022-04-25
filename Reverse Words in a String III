@@ -1,0 +1,45 @@
+class Solution {
+    
+      public void swap(StringBuilder s, int start, int end){
+        
+        char temp=s.charAt(start);
+        s.setCharAt(start,s.charAt(end));
+        s.setCharAt(end,temp);
+    }
+    
+    public void reverseWordsHelper(StringBuilder s, int start, int end){
+        
+        
+        while(start<end){
+            
+            swap(s,start,end);
+            
+            start++;
+            end--;
+        }
+    }
+    
+    public String reverseWords(String s) {
+       
+        StringBuilder result = new StringBuilder(s);
+         int start=0;
+      // reverse each word in the string
+        while(start<s.length()){
+            
+            
+            while(start<s.length()&&s.charAt(start)==' '){
+                start++;
+            }
+            int end=start+1;
+            
+             while(end<s.length()&&s.charAt(end)!=' '){
+                end++;
+            }
+            end--;
+            reverseWordsHelper(result,start,end);
+            start=end+2;      
+            
+        }
+        return result.toString();
+    }
+}
