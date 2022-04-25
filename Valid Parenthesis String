@@ -1,0 +1,176 @@
+/*
+https://www.youtube.com/watch?v=KuE_Cn3xhxI
+
+2 stack solution:
+
+stkOfIndexOfOpenBracket is for open brackets in which we keep index of open bracket as we encounter from start. If we see a star, we put them inside stkOfIndexOfStar. If we see closed braket if we if stkOfIndexOfOpenBracket is not empty to balance any open bracket else we see if there is any stkOfIndexOfStar to convert star into open bracket else we return false. In the end, we loop through all stkOfIndexOfOpenBracket and see if any unbalanced open bracket can we balanced by stars to the right of them by stkOfIndexOfStar.peek()>stkOfIndexOfOpenBracket.peek()
+*/
+/*
+class Solution {
+    
+    public boolean checkValidString(String s) {
+        
+        Stack<Integer> stkOfIndexOfOpenBracket=new Stack<Integer>();
+        Stack<Integer> stkOfIndexOfStar=new Stack<Integer>();
+        
+        for(int i=0;i<s.length();i++){
+            
+            if(s.charAt(i)=='('){
+                 stkOfIndexOfOpenBracket.push(i);
+            }else if(s.charAt(i)==')'){
+                
+                if(stkOfIndexOfOpenBracket.size()==0&&stkOfIndexOfStar.size()==0){
+                    return false;
+                }else if(stkOfIndexOfOpenBracket.size()==0&&stkOfIndexOfStar.size()>0){
+                    stkOfIndexOfStar.pop();
+                }else if(stkOfIndexOfOpenBracket.size()>0){
+                    stkOfIndexOfOpenBracket.pop();
+                }
+                
+            }else{
+                stkOfIndexOfStar.push(i);
+            }
+            
+        }
+        
+        while(!stkOfIndexOfOpenBracket.isEmpty()){
+            
+            int indexOfUnbalancedOpenBracket=stkOfIndexOfOpenBracket.pop();
+            if(!stkOfIndexOfStar.isEmpty()){
+                
+                if(stkOfIndexOfStar.peek()>indexOfUnbalancedOpenBracket){
+                    stkOfIndexOfStar.pop();
+                }else{
+                    return false;
+                }
+                
+            }else{
+                return false;
+            }
+            
+        }
+        
+        return stkOfIndexOfOpenBracket.size()==0&&stkOfIndexOfStar.size()>=0;
+    }
+}
+ */
+
+/*
+
+https://www.youtube.com/watch?v=2H9gMIIGyvY
+
+Solution2:
+
+In this we iterate from o to s.length() and we see that maximum openbracket is when we convert all star into open bracket, but if countOfClosedBracket>countOfOpenBracket+countOfStar then we know that even then we cannot balance the string. Similar we iterate from back and see if countOfOpenBracket>countOfClosedBracket+countOfStar that means even if all stars are closed, still the string is unbalanced.
+
+*/
+/*
+class Solution {
+    
+    public boolean checkValidString(String s) {
+        
+        int countOfOpenBracket=0;
+        int countOfClosedBracket=0;
+        int countOfStar=0;
+        
+        for(int i=0;i<s.length();i++){
+            
+            if(s.charAt(i)=='('){
+                countOfOpenBracket++;
+            }else if(s.charAt(i)==')'){
+                countOfClosedBracket++;
+            }else{
+                countOfStar++;
+            }
+            
+            if(countOfClosedBracket>countOfOpenBracket+countOfStar){
+                return false;
+            }
+        }
+        
+        if(countOfClosedBracket==countOfOpenBracket+countOfStar){
+            return true;
+        }
+        
+           countOfOpenBracket=0;
+           countOfClosedBracket=0;
+           countOfStar=0;
+        
+         for(int i=s.length()-1;i>=0;i--){
+            
+            if(s.charAt(i)=='('){
+                countOfOpenBracket++;
+            }else if(s.charAt(i)==')'){
+                countOfClosedBracket++;
+            }else{
+                countOfStar++;
+            }
+            
+            if(countOfOpenBracket>countOfClosedBracket+countOfStar){
+                return false;
+            }
+        }
+        
+        
+        return true;
+       
+    }
+}
+*/
+
+/*
+
+//A little buggy solution, but can be fixed :p
+Solution 3:
+
+memorization + recursion
+
+We make a recursion tree/decision tree when we arrive at * as * could mean ( or ) or empty and we keep track of open brackets.
+*/
+ 
+class Solution {
+    
+    HashMap<String,Boolean> dp=new HashMap<String,Boolean>();
+    public boolean checkValidStringHelper(String s,int index, int countOfOpenBracket){
+               
+        if(index>=s.length()&&countOfOpenBracket!=0){
+            return false;
+        }
+            
+        if(index>=s.length()){
+            System.out.println("I am here");
+            return true;
+        }
+       
+        String key=index+"-"+countOfOpenBracket;
+        if(dp.containsKey(key)){
+            return dp.get(key);
+        }
+        
+        boolean ans=false;
+        if(s.charAt(index)=='('){
+            ans=checkValidStringHelper(s,index+1,countOfOpenBracket+1);
+            
+        }else if(s.charAt(index)==')'){
+            if(countOfOpenBracket<=0){
+                return false;
+            }
+            
+            ans=checkValidStringHelper(s,index+1,countOfOpenBracket-1);
+            
+        }else{
+            ans=ans|checkValidStringHelper(s,index+1,countOfOpenBracket+1) //make star open
+                   |checkValidStringHelper(s,index+1,countOfOpenBracket-1) //make star closed
+                   |checkValidStringHelper(s,index+1,countOfOpenBracket);  //make star empty
+        }
+        
+        dp.put(key,ans);
+        return ans;
+    }
+    public boolean checkValidString(String s) {
+        
+       return checkValidStringHelper(s,0,0);
+    }
+}
+
+    
