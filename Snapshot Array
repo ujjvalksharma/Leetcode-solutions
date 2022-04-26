@@ -1,0 +1,52 @@
+/*
+
+https://www.youtube.com/watch?v=DOHvkZ7QpAM
+
+In this question, we make a treemap at each index in array and for the treemap we have snap id as key and value. We set values for each snap_id and index in that treemap and if we know a particular snap_id is not present that means its value hasn't been changed and it is using previous snap_id value and we can get that using floorKey.
+
+
+*/
+
+class SnapshotArray {
+
+    HashMap<Integer,TreeMap<Integer,Integer>> indexToSnapIdToValue = new HashMap<Integer,TreeMap<Integer,Integer>>();
+    int snapId;
+    public SnapshotArray(int length) {
+          snapId=0;
+        for(int i=0;i<length;i++){
+            
+            TreeMap<Integer,Integer> SnapIdToValue=new  TreeMap<Integer,Integer>();
+            SnapIdToValue.put(snapId,0);
+            indexToSnapIdToValue.put(i,SnapIdToValue);
+        }
+        
+      
+    }
+    
+    public void set(int index, int val) {
+        
+         TreeMap<Integer,Integer> SnapIdToValue=indexToSnapIdToValue.get(index);
+         SnapIdToValue.put(snapId,val);
+    }
+    
+    public int snap() {
+        
+        int prevSnap=snapId;
+        snapId++;
+        return prevSnap;
+    }
+    
+    public int get(int index, int snap_id) {
+          TreeMap<Integer,Integer> SnapIdToValue=indexToSnapIdToValue.get(index);
+        
+        return     SnapIdToValue.get(SnapIdToValue.floorKey(snap_id));
+    }
+}
+
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * SnapshotArray obj = new SnapshotArray(length);
+ * obj.set(index,val);
+ * int param_2 = obj.snap();
+ * int param_3 = obj.get(index,snap_id);
+ */
