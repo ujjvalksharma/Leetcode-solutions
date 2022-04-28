@@ -22,152 +22,110 @@
       While do doing merge sort we know it is like a post order traversal and left array index is less than right array index and left array values are less than right array values, so we just compare two sorted array to find nums[i] > 2 * nums[j] in O(n) for log N in time complexity nlogn
 */
 class Solution {
-    int count = 0;
-    public int reversePairs(int[] nums) {
-        long n[] = new long[nums.length];
-        int z =0 ;
-        for(int i : nums){
-            n[z++] = i;
-        }
-        mSort(n,0,nums.length-1);
-        return count;
-    }
-    long[] mSort(long n[],int s, int e) {
-        if(s == e) {
-            return new long[]{n[s]};
-        }
-        int mid = (s+e)/2;
-        long b[] = mSort(n,s,mid);
-        long c[] = mSort(n,mid+1,e);
-        int i=0,j=0;
-        while(j<c.length) {
-            while(i<b.length && b[i] <= 2*c[j]){
-                i++;
-            }
-            count+=(b.length - i);
-            j++;
-        }
+    
+     int totalReversePairs=0;
+    
+    public void reversePairsHelper(long[] nums, int left, int right){
         
-        n = merge(b,c);
-        return n;
-    }
-    long [] merge(long b[],long c[]){
-        long t[]= new long[b.length+c.length];
-        int i=0;
-        int j=0;
-        int z = 0;
-        while(i<b.length && j<c.length){
-            if(b[i] <= c[j]){
-                t[z++] = b[i++];
-            } else if(b[i] > c[j]) {
-                t[z++] = c[j++];
-            }
+        if(left>=right){
+            return;
         }
-        while(i<b.length){
-            t[z++] = b[i++];
-        }
-        while(j<c.length) {
-            t[z++] = c[j++];
-        }
-        return t;
-    }    
-}
-//My solution modified version of merge sort
-/*class Solution {
-    Num[] myNums;
-    int[] reversePairCount;
-    class Num{
-        int index;
-        int value;
-        Num(int index, int value){
-            
-            this.value=value;
-            this.index=index;
-        }
+        int mid=left+(right-left)/2;
+        
+        reversePairsHelper(nums,left,mid);
+        reversePairsHelper(nums,mid+1,right);
+        countReverseNumbers(nums,left,mid,right);
         
     }
     
-    private void merge(int l, int mid, int h){
-        Num[] left=new Num[mid-l+1];
-        Num[] right=new Num[(h-(mid+1))];
+    public void countReverseNumbers(long[] nums, int left,int mid ,int right){
         
-        for(int i=l;i<=mid;i++){
-            left[i]=myNums[i];
+        long[] leftArr=new long[mid-left+1];
+        long[] rightArr=new long[right-(mid+1)+1];
+        long[] mergedArr= new long[right-left+1];
+        int index=0;
+        for(int i=left;i<=mid;i++){
+           leftArr[index]= nums[i];
+            index++;
         }
         
-         for(int i=mid+1;i<h;i++){
-            right[i]=myNums[i];
+        index=0;
+        for(int i=mid+1;i<=right;i++){
+           rightArr[index]= nums[i];
+              index++;
         }
         
         int index1=0;
         int index2=0;
+        index=0;
         
-        while(index1<left.length){
-            
-            while(index2<right.length
-                  &&left[index1].value>(2*right[index2].value)){
-                index2++;
+      while(index2<rightArr.length) {
+            while(index1<leftArr.length && leftArr[index1] <= 2*rightArr[index2]){
+                index1++;
             }
-            reversePairCount[left[index1].index]+=index2;
-            
+            totalReversePairs+=(leftArr.length-1 - index1)+1;
+            index2++;
         }
-        
-         index1=0;
-         index2=0;
-        int index=l;
-        while(index1<left.length&&index2<right.length){
+        index1=0;
+        index2=0;
+
+        while(index1<leftArr.length&&index2<rightArr.length){
             
-            if(left[index1].value<=right[index2].value){
-                myNums[index]=left[index1];
+            if(leftArr[index1]<=rightArr[index2]){
+                mergedArr[index]=leftArr[index1];
                 index1++;
             }else{
-                myNums[index]=right[index2];
+                  mergedArr[index]=rightArr[index2];
                 index2++;
             }
             index++;
         }
         
-        while(index1<left.length){
-           
-            myNums[index]=left[index1];
-            reversePairCount[left[index1].index]+=right.length;
+        while(index1<leftArr.length){
+             mergedArr[index]=leftArr[index1];
             index1++;
             index++;
         }
         
-         while(index2<right.length){
-          
-            myNums[index]=right[index2];
+           while(index2<rightArr.length){
+            mergedArr[index]=rightArr[index2];
             index2++;
             index++;
         }
         
-    }
-    private void divide(int l, int h){
-        if(l>=h){
-            return;
+        
+        index=left;
+        for(int i=0;i<mergedArr.length;i++){
+            nums[index]=mergedArr[i];
+            index++;
         }
-        int mid=l+(h-l)/2;
-        divide(l,mid);
-        divide(mid+1,h);
-        merge(l,mid,h);
+     //   System.out.println("mergedArr: "+Arrays.toString(mergedArr));
+       //     System.out.println("----------------------");
     }
     public int reversePairs(int[] nums) {
         
-        this.myNums=new Num[nums.length];
-        this.reversePairCount=new int[nums.length];
+        long[] longOfNums=new long[nums.length];
         
         for(int i=0;i<nums.length;i++){
-            myNums[i]=new Num(i,nums[i]);
+            longOfNums[i]=nums[i];
         }
+       reversePairsHelper(longOfNums,0,nums.length-1);
         
-        divide(0,nums.length-1);
-        int count=0;
-        
-        for(int reversePair: reversePairCount){
-            count+=reversePair;
-        }
-        return count;
+        return totalReversePairs;
     }
 }
+
+
+/*
+ 0,1,2,3,4
+[1,3,2,3,1]
+
+[1,3,2]  [3,1]
+
+[1,3] [2] [3] [1]
+
+[1] [3]
+
+
+
 */
