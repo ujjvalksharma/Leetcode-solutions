@@ -1,0 +1,109 @@
+class NumArray {
+
+    int[] newNums;
+    int[] fenwickArr;
+    
+    
+    public int getMostSignaficantBitIndex(int index){
+        
+        
+        for(int shiftCount=0;shiftCount<32;shiftCount++){
+            
+            if(((1<<shiftCount)&index)!=0){
+                return shiftCount;
+            }
+        }
+        
+        return 0;
+    }
+    
+    public void setPrefixSum(int index, int countOfNumbersToInclude){
+        
+        int count=0;
+        int tempIndex=index;
+        while(count<countOfNumbersToInclude){
+            
+            fenwickArr[index]+=newNums[tempIndex];
+            tempIndex--;
+            count++;
+        }
+    }
+    
+    public int getPrefixSumTillIndexZero(int index){
+        
+        int tempIndex=index;
+        int totalSum=0;
+        while(tempIndex>=0){
+            totalSum+=fenwickArr[tempIndex];
+            int mostSignaficantBitIndex=getMostSignaficantBitIndex(tempIndex);
+            int countOfNumbersToInclude=(int) Math.pow(2,mostSignaficantBitIndex);
+            tempIndex-=countOfNumbersToInclude;
+        }
+        
+        return totalSum;
+    }
+    public void buildFenwickTree(){
+        
+        for(int i=1;i<newNums.length;i++){
+            
+            int mostSignaficantBitIndex=getMostSignaficantBitIndex(i);
+            int countOfNumbersToInclude=(int) Math.pow(2,mostSignaficantBitIndex);
+            setPrefixSum(i,countOfNumbersToInclude);
+        }
+    }
+    
+    public void updateFenwickTree(int index, int val){
+        
+        int tempIndex=index;
+        int prevVal=newNums[index];
+        newNums[index]=val;
+        while(tempIndex<fenwickArr.length){
+            fenwickArr[tempIndex]-=prevVal;
+             fenwickArr[tempIndex]+=val;
+            int mostSignaficantBitIndex=getMostSignaficantBitIndex(tempIndex);
+            int countOfNumbersToInclude=(int) Math.pow(2,mostSignaficantBitIndex);
+            tempIndex+=countOfNumbersToInclude;
+        }
+        
+    }
+    
+    public NumArray(int[] nums) {
+        newNums=new int[nums.length+1];
+        fenwickArr=new int[nums.length+1];
+        
+        for(int i=0;i<nums.length;i++){
+            newNums[i+1]=nums[i];
+        }
+        
+        buildFenwickTree();
+        
+     //   System.out.println("fenwick tree: "+Arrays.toString(fenwickArr));
+     //    System.out.println("--------------------");
+        
+    }
+    
+    public void update(int index, int val) {
+        updateFenwickTree(index+1,val);
+   //     System.out.println("fenwick tree: "+Arrays.toString(fenwickArr));
+   //      System.out.println("--------------------");
+    }
+    
+    public int sumRange(int left, int right) {
+        
+        
+        int leftSumTillIndexZero=getPrefixSumTillIndexZero(left+1);
+        int rightSumTillIndexZero=getPrefixSumTillIndexZero(right+1);
+ //       System.out.println("leftSumTillIndexZero: "+leftSumTillIndexZero);
+ //        System.out.println("rightSumTillIndexZero: "+rightSumTillIndexZero);
+ //        System.out.println("--------------------");
+        
+        return rightSumTillIndexZero-leftSumTillIndexZero+newNums[left+1];
+    }
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * obj.update(index,val);
+ * int param_2 = obj.sumRange(left,right);
+ */
