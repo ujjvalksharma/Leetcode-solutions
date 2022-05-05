@@ -1,0 +1,73 @@
+/*
+
+In this, we store frequecy in fenwick tree
+
+*/
+
+class Solution {
+    
+    
+    int[] fenwickArr;
+    int[] freq;
+   
+    public int findBitShiftIndex(int index){
+        
+        for(int shiftCount=0;shiftCount<32;shiftCount++){
+            
+            if(((1<<shiftCount)&index)!=0){
+                return shiftCount;
+            }
+        }
+        
+        return 0;
+    }
+    public void updateFenwickTree(int index){
+        
+        int tempIndex=index;
+            freq[index]++;
+            while(tempIndex<fenwickArr.length){
+                
+                fenwickArr[tempIndex]++;
+                int bitShiftIndex=findBitShiftIndex(tempIndex);
+                int numbersCount=(int) Math.pow(2,bitShiftIndex);
+                tempIndex+=numbersCount;
+            }
+        
+    }
+    
+    public int prefixSum(int index){
+        
+          int tempIndex=index;
+          int totalNumbersToLeft=0;
+            while(tempIndex>0){
+                
+                totalNumbersToLeft+=fenwickArr[tempIndex];
+                int bitShiftIndex=findBitShiftIndex(tempIndex);
+                int numbersCount=(int) Math.pow(2,bitShiftIndex);
+                tempIndex-=numbersCount;
+            }
+        
+        return totalNumbersToLeft;   
+    }
+    
+    
+    public int createSortedArray(int[] instructions) {
+        
+        final int SIZE=1000001;
+        final int MOD= 1000000007;
+        fenwickArr=new int[SIZE]; //fenwick intially has all 0
+        freq=new int[SIZE];
+       int totalCost=0;
+        
+        for(int i=0;i<instructions.length;i++){
+            
+            updateFenwickTree(instructions[i]);
+            int totalNumbersToLeft=prefixSum(instructions[i]-1);
+            int totalNumbersToRight=i+1-totalNumbersToLeft-freq[instructions[i]];
+            totalCost=(totalCost+Math.min(totalNumbersToLeft,totalNumbersToRight))%MOD;
+       //     System.out.println("totalNumbersToLeft: "+totalNumbersToLeft+"totalNumbersToRight:"+totalNumbersToRight);
+        }
+        
+        return totalCost;
+    }
+}
