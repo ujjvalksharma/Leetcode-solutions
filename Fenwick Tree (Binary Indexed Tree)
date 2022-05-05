@@ -46,7 +46,7 @@ return totalSum;
     public void updateFenwikTree(int index, int value, int[] fenwickTreeArr){
         int tempIndex=index;
         int prevVal=newArr[index];
-        newArr[index+1]=value;
+        newArr[index]=value;
         while(tempIndex<fenwickTreeArr.length){
             fenwickTreeArr[tempIndex]+= (-prevVal+value);
             int mostSignaficantBit=getMostSignaficantBit(tempIndex);
