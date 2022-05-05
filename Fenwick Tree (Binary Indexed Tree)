@@ -5,7 +5,8 @@ import java.util.Arrays;
 
 public class FenwickTree {
 
-
+int[] newArr;
+ int[] fenwickTreeArr;
     public int getMostSignaficantBit(int index){
         for(int shiftCount=0;shiftCount<32;shiftCount++){
             if(((1<<shiftCount)&index)!=0){
@@ -44,8 +45,10 @@ return totalSum;
 
     public void updateFenwikTree(int index, int value, int[] fenwickTreeArr){
         int tempIndex=index;
+        int prevVal=newArr[index];
+        newArr[index+1]=value;
         while(tempIndex<fenwickTreeArr.length){
-            fenwickTreeArr[tempIndex]+=value;
+            fenwickTreeArr[tempIndex]+= (-prevVal+value);
             int mostSignaficantBit=getMostSignaficantBit(tempIndex);
             int countOfNumbersToInclude=(int) Math.pow(2,mostSignaficantBit);
             tempIndex+=countOfNumbersToInclude;
