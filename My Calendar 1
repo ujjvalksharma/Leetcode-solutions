@@ -1,0 +1,74 @@
+class MyCalendar {
+
+    TreeMap<Integer,Integer> calendar;
+    public MyCalendar() {
+        calendar=new TreeMap<Integer,Integer>();
+    }
+    
+    public boolean book(int start, int end) {
+        
+        end--;
+        
+        // handle conflict case1
+        
+        Integer occuredEventStart=calendar.ceilingKey(start);
+        Integer occuredEventEnd=null;
+        if(occuredEventStart!=null){
+            occuredEventEnd=calendar.get(occuredEventStart);
+            if(start<=occuredEventStart&&end>=occuredEventEnd){
+                return false;
+            }
+        }
+        
+        // handle conflict case2
+        
+          occuredEventStart=calendar.floorKey(start);
+          occuredEventEnd=null;
+        if(occuredEventStart!=null){
+            occuredEventEnd=calendar.get(occuredEventStart);
+            if(occuredEventStart<=start&&start<=occuredEventEnd){
+                return false;
+            }
+        }
+        
+        //handle conflict case 3
+        
+          occuredEventStart=calendar.ceilingKey(start);
+          occuredEventEnd=null;
+        if(occuredEventStart!=null){
+            occuredEventEnd=calendar.get(occuredEventStart);
+            if(occuredEventStart<=end&&end<=occuredEventEnd){
+                return false;
+            }
+        }
+        
+        calendar.put(start,end);
+        return true;
+    }
+}
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar obj = new MyCalendar();
+ * boolean param_1 = obj.book(start,end);
+ */
+
+/*
+
+{} -- incoming event
+[] -- occured event
+
+
+conflict case 1:
+
+{ [] [] [] [] }
+
+conflict case 2:
+
+[ { ] }
+
+conflict case 3:
+
+{ [ } ]
+
+*/
