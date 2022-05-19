@@ -96,3 +96,58 @@ class Solution {
     }
 }
 */
+
+
+class Solution {
+    
+    class Element{
+        
+        int index;
+        int value;
+        Element(int index, int value){
+            this.index=index;
+            this.value=value;
+        }
+        
+        @Override
+        public String toString(){
+            return ""+this.value;
+        }
+        
+    }
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        
+         Deque<Element> deque= new LinkedList<Element>();
+        int[] ans=new int[nums.length-k+1];
+        
+        int start=0;
+        int end=0;
+        int i=0;
+        while(end<nums.length){
+            
+            
+            while(!deque.isEmpty()&&deque.peekFirst().index<start){
+                    deque.removeFirst();
+                }
+            
+            
+             while(!deque.isEmpty()&&deque.peekLast().value<nums[end]){
+                    deque.removeLast();
+                }
+            deque.addLast(new Element(end,nums[end]));
+            
+                if(end-start+1==k){
+                ans[i]=deque.peekFirst().value;
+                start++;
+                i++;
+            }
+            
+          //  System.out.println("deque: "+deque+" end:"+end);
+            end++;
+          
+        }
+        
+        
+        return ans;
+    }
+}
