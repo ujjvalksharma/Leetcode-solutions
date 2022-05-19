@@ -1,0 +1,28 @@
+
+//https://www.youtube.com/watch?v=K0NgGYEAkA4
+//monotonic increasing graph
+class Solution {
+    public int shortestSubarray(int[] nums, int k) {
+        
+    
+        long[] prefixSum = new long[nums.length+1];
+        for (int i = 0; i < nums.length; ++i)
+            prefixSum[i+1] = prefixSum[i] + (long) nums[i];
+
+        int ans = Integer.MAX_VALUE; 
+        Deque<Integer> deuque = new LinkedList(); //store index of prefixSum
+
+        for (int y = 0; y < prefixSum.length; ++y) {
+            // Want opt(y) = largest x with P[x] <= P[y] - K;
+            while (!deuque.isEmpty() && prefixSum[y] <= prefixSum[deuque.peekLast()]){
+                deuque.removeLast();
+            }
+            while (!deuque.isEmpty() && prefixSum[y]-prefixSum[deuque.peekFirst()] >=k)
+                ans = Math.min(ans, y - deuque.removeFirst());
+
+            deuque.addLast(y);
+        }
+
+        return ans != Integer.MAX_VALUE ? ans : -1;
+    }
+}
