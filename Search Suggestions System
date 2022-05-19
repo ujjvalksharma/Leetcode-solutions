@@ -1,0 +1,163 @@
+/** My Solution--------> Using Trie data structure----------class Solution {
+    
+    HashMap<Integer,Character> hm= new HashMap<Integer,Character>();
+    class Node
+{
+    boolean leaf;
+    Node children[]= new Node[26];
+    Node(boolean leaf)
+    {
+        this.leaf=leaf;
+        for(int i=0;i<26;i++)
+            children[i]=null;
+    }
+}
+    Node root;
+    
+    public void insert(String input)
+    {
+        Node temp=root;
+        for(int i=0;i<input.length();i++)
+        {
+            char input_char=input.charAt(i);
+            int index=input.charAt(i)-'a';
+            
+            if(temp.children[index]==null)
+            {
+               temp.children[index]= new Node(false);
+            }
+                temp=temp.children[index];
+        }
+       temp.leaf=true;
+    }
+    public void FindTheWord(String input,List<List<String>> answer,List<String> list)
+    {
+        Node current=root;
+        boolean prefix_found=true;
+        for(int i=0;i<input.length();i++)
+        {
+           char input_char=input.charAt(i);
+            int index=input.charAt(i)-'a'; 
+            
+            if(current.children[index]==null)
+            {
+                prefix_found=false;
+                break;
+            }
+            else
+            {
+               current=current.children[index]; 
+            }
+                
+        }
+        
+        if(prefix_found==false)
+        {
+            answer.add( new ArrayList<>(list));
+            return;
+        }
+        else
+        {
+            
+        FindSuffixWord(current,input,list);
+             answer.add( new ArrayList<>(list));
+            return;
+            }
+        
+    }
+    
+    public void FindSuffixWord(Node current,String input,List<String> list )
+    {
+        if(current.leaf==true&&list.size()<=3)
+        {
+            list.add(input);
+        }
+        if(list.size()>=3)
+        {
+            return;
+        }
+        
+        for(int i=0;i<26&&list.size()<=3;i++)  // search from 'a' to 'z' for each node
+        {
+            if(current.children[i]!=null)
+            {
+                FindSuffixWord(current.children[i],input+Character.toString(hm.get(i)),list);
+            }
+        }
+        return;
+        
+    }
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        root=new Node(false);
+         Arrays.sort(products);
+        List<List<String>> answer= new ArrayList<>();
+        
+        
+        for(int i=0;i<products.length;i++)
+        {
+            insert(products[i]);
+        }
+        List<String> list;
+        String temp="";
+        int k=0;
+        for(char c1='a';c1<='z';c1++)
+        {
+            hm.put(k,c1);
+            k++;
+        }
+        for(int i=0;i<searchWord.length();i++) 
+        {
+          list=new ArrayList<String>(); 
+             temp=temp+Character.toString(searchWord.charAt(i));
+            FindTheWord(temp,answer,list);
+        }
+        
+        return answer;
+        
+    }
+}*/
+
+class TrieNode{
+    ArrayList<String> words;
+    TrieNode[] childrens;
+    TrieNode(){
+        words = new ArrayList<String>();
+        childrens = new TrieNode[26];
+    }
+}
+class Solution {
+    TrieNode root;
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        Arrays.sort(products);
+        List<List<String>> result = new ArrayList<List<String>>();
+        root = new TrieNode();
+        for(String product:products){
+            TrieNode ptr = root;
+            for(int i=0;i<product.length();i++){
+                int index = product.charAt(i) - 'a';
+                if(ptr.childrens[index] == null ){
+                    ptr.childrens[index] = new TrieNode();
+                }
+                TrieNode node = ptr.childrens[index];
+                if(node.words.size() < 3){
+                    node.words.add(product);   
+                }
+                ptr = ptr.childrens[index];
+            }
+        }
+        TrieNode ptr = root;
+        boolean patternFound = true;
+        for(int i = 0;i<searchWord.length();i++){
+            int index = searchWord.charAt(i) - 'a';
+            if(patternFound && ptr.childrens[index]!= null){
+                ptr = ptr.childrens[index];
+                result.add(ptr.words);
+            }
+            else{ 
+                result.add(new ArrayList());
+                patternFound = false;
+            }
+        }
+        return result;
+    }
+}
