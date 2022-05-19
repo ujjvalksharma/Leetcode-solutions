@@ -1,0 +1,37 @@
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+     
+        
+        int start=0;
+        int end=0;
+        int totalsum=0;
+        int minWindowSize=Integer.MAX_VALUE;
+        while(end<nums.length){
+
+            totalsum+=nums[end];
+            
+            if(totalsum>=target){
+           //     System.out.println("start: "+start+" end: "+end+"sum:"+totalsum);
+               minWindowSize=Math.min(minWindowSize,end-start+1);
+            }
+            
+            while(totalsum>target&&start<end){
+                totalsum-=nums[start];
+                start++; 
+                if(totalsum>=target){
+               minWindowSize=Math.min(minWindowSize,end-start+1);
+            }
+            }
+            
+               if(totalsum>=target){
+               minWindowSize=Math.min(minWindowSize,end-start+1);
+            }
+            
+           // System.out.println("start: "+start+" end: "+end);
+            end++;
+        }
+        
+        
+        return minWindowSize!=Integer.MAX_VALUE?minWindowSize:0;
+    }
+}
