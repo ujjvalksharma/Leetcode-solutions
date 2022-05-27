@@ -1,0 +1,57 @@
+/*
+1) Add elements to ask if they have not been visited
+2) remove elements from stk if s.chart(i)<s.peek() and s.peek() index >i and  s.charAt(i) isn't present in stk
+
+*/
+class Solution {
+    public String removeDuplicateLetters(String s) {
+        
+        Stack<Character> stk=new Stack<Character>();
+        HashMap<Character,Integer> charToLastIndex=new HashMap<Character,Integer>();
+        Set<Character> visitedCharacters=new HashSet<Character>();
+        
+        for(int i=0;i<s.length();i++){
+            charToLastIndex.put(s.charAt(i),i);
+        }
+        
+            for(int i=0;i<s.length();i++){
+                
+                if(stk.isEmpty()){
+                    stk.push(s.charAt(i));
+                    visitedCharacters.add(s.charAt(i));
+                    continue;
+                }
+                
+                while(!stk.isEmpty()&&s.charAt(i)<stk.peek()&&charToLastIndex.get(stk.peek())>i&&
+                     !visitedCharacters.contains(s.charAt(i))){
+                    visitedCharacters.remove(stk.pop());
+                }
+                if(!visitedCharacters.contains(s.charAt(i))){
+                    stk.push(s.charAt(i));
+                    visitedCharacters.add(s.charAt(i));
+                }
+                      
+              //  System.out.println("stk: "+stk+" for char: "+s.charAt(i));
+            }
+        StringBuilder result=new StringBuilder("");
+        
+        while(!stk.isEmpty()){
+            result.append(stk.pop());
+        }
+        
+        return result.reverse().toString();
+        
+    }
+}
+
+/*
+a->2
+b->0,3
+c->1,4
+
+
+
+d
+c
+a
+*/
