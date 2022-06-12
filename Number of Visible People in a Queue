@@ -1,0 +1,65 @@
+/*
+
+
+O(N2) solutions
+
+for each i 0 to n-1 we move j from j=i+1 to n-1 till nums[j]>nums[i] and we calculate MaxprefixSum for each number and if I number is hidden by a number before that then num[j]<MaxprefixSum.
+  
+*/
+/*
+class Solution {
+    public int[] canSeePersonsCount(int[] heights) {
+    
+        int[] answer=new int[heights.length];
+        
+        for(int i=0;i<heights.length;i++){
+            
+            int maxSumYet=0;
+            int numberOfVisiblePeople=0;
+            for(int j=i+1;j<heights.length;j++){
+                
+                if(heights[j]>heights[i]){
+                    numberOfVisiblePeople++;
+                    break;
+                }
+                
+                 if(heights[j]>maxSumYet){
+                     numberOfVisiblePeople++;
+                 }
+                    
+                    maxSumYet=Math.max(maxSumYet,heights[j]);
+                
+            }
+            answer[i]=numberOfVisiblePeople;
+            
+        }
+        return answer;
+        
+    }
+}
+*/
+//https://www.youtube.com/watch?v=1sKFr_fhcV4
+class Solution {
+    public int[] canSeePersonsCount(int[] heights) {
+    
+        int[] answer=new int[heights.length];
+        Stack<Integer> stk=new Stack<Integer>();
+        
+        for(int i=0;i<heights.length;i++){
+            
+            while(!stk.isEmpty()&&heights[i]>heights[stk.peek()]){
+                   answer[stk.peek()]++;
+                stk.pop();
+            }
+            
+            if(!stk.isEmpty()){
+                answer[stk.peek()]++;
+            }
+            stk.push(i);
+            
+            
+        }
+        answer[heights.length-1]=0;
+        return answer;
+    }
+}
