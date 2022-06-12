@@ -1,0 +1,48 @@
+/*
+Solution1: TreeSet
+
+we find prefix minimum from left to right. 
+We iterate from n-1 to 0. while iterating we maintain a stack that contains elements greater than min[i]
+
+*/
+
+class Solution {
+    public boolean find132pattern(int[] nums) {
+        
+    
+        //define data structures
+        int[] left_min = new int[nums.length];
+        
+        //expand from center
+        left_min[0]=nums[0];
+        for (int i = 1; i < nums.length; i++){
+            left_min[i] = Math.min(left_min[i-1], nums[i]);
+        }
+        
+        
+        //find 132 pattern
+        Stack<Integer> stk=new Stack<Integer>();
+        for(int i=nums.length-1;i>=0;i--){
+            
+            while(!stk.isEmpty()&&nums[stk.peek()]<=left_min[i]){
+                stk.pop();
+            }
+            if(!stk.isEmpty()&&nums[stk.peek()]<nums[i]&&nums[i]>left_min[i]){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+}
+  
+    
+
+/*
+   /
+  /
+ /
+/
+*/
+    
+
