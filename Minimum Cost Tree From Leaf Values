@@ -1,0 +1,89 @@
+//recursion
+//https://www.youtube.com/watch?v=T6E74ypY_tU
+/*
+class Solution {
+    
+      class pair{
+        int max;
+        int sum;
+        pair(int max,int sum){
+            this.max=max;
+            this.sum=sum;
+        }
+    }
+    
+    public int mctFromLeafValues(int[] a) {
+        return mctFromLeafValuesHelper(a,0,a.length-1).sum;
+    }
+    public pair mctFromLeafValuesHelper(int a[],int l,int r){
+        if(l>r)
+            return new pair(0,1000000);
+        if(l==r)
+            return new pair(a[l],0);
+        pair ans=new pair(0,1000000);
+        for(int mid=l;mid<r;mid++){
+            pair left=mctFromLeafValuesHelper(a,l,mid);
+            pair right=mctFromLeafValuesHelper(a,mid+1,r);
+            int total=left.max*right.max+left.sum+right.sum;
+            if(total<ans.sum)
+            {
+                ans.max=Math.max(left.max,right.max);
+                ans.sum=total;
+            }else if(total==ans.sum){
+                ans.max=Math.max(left.max,right.max);
+            }
+        }
+        return ans;
+    }
+  
+}
+*/
+//memo + recursion
+class Solution {
+    
+   
+      class Pair{
+        int max;
+        int sum;
+        Pair(int max,int sum){
+            this.max=max;
+            this.sum=sum;
+        }
+    }
+    
+    public int mctFromLeafValues(int[] a) {
+         Pair[][] dp=new Pair[a.length][a.length];
+        
+        return mctFromLeafValuesHelper(a,0,a.length-1,dp).sum;
+    }
+    public Pair mctFromLeafValuesHelper(int a[],int l,int r, Pair[][] dp){
+        if(l>r){
+            return new Pair(0,1000000);
+        }
+            
+        if(l==r){
+            return new Pair(a[l],0);
+        }
+        
+        if(dp[l][r]!=null){
+            return dp[l][r];
+        }
+        Pair ans=new Pair(0,1000000);
+        
+        for(int mid=l;mid<r;mid++){
+            Pair left=mctFromLeafValuesHelper(a,l,mid,dp);
+            Pair right=mctFromLeafValuesHelper(a,mid+1,r,dp);
+            int total=left.max*right.max+left.sum+right.sum;
+            if(total<ans.sum)
+            {
+                ans.max=Math.max(left.max,right.max);
+                ans.sum=total;
+            }else if(total==ans.sum){
+                ans.max=Math.max(left.max,right.max);
+            }
+        }
+        dp[l][r]=ans;
+        return ans;
+    }
+  
+}
