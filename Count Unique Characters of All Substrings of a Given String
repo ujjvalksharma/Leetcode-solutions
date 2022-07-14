@@ -1,0 +1,33 @@
+class Solution {
+    public int uniqueLetterString(String s) {
+        final int MOD = 1000000007;
+        HashMap<Character,TreeSet<Integer>> charToIndexsToAllOccurances=new 
+        HashMap<Character,TreeSet<Integer>>();
+        
+        for(int i=0;i<s.length();i++){ 
+            if(!charToIndexsToAllOccurances.containsKey(s.charAt(i))){
+                charToIndexsToAllOccurances.put(s.charAt(i),
+                                               new TreeSet<Integer>());
+            }
+            TreeSet<Integer> set=charToIndexsToAllOccurances.get(s.charAt(i));
+            set.add(i);
+        }
+        
+        int totalUniqueCharInAllSubString=0;
+        for(int i=0;i<s.length();i++){
+            TreeSet<Integer> setOfIndexs=
+                charToIndexsToAllOccurances.get(s.charAt(i));
+            
+            Integer nextCharToLeft=setOfIndexs.lower(i);
+            Integer nextCharToRight=setOfIndexs.higher(i);
+            nextCharToLeft= nextCharToLeft == null ? -1 : nextCharToLeft;
+            nextCharToRight= nextCharToRight == null ? s.length() : nextCharToRight;
+            int contributions = (i - nextCharToLeft) * (nextCharToRight - i);
+            totalUniqueCharInAllSubString += contributions % MOD;
+            totalUniqueCharInAllSubString=totalUniqueCharInAllSubString%MOD;
+        }
+        
+        return totalUniqueCharInAllSubString%MOD;
+        
+    }
+}
