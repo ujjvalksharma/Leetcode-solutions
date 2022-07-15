@@ -1,0 +1,180 @@
+/*
+Logic: Move from left and store the cost to convert all char to zero
+Move from right and store the cost to convert all char to one
+At any point i, we would know the cost to convert all number from i=0 to i-1 to zero and i to n-1 to 1. We can sum that cost.
+
+Similarly,we would know the cost to convert all number from i=0 to i to zero and i+1 to n-1 to 1. We can sum that cost.
+
+We also know the cost to convert all number to zero and all numbers to ones.
+
+In the end, we wil find the minimum cost.
+
+*/
+class Solution {
+    public int minFlipsMonoIncr(String s) {
+        
+        int[] costToMakeZeroFromLeft=new int[s.length()];
+        int[] costToMakeOneFromRight=new int[s.length()];
+        
+        int cost=0;
+        for(int i=0;i<s.length();i++){
+            
+            if(s.charAt(i)=='1'){
+                cost++;
+            }
+            costToMakeZeroFromLeft[i]=cost;
+        }
+        cost=0;
+        for(int i=s.length()-1;i>=0;i--){
+            
+            if(s.charAt(i)=='0'){
+                cost++;
+            }
+            
+            costToMakeOneFromRight[i]=cost;
+        }
+        
+        int convertAllCharToZero=costToMakeZeroFromLeft[s.length()-1];
+        int convertAllCharToOnes=costToMakeOneFromRight[0];
+        int answer=Integer.MAX_VALUE;
+        for(int i=0;i<s.length();i++){
+            //make current digit 1
+            if(i-1>=0){
+                int totalCost1=costToMakeOneFromRight[i]+costToMakeZeroFromLeft[i-1];
+                answer=Math.min(answer,totalCost1);
+            }
+            //make current digit 0
+            if(i+1<s.length()){
+               int totalCost2=costToMakeZeroFromLeft[i]+costToMakeOneFromRight[i+1]; 
+               answer=Math.min(answer,totalCost2);
+            } 
+        }
+        
+        return Math.min(answer,
+                        Math.min(convertAllCharToZero,convertAllCharToOnes));
+        
+    }
+}
+
+/*
+1st Solution: recursion
+3rd Solution: Greedy
+
+Logic:
+
+I can make digit 0, if there is no one before it
+
+
+Any number of zero before a one is okay
+
+If we see a 1, 
+CASE1: we need to make all zero to the right 1=> totalFlips+=TotalzerosToRight
+CASE2: we need to make it zero, then we keep moving forward till we see a zero and count number of ones, and then we compare whether to make all zero to right 1 or make this group of 1 zeros.
+
+But as soon we choose to keep a one, we cannot have any zeros to the right
+
+
+0111111000000001110000001111
+
+*/
+/*
+class Solution {
+    
+    public int minFlipsMonoIncr(String s) {
+        
+        int totalOnes=0;
+        int totalZeros=0;
+        int totalFlips=0;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)=='0'){
+                totalZeros++;
+            }else{
+                totalOnes++;
+            }
+        }
+        boolean hasOneOccured=false;
+        int i=0;
+        int countOfZeroToLeft=0;
+        while(i<s.length()){
+            if(s.charAt(i)=='0'){
+                countOfZeroToLeft++;
+            }
+            
+            if(hasOneOccured){
+                if(s.charAt(i)=='0'){
+                    totalFlips++;
+                }
+            }else{
+                if(s.charAt(i)=='1'){
+                    int countOfOnesInAGroup=0;
+                    while(i<s.length()&&s.charAt(i)=='1'){
+                        countOfOnesInAGroup++;
+                        i++;
+                    }
+                    i--;
+                    int countOfZeroToRight=totalZeros-countOfZeroToLeft;
+                    
+                    //that means number of flips will be 
+                  //  more as we have to make a lot of zeros 
+              //      to the right ones. So we make this group of ones equal to //zeros
+                    if(countOfZeroToRight>countOfOnesInAGroup){
+                        totalFlips+=countOfOnesInAGroup;
+                    }else{
+                        hasOneOccured=true;
+                    }
+                    
+                }
+                
+            }
+            i++;
+        }
+        return totalFlips;
+    }
+
+}
+*/
+/*
+//Solution 1: recursion
+class Solution {
+    public int minFlipsMonoIncr(String s) {
+        
+        if(s.length()<=1){
+            return 0;
+        }
+        return minFlipsMonoIncrHelper(new StringBuilder(s),0,0);
+    }
+    
+    public int minFlipsMonoIncrHelper(StringBuilder sb, int index, int flips){  
+        if(index>=sb.length()){
+            return totalRequiredFlips(sb,flips);
+        }
+        //case 1: flip
+        char currentChar=sb.charAt(index);
+        if(currentChar=='0'){
+            sb.setCharAt(index,'1');
+        }else{
+            sb.setCharAt(index,'0');
+        }
+      int flipsCount= minFlipsMonoIncrHelper(sb,index+1,flips+1);
+        //case 2: Don't flip
+        sb.setCharAt(index,currentChar);
+       int noFlipsCount= minFlipsMonoIncrHelper(sb,index+1,flips);
+        
+        return Math.min(flipsCount,noFlipsCount);
+    }
+    
+    public int totalRequiredFlips(StringBuilder sb,int flips){
+        
+        for(int i=1;i<sb.length();i++){
+            
+            int prevDigit=Character.getNumericValue(sb.charAt(i-1));
+            int nextDigit=Character.getNumericValue(sb.charAt(i));
+            if(nextDigit<prevDigit){
+                return Integer.MAX_VALUE;
+            }
+        }
+        return flips;
+    }
+}
+
+*/
