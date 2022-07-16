@@ -1,0 +1,64 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+/*
+Reverse first half of linklist and then compare node val from by iterating two pointer moving forward and backward from mid.
+
+*/
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+                    
+     if(head.next==null){
+         return true;
+     }
+     
+        ListNode current=head.next;
+        ListNode prev=head;
+        ListNode fast=head.next;
+        boolean isLinkListSizeEven=true;
+        
+        while(fast.next!=null){
+            
+            //linklist size is even
+            if(fast.next.next!=null){
+                fast=fast.next.next;
+            }
+            else{//linklist size is odd
+                isLinkListSizeEven=false;
+                fast=fast.next;
+            }
+            
+            ListNode nextNode=current.next;
+            current.next=prev;
+            prev=current;
+            current=nextNode;
+        }
+        if(!isLinkListSizeEven){ //if size is odd, then middle is not compare with any node
+            prev=prev.next;
+        }
+        while(current!=null){
+            if(current.val!=prev.val){
+                return false;
+            }
+            current=current.next;
+            prev=prev.next;
+        }
+        return true;
+    }
+    
+    /*
+         s         f  
+    1 -> 2 -> 3 -> 4
+    
+         s             f  
+    1 -> 2 -> 3 -> 4 ->5
+    
+    */
+}
