@@ -1,0 +1,36 @@
+import java.util.Stack;
+
+public class PostFixEval {
+
+  public static void main(String args[]){
+
+    PostFixEval postFixEval=new PostFixEval();
+    System.out.println(postFixEval.findPostFixExpressionEvaluation(""));
+  }
+
+  private int findPostFixExpressionEvaluation(String s) {
+    
+    Stack<Integer> stk=new Stack<Integer>();
+    for(int i=0;i<s.length();i++){
+      if(Character.isDigit(s.charAt(i))){
+        stk.push(Integer.parseInt(""+s.charAt(i)));
+      }else{
+        int secondNum=stk.pop();
+        int firstNum=stk.pop();
+        if(s.charAt(i)=='+'){
+          stk.push(firstNum+secondNum);
+        }else if(s.charAt(i)=='-'){
+          stk.push(firstNum-secondNum);
+        }else if(s.charAt(i)=='*'){
+          stk.push(firstNum*secondNum);
+        }else if(s.charAt(i)=='/'){
+          stk.push(firstNum/secondNum);
+        }
+
+      }
+
+    }
+
+    return stk.pop();
+  }
+}
