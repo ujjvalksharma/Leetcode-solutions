@@ -1,0 +1,20 @@
+class Solution {
+    public long minimumHealth(int[] damage, int armor) {
+        
+      long minimumHealthNeeded=0;
+      long maxDamage=0;
+        
+        for(int dam: damage){
+            maxDamage=Math.max(maxDamage,(long) dam);
+            minimumHealthNeeded+= (long) dam;
+        }
+        long totalHealthSaved=0;
+        if(maxDamage>armor){
+            totalHealthSaved=armor;
+        }else{
+           totalHealthSaved=maxDamage;
+        }
+        
+        return minimumHealthNeeded-totalHealthSaved+1;
+    }
+}
