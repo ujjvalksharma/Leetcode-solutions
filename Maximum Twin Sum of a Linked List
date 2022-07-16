@@ -1,0 +1,48 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+/*
+
+Logic: Move slow and fast pointer such that slow pointer reaches half way.
+also reverse the first half of linklist on the way.
+Now keep adding number in pair as one pointer from the mid is moving backward while other is moving forward.
+
+*/
+class Solution {
+    public int pairSum(ListNode head) {
+        
+        
+        ListNode current=head.next;
+        ListNode prev=head;
+        ListNode fast=head.next;
+        
+        while(fast.next!=null){
+            
+            fast=fast.next.next;
+            ListNode nextNode=current.next;
+            current.next=prev;
+            prev=current;
+            current=nextNode;
+        }
+        
+        int maxTwinSum=0;
+        while(current!=null){
+            maxTwinSum=Math.max(maxTwinSum,current.val+prev.val);
+            current=current.next;
+            prev=prev.next;
+        }
+        
+        return maxTwinSum;
+        
+        
+    }
+
+}
