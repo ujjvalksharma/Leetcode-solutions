@@ -1,0 +1,148 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
+    boolean isSubTreePresent=false;
+    String serializedSmallSubTree;
+    public String findSerializationOfSubTree(TreeNode root){
+        if(root==null){
+           return "n";
+        }
+        String left=findSerializationOfSubTree(root.left);
+        String right=findSerializationOfSubTree(root.right);
+        
+        return "("+left+")<-"+root.val+"->("+right+")";
+        
+    }
+    
+    public String findSubTreePresence(TreeNode root){
+        
+         if(root==null){
+           return "n";
+        }
+        String left=findSerializationOfSubTree(root.left);
+        String right=findSerializationOfSubTree(root.right);
+        
+       String serializedBigSubTree="("+left+")<-"+root.val+"->("+right+")";
+        
+       // System.out.println("each sub tree: "+serializedBigSubTree);
+        
+        return serializedBigSubTree;
+        
+    }
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        
+         serializedSmallSubTree=findSerializationOfSubTree(subRoot);
+       // System.out.println("sub sub tree: "+serializedSmallSubTree);
+        String serializedBigSubTree = findSubTreePresence(root);
+        return serializedBigSubTree.contains(serializedSmallSubTree);
+        
+    }
+}
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    Boolean sub_tree_found=true;
+    List<Boolean> b1= new ArrayList<Boolean>();
+    Boolean check=false;
+    public void check_preorder(TreeNode big,TreeNode small)
+    {
+        
+        if((big==null&&small!=null)||big!=null&&small==null)
+        {
+            sub_tree_found=false;
+            return;
+        }
+        if(big!=null&&small!=null)
+        {
+            if(big.val!=small.val)
+        {
+           sub_tree_found=false; 
+            return; 
+        }
+            
+        }
+        
+         if((big.left!=null&&small.left==null)||(big.left==null&&small.left!=null))
+              {
+           sub_tree_found=false; 
+            return; 
+        }
+          if((big.right!=null&&small.right==null)||(big.right==null&&small.right!=null))
+              {
+           sub_tree_found=false; 
+            return; 
+        }
+             
+        if(big.left!=null&&small.left!=null)
+        check_preorder( big.left, small.left);
+        if(big.right!=null&&small.right!=null)
+        check_preorder( big.right, small.right);
+        
+        return;
+        
+        
+    }
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.add(s);
+        while(!q.isEmpty())
+        {
+            TreeNode temp=q.poll();
+            
+            
+            if(temp!=null)
+            {
+                if(t.val==temp.val)
+                {    check=true;
+                     check_preorder( temp, t);
+                 b1.add(sub_tree_found);
+                 if(sub_tree_found==true)
+                 {
+                     break;
+                 }
+                 
+                 sub_tree_found=true;
+                        // break;
+                }
+                   
+             
+                
+                if(temp.left!=null)
+                    q.add(temp.left);
+                
+                if(temp.right!=null)
+                    q.add(temp.right);
+            }
+        }
+        
+        if(check==true)
+        return b1.get(b1.size()-1);
+        else
+            return false;
+        
+    }
+}
