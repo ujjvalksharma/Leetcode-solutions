@@ -1,0 +1,77 @@
+//https://www.youtube.com/watch?v=dcOSQjhfBcQ
+class Solution {
+    public String longestDupSubstring(String s) {
+        
+        int minLen=1;
+        int maxLen=s.length();
+        String dublicateSubString="";
+        String answer="";
+        while(minLen<maxLen){
+            
+            int midLen=(minLen+maxLen)/2;
+            
+            dublicateSubString=findDublicateSubString(s, (long) midLen);
+
+            if(dublicateSubString.length()>answer.length()){
+                answer=dublicateSubString;
+            }
+            if(dublicateSubString.length()>0){
+                minLen=midLen+1;
+            }else{
+                maxLen=midLen;
+            }
+        }
+        
+        return answer;
+    }
+    
+    public String findDublicateSubString(String s, long len){
+        
+        HashMap<Long,List<Integer>> hashValToListOfStartIndex=new HashMap<Long,List<Integer>>();
+        final long MOD= 10000007;
+              long primeNumber=31;
+              long hashVal=0;
+              long tempLen= len-1;
+        int start=0;
+        int end=0;
+        
+        while(end<s.length()){
+            
+            hashVal+= (getCharVal(s.charAt(end))* (Math.pow(primeNumber,tempLen)%MOD))%MOD;
+            if(tempLen>0){
+                tempLen--;
+            }
+            if(end-start+1==len){
+                //store current hash
+               //if collision, then we find if a substring is present
+                
+                if(!hashValToListOfStartIndex.containsKey(hashVal)){
+                    hashValToListOfStartIndex.put(hashVal, new ArrayList<Integer>());
+                }else{
+      
+                    List<Integer> indexs=hashValToListOfStartIndex.get(hashVal);
+                    for(int index: indexs){
+                        int tempEnd=(int) index+(int)len;
+                        if(s.substring(index,tempEnd)
+                           .equals(s.substring(start,end+1))){
+                            return s.substring(start,end+1);
+                        }
+                    }
+                }
+                
+                
+                hashValToListOfStartIndex.get(hashVal).add(start);
+                hashVal-=(getCharVal(s.charAt(start))*(Math.pow(primeNumber,len-1)%MOD))%MOD;
+                hashVal=(hashVal*primeNumber)%MOD;
+                start++;
+            }
+            end++;
+        }
+        
+        return "";
+    }
+    
+   public long getCharVal(char c){
+       return c-'a';
+   }
+}
