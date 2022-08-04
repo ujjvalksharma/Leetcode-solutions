@@ -39,3 +39,87 @@ class Solution {
         
     }
 }
+
+
+class Solution {
+    public void sortColors(int[] nums) {
+        
+        int start=0; //points to index where we put 0
+        int end=nums.length-1; //points to index where we put 2
+        
+        while(start<nums.length&&nums[start]==0){
+            start++;
+        }
+        
+           while(end>=0&&nums[end]==2){
+            end--;
+        }
+        int index=start; //moving pointer starts after 0s are set
+        while(index<=end&&start<=end){
+            
+            
+                
+            if(nums[index]==0){
+                swap(nums,index,start);
+                start++;
+            }
+            
+            if(nums[index]==2){
+                swap(nums,index,end);
+                end--;
+            }
+              
+             if(nums[index]==0){
+                swap(nums,index,start);
+                start++;
+            }
+            
+           while(nums[start]==0){
+            start++;
+        }
+        
+           while(nums[end]==2){
+            end--;
+        }      
+     
+     if(start>index){   
+          index=start;
+     }else{
+         index++;
+     }
+            
+            System.out.println("nums: "+Arrays.toString(nums)+" start: "+start+" end: "+end+" index: "+index);
+            
+        }
+        
+        
+    }
+    
+    private void swap(int[] nums, int index1, int index2){
+        int temp=nums[index1];
+        nums[index1]=nums[index2];
+        nums[index2]=temp;
+    }
+}
+
+/*
+
+
+
+one pass with 0 at start
+[2, 0, 2, 1, 1, 0]
+
+1st pass:
+    s
+[0, 0, 2, 1, 1,2]
+
+2st pass:
+          s
+[0, 0, 1, 1, 2,2]
+
+In the first pass we put all the zero at the start while incrementing index
+and in the second pass we put all the 1 after the zero postion while incrementing index
+
+Combing 1st pass and second pass is dutch national algo
+
+*/
