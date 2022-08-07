@@ -70,3 +70,61 @@ class Solution {
         
     }
 }
+
+
+
+//Simple heap sort
+class Solution {
+    public int[] sortArray(int[] nums) {
+        // implement heap-sort
+        //heapify each node as if the node is leaf it won't have left and right children
+        
+        int[] result=new int[nums.length];
+        for(int i=nums.length-1;i>=0;i--){
+            maxHeapify(nums,i);
+        }
+        //pull out max Element from maxHeap
+       for(int i=nums.length-1;i>=0;i--){
+           
+           result[i]=nums[0];
+           nums[0]=Integer.MIN_VALUE; //make the root element smallest, so it is never picked and it stays in the leaf and even if it is picked because there is some value equal to smallest value and it means it is its chance to be position in result array
+           maxHeapify(nums,0);
+       }
+        
+        return result;
+    }
+    
+    public void maxHeapify(int[] nums, int parentIndex){
+        
+        int leftChildIndex=2*parentIndex+1;
+        int rightChildIndex=2*parentIndex+2;
+        
+        int largestNum=nums[parentIndex];
+        int largestNumIndex=parentIndex;
+        
+        if(leftChildIndex<nums.length&&nums[leftChildIndex]>largestNum){
+            largestNum=nums[leftChildIndex];
+            largestNumIndex=leftChildIndex;
+        }
+        
+          if(rightChildIndex<nums.length&&nums[rightChildIndex]>largestNum){
+            largestNum=nums[rightChildIndex];
+            largestNumIndex=rightChildIndex;
+        }
+        if(largestNumIndex!=parentIndex){
+            swap(nums,parentIndex,largestNumIndex);
+            maxHeapify(nums,largestNumIndex);
+        }
+        
+    }
+    
+    public void swap(int[] nums, int index1, int index2){
+        
+        int temp=nums[index1];
+        nums[index1]=nums[index2];
+        nums[index2]=temp;
+    }
+}
+
+//[5,2,3,1]
+
