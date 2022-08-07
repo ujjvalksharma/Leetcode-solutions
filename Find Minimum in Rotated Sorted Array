@@ -1,0 +1,39 @@
+class Solution {
+    public int findMin(int[] nums) {
+        
+        if(nums.length==1){
+            return nums[0];
+        }
+        
+        int left=0;
+        int right=nums.length-1;
+        int minimumElement=Integer.MAX_VALUE;
+        
+        while(left<=right){
+            
+            int mid=left+(right-left)/2;
+            minimumElement=Math.min(minimumElement,nums[mid]);
+            if(mid-1>=0&&nums[mid-1]>nums[mid]){
+                return nums[mid];
+            }
+            
+            //left to mid is sorted,  so go to right
+            if(nums[left]<=nums[mid]&&nums[mid]>=nums[right]){
+                left=mid+1;
+                //mid to right is sorted,  so go to left
+            }else if(nums[left]>=nums[mid]&&nums[mid]<=nums[right]){
+                right=mid;
+            }else{ //mid to right is sorted,  and left to mid sorted, return left
+                return nums[left];
+            } 
+            
+        }
+       
+        return minimumElement;
+    }
+}
+/*
+ 0 1 2 3  4 5 6 7 8 9 10 11 12 
+[4,5,6,7,-1,0,2,3,4,5,6, 7 ,8]
+
+*/
