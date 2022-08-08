@@ -1,0 +1,28 @@
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        
+        int start=0;
+        int movingPtn=0;
+        int prevNum=Integer.MIN_VALUE;
+        int countSameNumber=0;
+        
+        while(movingPtn<nums.length){
+            
+             if(prevNum==nums[movingPtn]){
+                countSameNumber++;
+            }else{
+                countSameNumber=1;
+            }
+            
+            if(countSameNumber<=2){
+                nums[start]=nums[movingPtn];
+                start++;   
+            }
+            
+            prevNum=nums[movingPtn];
+            movingPtn++;
+        }
+        
+        return start;
+    }
+}
