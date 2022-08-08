@@ -36,3 +36,28 @@ class Solution {
         return start;
     }
 }
+
+
+//Simple solution
+
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        
+        int start=0;
+        int movingPtn=0;
+        int prevNum=Integer.MIN_VALUE;
+        while(movingPtn<nums.length){
+            
+            if(prevNum!=nums[movingPtn]){
+            nums[start]=nums[movingPtn];
+            start++;
+            }
+            prevNum=nums[movingPtn];
+            movingPtn++;
+        }
+        
+        return start;
+    }
+    
+   
+}
