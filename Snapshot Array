@@ -50,3 +50,61 @@ class SnapshotArray {
  * int param_2 = obj.snap();
  * int param_3 = obj.get(index,snap_id);
  */
+ 
+ 
+ 
+ class SnapshotArray {
+
+    HashMap<Integer,TreeMap<Integer,Integer>> indexToSnapIdAndValue;
+    int currentSnapId;
+    public SnapshotArray(int length) {
+        
+        this.indexToSnapIdAndValue=new HashMap<Integer,TreeMap<Integer,Integer>>();
+        this.currentSnapId=0;
+        for(int i=0;i<length;i++){
+            
+            TreeMap<Integer,Integer> map=new TreeMap<Integer,Integer>();
+            map.put(currentSnapId,0);
+            this.indexToSnapIdAndValue.put(i,map);
+        } 
+    }
+    
+    public void set(int index, int val) {
+      TreeMap<Integer,Integer> snapidToValue=  indexToSnapIdAndValue.get(index);
+            snapidToValue.put(currentSnapId,val);
+    }
+    
+    public int snap() {
+        
+        int tempCurrentSnapId=currentSnapId;
+        currentSnapId++;
+        
+        return tempCurrentSnapId;
+        
+    }
+    
+    public int get(int index, int snap_id) {
+        
+        TreeMap<Integer,Integer> snapidToValue=  indexToSnapIdAndValue.get(index);
+        
+        int closestSnapId= snapidToValue.floorKey(snap_id);
+        
+        return snapidToValue.get(closestSnapId);
+    }
+}
+
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * SnapshotArray obj = new SnapshotArray(length);
+ * obj.set(index,val);
+ * int param_2 = obj.snap();
+ * int param_3 = obj.get(index,snap_id);
+ */
+
+
+/*
+//solution 1:  store array for each snap_id
+//solution 2:
+
+
+*/
