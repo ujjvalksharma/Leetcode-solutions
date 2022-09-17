@@ -1,3 +1,105 @@
+/my code
+class Solution {
+    
+    class Element{
+        
+        int index;
+        int value;
+        
+        public Element(int index, int value){
+            this.index=index;
+            this.value=value;
+        }
+        
+        @Override
+        public String toString(){
+          //  return "index: "+index+" value: "+value;
+            return ""+value;
+        }
+    }
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        
+        List<Integer> tempAnswer=new ArrayList<Integer>();
+        
+        Deque<Element> deque = new LinkedList<Element>();
+        
+        int start=0;
+        int end=0;
+        
+        while(end<nums.length){
+            
+            if(end-start+1==k){
+                
+                removeElementFromStartAndEndLessThanIndex(start, deque);
+
+            }    
+            
+            if(!deque.isEmpty()){
+                
+                if(nums[end]>=deque.peekLast().value){
+                    
+                    removeElementsFromLastLessThanValue(nums[end], deque);
+                    deque.addLast(new Element(end,nums[end]));
+                    
+                }else {
+                    removeElementsFromFirstLessThanValue(nums[end], deque);
+                      deque.addFirst(new Element(end,nums[end]));
+                }
+                
+            }else {
+                  deque.addLast(new Element(end,nums[end]));
+            } 
+            
+              if(end-start+1==k){
+                tempAnswer.add(deque.peekLast().value);
+                start++;
+            }  
+            
+          
+     //    System.out.println("deque: "+deque);
+            end++;
+        }
+        
+        int[] answer=new int[tempAnswer.size()];
+        
+        for(int i=0;i<tempAnswer.size();i++){
+            answer[i]=tempAnswer.get(i);
+        }
+        
+        return answer;
+    }
+    
+    public void removeElementFromStartAndEndLessThanIndex(int index, Deque<Element> deque){
+        
+        while(!deque.isEmpty()&&deque.peekFirst().index<index){
+            deque.pollFirst();
+        }
+        
+          while(!deque.isEmpty()&&deque.peekLast().index<index){
+            deque.pollLast();
+        }
+    }
+    
+    
+      public void removeElementsFromLastLessThanValue(int value, Deque<Element> deque){
+        
+        while(!deque.isEmpty()&&deque.peekLast().value<value){
+            deque.pollLast();
+        }
+    }
+    
+    
+        public void removeElementsFromFirstLessThanValue(int value, Deque<Element> deque){
+        
+        while(!deque.isEmpty()&&deque.peekFirst().value<value){
+            deque.pollFirst();
+        }
+    }
+    
+}
+
+
+
 class Solution {
     
     class Node{
