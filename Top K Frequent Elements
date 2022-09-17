@@ -1,0 +1,71 @@
+
+//O(N): Bucket sort
+/*
+Store items and their count in hasmap, then we know maximum count of an element is nums.length, so we create bucket of size nums.length+1, then we put elements in bucket based on their frequency. We iterate the bucket and store the numbers in answer list
+
+*/
+class Solution {
+    
+    class Bucket{
+        
+        List<Integer> numbers=new ArrayList<Integer>();
+        
+        @Override
+        public String toString(){
+            return "numbers: "+numbers;
+        }
+    }
+    public int[] topKFrequent(int[] nums, int k) {
+        
+        List<Integer> tempAnswer=new ArrayList<Integer>();
+     
+        Bucket[] bucket=new Bucket[nums.length+1];
+        HashMap<Integer,Integer> numToCount=new HashMap<Integer,Integer>();
+        
+        for(int i=0;i<nums.length;i++){
+            
+            bucket[i]=new Bucket();
+            if(!numToCount.containsKey(nums[i])){
+                numToCount.put(nums[i],0);
+            }
+            numToCount.put(nums[i],numToCount.get(nums[i])+1);
+        }
+        
+        bucket[nums.length]=new Bucket();
+        
+        for(int key: numToCount.keySet()){
+          bucket[numToCount.get(key)].numbers.add(key);
+        }
+        
+//System.out.println(Arrays.toString(bucket));
+        for(int i=bucket.length-1;i>=0;i--){
+            
+            if(k==0){
+                break;
+            }
+            
+        //    System.out.println(bucket[i].numbers);
+            for(int tempNum: bucket[i].numbers){
+             
+                   System.out.println(tempNum);
+                
+                  if(k==0){
+                break;
+               }
+                
+                tempAnswer.add(tempNum);
+                k--;
+            }
+            
+        }
+      //  System.out.println(tempAnswer);
+        
+           int[] answer=new int[tempAnswer.size()];
+        
+        for(int i=0;i<tempAnswer.size();i++){
+            answer[i]=tempAnswer.get(i);
+        }
+        
+        return answer;
+    }
+}
