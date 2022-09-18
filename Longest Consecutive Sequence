@@ -1,0 +1,59 @@
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        
+        Set<Integer> setOfNums=new HashSet<Integer>();
+        
+        for(int num: nums){
+            setOfNums.add(num);
+        }
+        
+        int longestconsecutiveelements=0;
+           for(int num: nums){
+               
+               int temp=num;
+               int currentSequence=0;
+               // if a less number is present, then skip
+                if(setOfNums.contains(temp-1)){
+                    continue;
+                }
+              
+               //start counting from first number in sequence
+               while(setOfNums.contains(temp)){
+                   currentSequence++;
+                   setOfNums.remove(temp);
+                   temp++;
+         
+               }
+               longestconsecutiveelements=Math.max(longestconsecutiveelements,
+                                                   currentSequence);
+               setOfNums.remove(num);   
+        }
+        return longestconsecutiveelements;
+        
+    }
+}
+
+//5 - 1
+
+//2 - 1
+
+
+//6 - 2 [5,6]
+
+
+//3 - 2 [2,3]
+
+
+//4 - 3  [2,3,4]
+
+
+
+//1 [1,2]
+
+
+/*
+
+Solution 1: put everything in a heap/treemap/treeset total time complexity nlogn same as sorting the nums array.
+Solution 2: Make bucket to put each element, but range is too much.
+
+*/
