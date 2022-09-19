@@ -1,0 +1,88 @@
+class Solution {
+    
+    public class Element{
+        int num;
+        int count;
+        
+        public Element(int num, int count){
+            this.num=num;
+            this.count=count;
+        }
+        
+        @Override
+        public String toString(){
+            return " num: "+num+" count: "+count;
+        }
+        
+    }
+    
+    public int partition(List<Element> numAndFrequency, int start, int end){
+        
+        
+        int pivot=numAndFrequency.get(end).count;
+        int index=start;
+        
+        for(int i=start;i<end;i++){
+            
+            if(numAndFrequency.get(i).count<=pivot){
+                 Collections.swap(numAndFrequency, i, index);
+                index++;
+            }
+        }
+        
+        Collections.swap(numAndFrequency, end, index);
+   //     System.out.println("start: "+start+" end: "+end+" numAndFrequency: "+numAndFrequency);
+        return index;
+    }
+    
+    public int quickSelect(List<Element> numAndFrequency, int k){
+        
+        int start=0;
+        int end=numAndFrequency.size()-1;
+     //   System.out.println("k :"+k);
+        while(start<=end){
+            
+            int pivot=partition(numAndFrequency, start, end);
+            if(pivot==k){
+                return pivot;
+            }else if(pivot<k){
+                start=pivot+1;
+            }else{
+                end=pivot-1;
+            }
+        }
+        return 0;
+        
+    }
+    public int[] topKFrequent(int[] nums, int k) {
+        
+         HashMap<Integer,Integer> numToCount=new HashMap<Integer,Integer>();
+        List<Element> numAndFrequency=new ArrayList<Element>();
+        
+        for(int i=0;i<nums.length;i++){
+            
+            if(!numToCount.containsKey(nums[i])){
+                numToCount.put(nums[i],0);
+            }
+            numToCount.put(nums[i],numToCount.get(nums[i])+1);
+        }
+        
+        for(int key: numToCount.keySet()){
+            
+            numAndFrequency.add(new Element(key,numToCount.get(key)));
+        }
+        
+        //System.out.println(numAndFrequency);
+        int index=quickSelect(numAndFrequency,numAndFrequency.size()-k);  
+       // System.out.println("index: "+index);
+        int[] answer=new int[numAndFrequency.size()-1-index+1];
+      //  System.out.println("answer: "+answer.length);
+        int start=0;
+        for(int i=index;i<numAndFrequency.size();i++){
+            answer[start]=numAndFrequency.get(i).num;
+            start++;
+        }
+       
+        return answer;
+    }
+}
