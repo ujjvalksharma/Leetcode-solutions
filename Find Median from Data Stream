@@ -1,4 +1,82 @@
+class MedianFinder {
+    
+    PriorityQueue<Integer> leftHeap;
+    PriorityQueue<Integer> rightHeap;
+    public MedianFinder() {
+        this.leftHeap=new PriorityQueue<Integer>((a,b)->b-a);
+        this.rightHeap=new PriorityQueue<Integer>((a,b)->a-b);
+    }
+    
+    public void addNum(int num) {
+        
+        int totalElements=leftHeap.size()+rightHeap.size();
+        
+        if(totalElements==0){
+            leftHeap.add(num);
+        } else if (totalElements%2==0){
+            
+            if(num<=leftHeap.peek()){
+                leftHeap.add(num);
+            } else {
+                rightHeap.add(num);
+                leftHeap.add(rightHeap.poll());
+            }
+            
+        } else{
+            
+            if(num>= leftHeap.peek() ){
+                rightHeap.add(num);
+            } else {
+                leftHeap.add(num);
+                rightHeap.add(leftHeap.poll());
+            }
+            
+        }
+        
+        
+    }
+    
+    public double findMedian() {
+        
+        int totalElements=leftHeap.size()+rightHeap.size();
+        if(totalElements%2==0){
+            
+            double median = (double) (leftHeap.peek()+rightHeap.peek())/2;
+            return median;
+        }else {
+            return leftHeap.peek();
+        }
+        
+    }
+}
 
+
+
+/*
+
+
+How to find median:
+total-element = 2 heap size 
+
+Case 1:total-element == even then addition of top of both heap/2
+Case 2: total-element == odd then left heap top
+
+
+Filling heap:
+Cases 1: both heap is empty: then push to left heap
+Case 2: if total heap size == even, then check if lef heap top >=num, insert in left else insert in right heap and take out top of right heap
+case 3 if total heap size is odd, then insert in right heap if element is >= right heap top else insert in left heap and take out top and put in right heap
+
+
+
+*/
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
 
     /*
     https://www.youtube.com/watch?v=1LkOrc-Le-Y
