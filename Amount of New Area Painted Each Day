@@ -1,0 +1,63 @@
+/*
+Keep intervals in treemap and merge them when you see.
+
+*/
+class Solution {
+    public int[] amountPainted(int[][] paint) {
+        
+        TreeMap<Integer,Integer> tm=new TreeMap<Integer,Integer>();
+        int[] answer=new int[paint.length];
+        for(int i=0;i<paint.length;i++){
+            
+         //   System.out.println(tm);
+            
+            
+            Integer prevStart=tm.floorKey(paint[i][0]);
+            if(prevStart!=null){
+                Integer prevEnd=tm.get(prevStart);
+                if(paint[i][1]<=prevEnd&&paint[i][0]>=prevStart){
+                    answer[i]=0;
+                    continue;
+                }
+            }    
+                
+            int totalAreaToBePainted=paint[i][1]-paint[i][0];
+            
+            int finalStart=paint[i][0];
+            int finalEnd=paint[i][1];
+            while(tm.ceilingKey(paint[i][0])!=null&&tm.ceilingKey(paint[i][0])<=paint[i][1]){
+              //  System.out.println("I am here1");
+                int tempStart=tm.ceilingKey(paint[i][0]);
+                int tempEnd=tm.get(tempStart);
+                finalStart=Math.min(finalStart,tempStart);
+                finalEnd=Math.max(finalEnd,tempEnd);
+                totalAreaToBePainted-=Math.min(tempEnd,paint[i][1])-Math.max(tempStart,paint[i][0]);
+                tm.remove(tempStart);
+                
+            }
+            
+            
+                while(tm.floorKey(paint[i][0])!=null&&tm.get(tm.floorKey(paint[i][1]))<=paint[i][1]&&tm.get(tm.floorKey(paint[i][1]))>=paint[i][0]){
+           //     System.out.println("I am here2");
+                int tempStart=tm.floorKey(paint[i][0]);
+                int tempEnd=tm.get(tempStart);
+                finalStart=Math.min(finalStart,tempStart);
+                finalEnd=Math.max(finalEnd,tempEnd);
+                totalAreaToBePainted-=Math.min(tempEnd,paint[i][1])-Math.max(tempStart,paint[i][0]);
+                tm.remove(tempStart);
+                
+            }
+            
+            if(totalAreaToBePainted<0){
+                totalAreaToBePainted=0;
+            }
+            
+            
+            
+            tm.put(finalStart,finalEnd);
+            answer[i]=totalAreaToBePainted;
+        }
+        
+        return answer;
+    }
+}
