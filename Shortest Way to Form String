@@ -1,0 +1,52 @@
+/*
+Store character in treeset with index, for each character find the index in that treeset and also keep the previous index, the next index has to be greater than prev index for it to be part of the subsequence. If no higher index, then we start a new subsequence with that character.
+
+*/
+class Solution {
+    public int shortestWay(String source, String target) {
+        
+        HashMap<Character,TreeSet<Integer>> charToIndexList=new HashMap<Character,TreeSet<Integer>>();
+        
+        for(int i=0;i<source.length();i++){
+            
+            if(!charToIndexList.containsKey(source.charAt(i))){
+                charToIndexList.put(source.charAt(i), new TreeSet<Integer>());
+            }
+            
+            charToIndexList.get(source.charAt(i)).add(i);
+            
+        }
+        
+        int totalSubsequenceStr=1;
+        int prevIndex=-2;
+        for(int i=0;i<target.length();i++){
+            
+            char currentChar=target.charAt(i);
+            if(!charToIndexList.containsKey(currentChar)){
+                return -1;
+            }
+            TreeSet<Integer> indexsOfCurrentChar=charToIndexList.get(currentChar);
+            Integer closestIndex=indexsOfCurrentChar.higher(prevIndex);
+            if(closestIndex==null){
+                totalSubsequenceStr++;
+                prevIndex=indexsOfCurrentChar.first();
+            }else {
+                prevIndex=closestIndex;
+            }
+            
+        }
+        
+        return totalSubsequenceStr;
+        
+        
+    }
+}
+
+/*
+source = "xyz"
+target = "xzyxz"
+
+xz + y + xz
+
+
+*/
