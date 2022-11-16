@@ -1,0 +1,37 @@
+class FooBar {
+    private int n;
+    private String prevPrintedStr;
+    public FooBar(int n) {
+        this.n = n;
+        this.prevPrintedStr = "bar";
+    }
+
+    public synchronized void foo(Runnable printFoo) throws InterruptedException {
+        
+        for (int i = 0; i < n; i++) {
+
+            while("foo".equals(this.prevPrintedStr)){
+              wait();
+            }
+            
+        	// printFoo.run() outputs "foo". Do not change or remove this line.
+        	printFoo.run();
+            this.prevPrintedStr="foo";
+            notifyAll();
+        }
+    }
+
+    public synchronized void bar(Runnable printBar) throws InterruptedException {
+        
+        for (int i = 0; i < n; i++) {
+            
+            while("bar".equals(this.prevPrintedStr)){
+              wait();
+            }
+            // printBar.run() outputs "bar". Do not change or remove this line.
+        	printBar.run();
+            this.prevPrintedStr="bar";
+            notifyAll();
+        }
+    }
+}
