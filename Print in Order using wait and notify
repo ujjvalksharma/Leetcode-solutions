@@ -1,0 +1,40 @@
+class Foo {
+
+    String prevPrintedVal;
+    public Foo() {
+        this.prevPrintedVal= "nothing";
+    }
+
+    public synchronized void first(Runnable printFirst) throws InterruptedException {
+        
+        while(!"nothing".equals(this.prevPrintedVal)){
+            wait();
+        }
+        // printFirst.run() outputs "first". Do not change or remove this line.
+        printFirst.run();
+        this.prevPrintedVal="first";
+        notifyAll();
+    }
+
+    public synchronized void second(Runnable printSecond) throws InterruptedException {
+        
+         while(!"first".equals(this.prevPrintedVal)){
+            wait();
+        }
+        // printSecond.run() outputs "second". Do not change or remove this line.
+        printSecond.run();
+        this.prevPrintedVal="second";
+        notifyAll();
+    }
+
+    public synchronized void third(Runnable printThird) throws InterruptedException {
+        
+         while(!"second".equals(this.prevPrintedVal)){
+            wait();
+        }
+        // printThird.run() outputs "third". Do not change or remove this line.
+        printThird.run();
+        this.prevPrintedVal="third";
+        notifyAll();
+    }
+}
