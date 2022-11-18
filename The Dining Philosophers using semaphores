@@ -1,0 +1,43 @@
+
+import java.util.concurrent.Semaphore;
+
+class DiningPhilosophers {
+
+    private Semaphore[] forkSemaphores;
+
+    public DiningPhilosophers() {
+        forkSemaphores = new Semaphore[5];
+        for (int i = 0; i < 5; i++)
+            forkSemaphores[i] = new Semaphore(1);
+    }
+
+    // call the run() method of any runnable to execute its code
+    public void wantsToEat(int philosopher,
+                           Runnable pickLeftFork,
+                           Runnable pickRightFork,
+                           Runnable eat,
+                           Runnable putLeftFork,
+                           Runnable putRightFork) throws InterruptedException {
+        int right = philosopher;
+        int left = (philosopher + 1) % 5;
+
+        if (philosopher < 4) {
+            forkSemaphores[left].acquire();
+            forkSemaphores[right].acquire();
+        } else {
+            forkSemaphores[right].acquire();
+            forkSemaphores[left].acquire();
+        }
+
+        pickLeftFork.run();
+        pickRightFork.run();
+        eat.run();
+        putLeftFork.run();
+        putRightFork.run();
+
+        forkSemaphores[left].release();
+        forkSemaphores[right].release();
+    }
+
+
+}
