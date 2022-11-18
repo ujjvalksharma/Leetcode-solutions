@@ -1,0 +1,30 @@
+class H2O {
+
+    int currentHydrogenCount;
+    public H2O() {
+        this.currentHydrogenCount=0;
+    }
+
+    public synchronized void hydrogen(Runnable releaseHydrogen) throws InterruptedException {
+		
+        while(currentHydrogenCount>=2){
+           wait();
+        }
+        currentHydrogenCount++;
+        // releaseHydrogen.run() outputs "H". Do not change or remove this line.
+        releaseHydrogen.run();
+        notifyAll();
+    }
+
+    public synchronized void oxygen(Runnable releaseOxygen) throws InterruptedException {
+        
+         while(currentHydrogenCount<2){
+           wait();
+        }
+
+        // releaseOxygen.run() outputs "O". Do not change or remove this line.
+		releaseOxygen.run();
+        currentHydrogenCount=0;
+        notifyAll();
+    }
+}
