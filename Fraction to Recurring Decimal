@@ -1,0 +1,48 @@
+class Solution {
+    public String fractionToDecimal(int numerator, int denominator) {
+        
+        StringBuilder result=new StringBuilder("");
+        HashMap<Integer,Integer> numToIndex=new HashMap<Integer,Integer>();
+        boolean isDecimalRecuring=false;
+        boolean numAppendedAfterDecimal=false;
+//System.out.println("numerator: "+numerator+" denominator: "+denominator);
+        while(!isDecimalRecuring && numerator!=0){
+
+
+           while(numerator<denominator){
+
+               if("".equals(result.toString())){
+                   result.append("0.");
+               } else if(!numAppendedAfterDecimal) {
+                   result.append("0");
+               }
+               numerator=numerator*10;
+           }
+
+                int temp=numerator/denominator;
+
+            if(result.toString().startsWith("0.")){
+
+if(!numToIndex.containsKey(temp)){
+    numToIndex.put(temp,result.length()-1);
+    result.append(""+temp);
+    numAppendedAfterDecimal=true;
+} else {
+//result.setCharAt(numToIndex.get(temp),'(');
+String tempAnswer= result.substring(0, numToIndex.get(temp)) + "(" + result.substring(numToIndex.get(temp), result.length());
+result=new StringBuilder(tempAnswer);
+result.append(')');
+isDecimalRecuring=true;
+}
+            } else{
+                    result.append(""+temp);
+            }
+
+System.out.println("result: "+result.toString());
+            numerator=numerator%denominator;
+          //  System.out.println("numerator: "+numerator);
+        }
+
+        return result.toString();
+    }
+}
