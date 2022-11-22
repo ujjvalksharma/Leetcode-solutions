@@ -1,0 +1,28 @@
+/*
+
+[4 , 7 , 10 , 20]
+
+    1.     2      3        4          => How much space indexs take for probability
+//[0...3, 4...10,10...19,20.... INF]
+
+*/
+class Solution {
+    TreeMap<Integer, Integer> map = new TreeMap<>();
+    int sum = 0;
+    Random rand = new Random();
+    
+    public Solution(int[] w) {
+        int preIndex = 0, preValue = 0;
+        for(int i = 0; i < w.length; i++) {
+            map.put(preIndex+preValue, i);
+            preIndex = preIndex + preValue;
+            preValue = w[i];
+        }
+        sum = Arrays.stream(w).sum();
+    }
+    
+    public int pickIndex() {
+        int randomWeight = rand.nextInt(sum);
+        return map.get(map.floorKey(randomWeight));
+    }
+}
