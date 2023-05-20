@@ -1,0 +1,82 @@
+package org.example;
+
+import java.util.HashMap;
+
+public class TravelBetweenCitiesToFindProfit {
+
+  int[] cityA;
+  int[] cityB;
+
+  private void execute() {
+    cityA = new int[]{23, 4, 5, 10};
+    cityB = new int[]{21, 1, 10, 100};
+
+    findMaxProfit(cityA, cityB,20);
+
+  }
+
+  private void findMaxProfit(int[] cityA, int[] cityB, int fine) {
+
+    int profitWithoutDp= findMaxProfitHelper(cityA, cityB,0, 20, 'N');
+    int profitWithDp= findMaxProfitHelperWithDp(cityA, cityB,0, 20, 'N', new HashMap<String,Integer>());
+    System.out.println("MAX profit  profitWithoutDp: "+profitWithoutDp+ " profitWithDp: "+profitWithDp);
+
+  }
+
+  private int findMaxProfitHelper(int[] cityA, int[] cityB, int index, int fine, char prevCity) {
+
+    if(index == cityA.length){
+      return 0;
+    }
+
+    if(prevCity == 'A'){
+      int profitIfCityAIsSelected= findMaxProfitHelper(cityA, cityB, index+1, fine, 'A')+cityA[index];
+      int profitIfCityBIsSelected= findMaxProfitHelper(cityA, cityB, index+1, fine, 'B')+cityA[index]-fine;
+      return Math.max(profitIfCityAIsSelected, profitIfCityBIsSelected);
+    } else if (prevCity == 'B'){
+
+      int profitIfCityAIsSelected= findMaxProfitHelper(cityA, cityB, index+1, fine, 'A')+cityA[index]-fine;
+      int profitIfCityBIsSelected= findMaxProfitHelper(cityA, cityB, index+1, fine, 'B')+cityA[index];
+      return Math.max(profitIfCityAIsSelected, profitIfCityBIsSelected);
+    }
+    int profitIfCityAIsSelected= findMaxProfitHelper(cityA, cityB, index+1, fine, 'A')+cityA[index];
+    int profitIfCityBIsSelected= findMaxProfitHelper(cityA, cityB, index+1, fine, 'B')+cityA[index];
+    return Math.max(profitIfCityAIsSelected, profitIfCityBIsSelected);
+  }
+
+  private int findMaxProfitHelperWithDp(int[] cityA, int[] cityB, int index, int fine, char prevCity, HashMap<String,Integer> dp) {
+
+    if(index == cityA.length){
+      return 0;
+    }
+    String key=index+"-"+prevCity;
+    int profitIfCityAIsSelected=0;
+    int profitIfCityBIsSelected=0;
+    if(!dp.containsKey(key)){
+      return dp.get(key);
+    }
+    if(prevCity == 'A'){
+       profitIfCityAIsSelected= findMaxProfitHelperWithDp(cityA, cityB, index+1, fine, 'A', dp)+cityA[index];
+       profitIfCityBIsSelected= findMaxProfitHelperWithDp(cityA, cityB, index+1, fine, 'B', dp)+cityA[index]-fine;
+      return Math.max(profitIfCityAIsSelected, profitIfCityBIsSelected);
+    } else if (prevCity == 'B'){
+       profitIfCityAIsSelected= findMaxProfitHelperWithDp(cityA, cityB, index+1, fine, 'A', dp)+cityA[index]-fine;
+       profitIfCityBIsSelected= findMaxProfitHelperWithDp(cityA, cityB, index+1, fine, 'B', dp)+cityA[index];
+      return Math.max(profitIfCityAIsSelected, profitIfCityBIsSelected);
+    }else {
+      profitIfCityAIsSelected = findMaxProfitHelperWithDp(cityA, cityB, index + 1, fine, 'A', dp) + cityA[index];
+      profitIfCityBIsSelected = findMaxProfitHelperWithDp(cityA, cityB, index + 1, fine, 'B', dp) + cityA[index];
+    }
+    int profit = Math.max(profitIfCityAIsSelected, profitIfCityBIsSelected);
+    dp.put(key,profit);
+    return profit;
+  }
+
+  public static void main(String[] args) {
+    TravelBetweenCitiesToFindProfit obj = new TravelBetweenCitiesToFindProfit();
+    obj.execute();
+
+  }
+
+
+}
