@@ -1,0 +1,89 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+TreeNode startNode;
+TreeNode endNode;
+StringBuilder currentPath;
+String shortestPath;
+Set<TreeNode> visited;
+HashMap<TreeNode,TreeNode> mapChildToParentNode;
+public void getMapOfChildNodeToParentNodeHelper(TreeNode root, TreeNode parent, HashMap<TreeNode,TreeNode> mapChildToParentNode, int startValue, int destValue){
+if(root == null){
+    return;
+}
+if(root.val == startValue){
+startNode=root;
+}
+
+if(root.val == destValue){
+    endNode=root;
+}
+
+mapChildToParentNode.put(root,parent);
+getMapOfChildNodeToParentNodeHelper(root.left,root,mapChildToParentNode , startValue, destValue);
+getMapOfChildNodeToParentNodeHelper(root.right,root,mapChildToParentNode , startValue, destValue);
+
+}
+    public void getMapOfChildNodeToParentNode(TreeNode root, HashMap<TreeNode,TreeNode> mapChildToParentNode, int startValue, int destValue){
+
+      getMapOfChildNodeToParentNodeHelper(root, null, mapChildToParentNode, startValue, destValue);
+
+    }
+
+    public String getDirections(TreeNode root, int startValue, int destValue) {
+mapChildToParentNode = new HashMap<TreeNode,TreeNode>();
+getMapOfChildNodeToParentNode(root,mapChildToParentNode, startValue, destValue);
+currentPath = new StringBuilder("");
+visited = new HashSet<TreeNode>();
+findShortestPath(startNode, endNode,'N');
+
+return shortestPath;
+        
+    }
+
+public void findShortestPath(TreeNode currentNode, TreeNode endNode, char direction){
+
+if(currentNode == null){
+    return;
+}
+
+if(visited.contains(currentNode)){
+    return;
+}
+
+if(direction != 'N'){
+    currentPath.append(direction);
+}
+
+if(currentNode == endNode){
+    if(shortestPath == null){
+        shortestPath =currentPath.toString();
+    }
+    if(currentPath.length()<shortestPath.length()){
+        shortestPath= currentPath.toString();
+    }
+    return;
+}
+visited.add(currentNode);
+
+findShortestPath(mapChildToParentNode.get(currentNode),endNode,'U');
+findShortestPath(currentNode.left,endNode,'L');
+findShortestPath(currentNode.right,endNode,'R');
+currentPath .deleteCharAt(currentPath.length()-1);
+        
+}
+}
