@@ -1,0 +1,87 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    List<List<Integer>> answer = new ArrayList<>();
+    Set<TreeNode> recentLeaves = new HashSet<TreeNode>();
+    HashMap<TreeNode,TreeNode> nodeToParent = new HashMap<TreeNode,TreeNode>();
+
+    public void findLeaves(TreeNode root, TreeNode parent){
+        if(root == null){
+            return;
+        }
+        if(root.left == null || root.right == null){
+            recentLeaves.add(root);
+        }
+        nodeToParent.put(root,parent);
+        findLeaves(root.left,root);
+        findLeaves(root.right,root);
+
+    }
+
+    public void detachLeafNodes(){
+    //    System.out.println("answer: "+answer+" recentLeaves.size: "+recentLeaves.size());
+List<Integer> tempAnswer = new ArrayList<Integer>();
+Set<TreeNode> tempRecentLeaves = new HashSet<TreeNode>();
+//String recentLeafStr= "";
+        for(TreeNode leaf: recentLeaves){
+            TreeNode parent = nodeToParent.get(leaf);
+            tempRecentLeaves.add(parent);
+            if(parent.left == leaf){
+                parent.left = null;
+            } 
+            if(parent.right == leaf){
+                parent.right = null;
+            }
+            tempAnswer.add(leaf.val); 
+          //  recentLeafStr+=leaf.val+",";
+            
+        }
+      //   System.out.println("recentLeafStr: "+recentLeafStr);
+        answer.add(tempAnswer);
+        recentLeaves.clear();
+        recentLeaves.addAll(tempRecentLeaves);
+    }
+
+    public void removeNonLeaf(){
+        Set<TreeNode> incorrectLeafs = new HashSet<TreeNode>();
+
+        for(TreeNode leaf: recentLeaves){
+           if(leaf.left != null || leaf.right !=null){
+               incorrectLeafs.add(leaf);
+           }
+        }
+
+        for(TreeNode incorrectLeaf: incorrectLeafs){
+recentLeaves.remove(incorrectLeaf);
+
+        }
+
+
+    }
+
+    public List<List<Integer>> findLeaves(TreeNode root) {
+
+        findLeaves(root, null);
+        while(root.left!=null || root.right!=null){
+            removeNonLeaf();
+         detachLeafNodes();
+        }
+        List<Integer> tempAnswer = new ArrayList<Integer>();
+        tempAnswer.add(root.val);
+        answer.add(tempAnswer);
+        return answer;
+    }
+}
