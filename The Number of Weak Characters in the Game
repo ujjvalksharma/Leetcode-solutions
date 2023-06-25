@@ -1,0 +1,39 @@
+class Solution {
+    
+    // Time complexity NlogN
+    public int numberOfWeakCharacters(int[][] properties) {
+        
+        Arrays.sort(properties,(a,b)->a[0]-b[0]);
+        HashMap<Integer,TreeSet<Integer>> numberToDefenceToRight = new HashMap<>();
+//         String temp="";
+        
+//         for(int[] property: properties){
+//             temp+=Arrays.toString(property)+",";
+//         }
+//         System.out.println("temp:"+temp);
+        int result=0;
+        int maxDefenseValSeen= Integer.MIN_VALUE;
+        TreeMap<Integer,Integer> tm= new TreeMap<Integer,Integer>();
+        
+        for(int i=properties.length-1;i>=0;i--){
+            maxDefenseValSeen=Math.max(maxDefenseValSeen,properties[i][1]);
+            tm.put(properties[i][0],maxDefenseValSeen);
+        }
+        System.out.println(tm);
+        
+        for(int[] property: properties){
+            Integer nextGreaterAttack = tm.higherKey(property[0]);
+            if(nextGreaterAttack == null){
+                continue;
+            }
+            int maxDefensePresent = tm.get(nextGreaterAttack);
+            if(maxDefensePresent>property[1]){
+                result++;
+            }
+        }
+        
+        
+        return result;
+        
+    }
+}
