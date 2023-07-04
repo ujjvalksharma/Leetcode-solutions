@@ -1,0 +1,49 @@
+class Solution {
+    
+    public int findParent(int index,int[] parent){
+        
+        if(parent[index] == index){
+            return index;
+        }
+        
+        return findParent(parent[index], parent);
+    }
+    public int earliestAcq(int[][] logs, int n) {
+        
+        Arrays.sort(logs,(log1,log2)->log1[0]-log2[0]);
+        int[] parent = new int[n];        
+        int[] totalChildrenOfParent = new int[n]; 
+        Set<Integer> distinctParent = new HashSet<Integer>();
+        for(int i=0;i<n;i++){
+            parent[i] = i;
+            totalChildrenOfParent[i] = 1;
+            distinctParent.add(i);
+        }
+        
+        for(int[] log: logs){
+            
+            int parent1 = findParent(log[1], parent);
+            int parent2 = findParent(log[2], parent);
+            
+            if(totalChildrenOfParent[parent1]>=totalChildrenOfParent[parent2]){
+               totalChildrenOfParent[parent1]++; 
+                parent[parent2] = parent1;
+                distinctParent.remove(parent2);
+                distinctParent.add(parent1);
+            }else{
+                totalChildrenOfParent[parent2]++;
+                parent[parent1] = parent2;
+                distinctParent.add(parent2);
+                distinctParent.remove(parent1);
+            }
+            
+            if(distinctParent.size() == 1){
+                return log[0];
+            }
+            
+        }
+        
+        return -1;
+        
+    }
+}
