@@ -17,3 +17,36 @@ class Solution {
         return myPowHelper(x,n);
     }
 }
+
+/*
+pow = 10 can be divied into 5 + 5. Now if we calculate the result from pow of 5 then we don't need to calculate for other pow = 5. We can simply do result*result and it is 11 then we can do result*result *x
+*/
+class Solution {
+    
+    public double myPowHelper(double x, int n){
+        
+        if(n == 0){
+            return 1;
+        }
+        
+        if(n == 1){
+            return x;
+        }
+        if(n == 2){
+            return x*x;
+        }
+        if(n%2==0){
+            double result = myPowHelper(x,n/2);
+            return result*result;
+        }else{
+            double result = myPowHelper(x,n/2);
+            return result*result*x;
+        }
+    }
+    public double myPow(double x, int n) {
+        if(n<0){
+            return 1/myPowHelper(x,-n);
+        }
+        return myPowHelper(x,n);
+    }
+}
