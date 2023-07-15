@@ -123,3 +123,57 @@ and in the second pass we put all the 1 after the zero postion while incrementin
 Combing 1st pass and second pass is dutch national algo
 
 */
+
+
+/*
+This is like partition problem in quick sort. The goal is put 0 to the left and 2 to the right. So we first see if left is not pointing to 0 and if it is then left++ and same for right. Now we have swap position available for left and right. We check nums[mvnIndex] = 0 then swap left else right. if nums[index] = 1 then we don't do anything if we know later on if we find a 0 or 2 it move to the left or right available position which is <= or >=mvnIndex respectivity.  
+
+Now we have 2 times same condition as 
+if(nums[mvnIndex] == 0){
+                swap(nums,mvnIndex,left);
+            }else if(nums[mvnIndex] == 2) {
+               swap(nums,mvnIndex,right); 
+            }
+            
+            it could be after a swap nums[mvnIndex] got a 0 or 2 then if we increment it mvnIndex can't place nums[mvnIndex]  at its correct position.
+
+*/
+
+class Solution {
+    public void sortColors(int[] nums) {
+        
+        int left=0;
+        int right=nums.length-1;
+        int mvnIndex =left;
+        
+        while(mvnIndex<=right){
+            while(nums[left] == 0 && left+1<=mvnIndex){
+                left++;
+            }
+            
+            while(nums[right] == 2 && right-1>=mvnIndex){
+                right--;
+            }
+            
+            if(nums[mvnIndex] == 0){
+                swap(nums,mvnIndex,left);
+            }else if(nums[mvnIndex] == 2) {
+               swap(nums,mvnIndex,right); 
+            }
+            
+             if(nums[mvnIndex] == 0){
+                swap(nums,mvnIndex,left);
+            }else if(nums[mvnIndex] == 2) {
+               swap(nums,mvnIndex,right); 
+            }
+            
+            
+            mvnIndex++;
+        }
+    }
+    public void swap(int[] nums, int index1, int index2){
+        int temp = nums[index1];
+        nums[index1] = nums[index2];
+        nums[index2] = temp;
+    }
+}
