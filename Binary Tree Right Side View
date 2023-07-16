@@ -35,3 +35,63 @@ class Solution {
         return rightSideView;
     }
 }
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+        
+
+        List<Integer>  result = new ArrayList<Integer>();
+        
+        if(root == null){
+            return result;
+        }
+        
+        Queue<TreeNode> bfsQueue = new LinkedList<TreeNode>();
+        bfsQueue.add(root);
+        bfsQueue.add(null);
+        int rightMostNodeVal = root.val;
+        while(!bfsQueue.isEmpty()){
+            
+            TreeNode currentNode = bfsQueue.poll();
+            if(currentNode != null){
+                rightMostNodeVal = currentNode.val;
+              //  System.out.println("currentNode.val: "+currentNode.val);
+                if(currentNode.left!=null){
+                    bfsQueue.add(currentNode.left);
+                }
+                
+                if(currentNode.right!=null){
+                    bfsQueue.add(currentNode.right);
+                }
+                
+            } else {
+              //  System.out.println("level end");
+                result.add(rightMostNodeVal);
+                if(bfsQueue.isEmpty()){
+                    break;
+                }
+                bfsQueue.add(null);
+                
+            }
+        }
+        
+        return result;
+    }
+}
