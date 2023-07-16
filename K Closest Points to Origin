@@ -1,0 +1,68 @@
+class Solution {
+
+    boolean isKClosestPointPresent = false;
+    
+    public int distanceFromOrigin(int[] point){
+        
+         return point[0] * point[0] + point[1] * point[1];
+    }
+       public void swap(int[][] points,int i, int j) {
+        int t0 = points[i][0];
+        int t1 = points[i][1];
+        points[i][0] = points[j][0];
+        points[i][1] = points[j][1];
+        points[j][0] = t0;
+        points[j][1] = t1;
+    }
+    public int partition(int left, int right, int[][] points){
+        
+        int pivotNum = distanceFromOrigin(points[right]);
+        int index = left;
+        for(int i=left;i<right;i++){
+            
+            int currentDistance = distanceFromOrigin(points[i]);
+            if(currentDistance<pivotNum){
+               swap(points,index,i);
+                index++;
+            }
+        }
+        swap(points,right,index);
+        return index;
+        
+    }
+    
+    
+    public void findKClosestPoint(int left, int right, int[][] points, int k){
+        
+        if(left>=right || isKClosestPointPresent){
+            return;
+        }
+        
+        int pivot = partition(left, right, points);
+    //    System.out.println("left: "+left+" right: "+right+" pivot: "+pivot);
+    //    System.out.println("array after partition: "+Arrays.toString(points[0])+Arrays.toString(points[1]));
+        if(pivot == k){
+            isKClosestPointPresent = true;
+            return;
+        } else if(k>pivot){
+            findKClosestPoint(pivot+1,right, points,k);
+        } else if(k<pivot){
+            findKClosestPoint(left,pivot-1, points,k);
+        }
+        
+    }
+    public int[][] kClosest(int[][] points, int K) {
+        
+        int[][] result= new int[K][2];
+        
+        findKClosestPoint(0,points.length-1,points,K);
+        
+        for(int i=0;i<K;i++){
+            result[i]=points[i];
+        }
+        
+        return result;
+        
+        
+    }
+}
