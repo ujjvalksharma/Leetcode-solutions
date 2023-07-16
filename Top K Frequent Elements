@@ -69,3 +69,64 @@ class Solution {
         return answer;
     }
 }
+
+
+
+class Solution {
+    
+    class Pair{
+        
+        public int left;
+        public int right;
+        
+        public Pair(int left, int right){
+            this.left = left;
+            this.right = right;
+        }
+        
+        @Override
+        public String toString(){
+            return "left: "+left+" right: "+right;
+        }
+        
+    }
+    public int[] topKFrequent(int[] nums, int k) {
+        
+        HashMap<Integer,Integer> numToFreq = new HashMap<>();
+        int[] result = new int[k];
+        
+        for(int num: nums){
+            
+            if(!numToFreq.containsKey(num)){
+                numToFreq.put(num,0);
+            }
+            int count = numToFreq.get(num);
+            count++;
+            numToFreq.put(num,count);
+        }
+        
+        List<Pair> numWithFreqPair = new ArrayList<>();
+        
+        for(int key: numToFreq.keySet()){
+            numWithFreqPair.add(new Pair(key,numToFreq.get(key)));
+        }
+        
+        Collections.sort(numWithFreqPair,(p1,p2)->p2.right - p1.right);
+        
+        int index = 0;
+        for(Pair pair: numWithFreqPair){
+            
+            result[index] = pair.left;
+            index++;
+            if(index == k){
+                break;
+            }
+            
+        }
+        
+        
+        
+        return result;
+        
+    }
+}
