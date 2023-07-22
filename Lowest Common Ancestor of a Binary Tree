@@ -1,0 +1,82 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    
+    TreeNode lowestAncester = null;
+    public String lowestCommonAncestorHelper(TreeNode root, TreeNode p, TreeNode q){
+        
+        if(root == null){
+            return "n";
+        }
+        
+        String presenceFromLeft = lowestCommonAncestorHelper(root.left, p, q);
+        String presenceFromRight = lowestCommonAncestorHelper(root.right, p, q);
+        //System.out.println("root: "+root.val +" presenceFromLeft: "+presenceFromLeft+" presenceFromRight: "+presenceFromRight);
+        if(root == p){
+            if("q".equals(presenceFromLeft) || "q".equals(presenceFromRight) ){
+                if(lowestAncester == null){
+                    lowestAncester = root;
+                }
+            }
+            
+        }else if(root == q){
+            
+             if("p".equals(presenceFromLeft) || "p".equals(presenceFromRight) ){
+                if(lowestAncester == null){
+                    lowestAncester = root;
+                }
+            }
+        }
+        
+        if(("p".equals(presenceFromLeft) && "q".equals(presenceFromRight)) || 
+           ("q".equals(presenceFromLeft) && "p".equals(presenceFromRight))) {
+            if(lowestAncester == null){
+                    lowestAncester = root;
+                }
+        }
+        
+        if(root == p){
+            return "p";
+        }
+        if(root == q){
+            return "q";
+        }
+        
+        
+        if("n".equals(presenceFromLeft) && "n".equals(presenceFromRight)){
+            return "n";
+        }
+        
+        if("q".equals(presenceFromLeft) && "n".equals(presenceFromRight)){
+            return "q";
+        }
+        
+         if("p".equals(presenceFromLeft) && "n".equals(presenceFromRight)){
+            return "p";
+        }
+        
+        if("n".equals(presenceFromLeft) && "q".equals(presenceFromRight)){
+            return "q";
+        }
+        
+         if("n".equals(presenceFromLeft) && "p".equals(presenceFromRight)){
+            return "p";
+        }
+        
+        return presenceFromLeft+presenceFromRight;
+        
+    }
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        
+        lowestCommonAncestorHelper(root, p, q);
+        
+        return lowestAncester;
+    }
+}
