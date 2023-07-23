@@ -36,3 +36,37 @@ class Solution {
         return ans;
     }
 }
+
+
+
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        
+        int[] distancesFromK = new int[n+1];
+        Arrays.fill(distancesFromK, Integer.MAX_VALUE);
+        distancesFromK[k] = 0;
+        int minDistance = 0;
+        
+        while(n-1>0){
+            
+            for(int[] time: times){
+                if(distancesFromK[time[0]] !=Integer.MAX_VALUE  && (distancesFromK[time[0]] +time[2] < distancesFromK[time[1]])){
+                    distancesFromK[time[1]] = distancesFromK[time[0]] +time[2];
+                }
+                // System.out.println("distancesFromK: "+Arrays.toString(distancesFromK));
+            }
+            
+            n--;
+        }
+        
+        for(int i=1; i<distancesFromK.length; i++ ){
+            if( distancesFromK[i] == Integer.MAX_VALUE){
+                return -1;
+            }
+            
+            minDistance = Math.max(minDistance, distancesFromK[i]);
+        }
+        
+        return minDistance;     
+    }
+}
