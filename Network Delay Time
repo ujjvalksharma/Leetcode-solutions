@@ -38,7 +38,7 @@ class Solution {
 }
 
 
-
+//BellmanFord Algorithm
 class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
         
@@ -68,5 +68,87 @@ class Solution {
         }
         
         return minDistance;     
+    }
+}
+
+
+//Dikstra Algorithm
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        
+        int[] timeToReachANode = new int[n+1];
+        Arrays.fill(timeToReachANode, Integer.MAX_VALUE);
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a,b)->a[1]-b[1]); //node,weight
+        Map<Integer,List<Integer>> graph = new HashMap<>();
+        Map<String,Integer> edge = new HashMap<>();
+        Set<Integer> visited = new HashSet<Integer>();
+        
+        // timeToReachANode[k] = 0;
+        pq.add(new int[]{k,0});
+        
+//         for(int i=1;i<=n;i++){
+//             if(i == k){
+//                 continue;
+//             }
+//             pq.add(new int[]{k,Integer.MAX_VALUE});
+//         }
+        
+        for(int[] time: times){
+            if(!graph.containsKey(time[0])){
+                graph.put(time[0], new ArrayList<Integer>());
+            }
+            graph.get(time[0]).add(time[1]);
+            edge.put(time[0]+","+time[1], time[2]);
+        }
+        
+        while(!pq.isEmpty()){
+            
+            int[] node = pq.poll();
+            
+             if (node[1] > timeToReachANode[node[0]]) { // since we are not removing node from the heap, we may see a node again after it is relaxed since it could be added as it might be have been a neighbour of someone else. but don't iterate over it as we know we found a shortest to this node before.
+                continue;
+            }
+            timeToReachANode[node[0]] = node[1];
+            visited.add(node[0]);
+        
+            List<Integer> neighbours = graph.get(node[0]);
+            
+            if(neighbours == null){
+                continue;
+            }
+            
+            for(int neighbour: neighbours){
+                
+                if(visited.contains(neighbour)){
+                    continue;
+                }
+                
+                String XY= node[0]+","+neighbour;
+                int newTime = timeToReachANode[node[0]] + edge.get(XY);
+                
+                if(newTime<timeToReachANode[neighbour] ){
+                    pq.add(new int[]{neighbour,newTime});
+                }
+                
+            }
+            
+            
+        }
+        
+        int minTime = 0;
+        for(int i=1;i <timeToReachANode.length ;i++){
+            
+            if(timeToReachANode[i] == Integer.MAX_VALUE){
+                return -1;
+            }
+            
+            minTime = Math.max(minTime, timeToReachANode[i]);
+            
+        }
+        
+        return minTime;
+        
+        
+        
     }
 }
