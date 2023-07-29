@@ -173,3 +173,67 @@ class MedianFinder {
  * obj.addNum(num);
  * double param_2 = obj.findMedian();
  */
+
+class MedianFinder {
+
+    //left to median
+    PriorityQueue<Integer> maxHeap;
+   //median to right
+    PriorityQueue<Integer> minHeap;
+    
+    public MedianFinder() {
+        this.minHeap = new PriorityQueue<Integer>((a,b)->a-b);
+        this.maxHeap = new PriorityQueue<Integer>((a,b)->b-a);
+    }
+    
+    public void addNum(int num) {
+        
+        int totalStreamLength = maxHeap.size() + minHeap.size();
+        
+        if(totalStreamLength%2 == 0) { 
+            //addition of num will cause the stream of odd length so insert in left heap (maxHeap)
+            if(this.maxHeap.size() == 0) {
+                this.maxHeap.add(num);
+            } else if((num <= this.maxHeap.peek()) || (num >= this.maxHeap.peek() && num < this.minHeap.peek() )) {
+                this.maxHeap.add(num);
+            } else {
+               this.maxHeap.add(this.minHeap.poll());
+               this.minHeap.add(num);
+            }
+            
+        } else {
+            //addition of num will cause the stream of even length so insert in right heap (maxHeap)
+            if(num <= this.maxHeap.peek()) {
+                this.minHeap.add(this.maxHeap.poll());
+                this.maxHeap.add(num);
+            } else if(num > this.maxHeap.peek()) {
+                this.minHeap.add(num);
+            }
+            
+        }
+        
+       // System.out.println("after adding maxHeap: "+maxHeap+" minHeap: "+minHeap);
+            
+    }
+    
+    public double findMedian() {
+        
+        int totalStreamLength = maxHeap.size() + minHeap.size();
+        
+        if(totalStreamLength%2 == 0){
+            int total = maxHeap.peek() + minHeap.peek();
+            //System.out.println("totalStreamLength: "+totalStreamLength+" total: "+total);
+            return (double) total/2;
+        }
+        
+        return maxHeap.peek();
+        
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
