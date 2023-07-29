@@ -145,3 +145,149 @@ class LRUCache {
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */
+
+
+class LRUCache {
+
+    class Node {
+        
+        public int value;
+        public int key;
+        public boolean isStartNode;
+        public Node next;
+        public Node prev;
+        
+        public Node(int key, int value){
+            this.key = key;
+            this.value = value;
+            this.isStartNode = false;
+            this.next = null;
+            this.prev = null;
+        }
+        
+        @Override
+        public String toString() {
+            return "key: "+key+" value: "+value+" next:-> "+next;
+        }
+        
+    }
+    int capacity;
+    Node head;
+    Node tail;
+    Map<Integer,Node> cache;
+    public LRUCache(int capacity) {
+        
+        this.capacity = capacity;
+        this.head = new Node(0,0);
+        this.head.isStartNode = true;
+        this.tail = this.head;
+        this.cache = new HashMap<>(); 
+        
+    }
+    
+    public int get(int key) {
+        
+      //  System.out.println("before get: "+head);
+        if(!cache.containsKey(key)) {
+            return -1;
+        }
+        
+        Node currentNode = cache.get(key);
+        
+        if(currentNode == tail) {
+           return cache.get(key).value;
+         }
+            
+        // if the node is a middle node
+            Node nextNode = currentNode.next;
+            Node prevNode = currentNode.prev;
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+            
+        // refresh current node
+            currentNode.next = null;
+            currentNode.prev = null;
+        
+       //append currentNode at the end and make it the tail
+            tail.next = currentNode;
+            currentNode.prev = tail;
+            currentNode.next = null;
+            tail = currentNode;
+        
+        return cache.get(key).value;
+    }
+    
+    public void put(int key, int value) {
+        
+       // System.out.println("before put: "+head);
+        if(cache.containsKey(key)) { //since node is at the end we don't need to append it
+            
+            Node currentNode = cache.get(key);
+            currentNode.value = value;  
+            
+            if(currentNode == tail) {
+                return;
+            }
+            
+        // if the node is a middle node
+            Node nextNode = currentNode.next;
+            Node prevNode = currentNode.prev;
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+            
+        // refresh current node
+            currentNode.next = null;
+            currentNode.prev = null;
+        
+       //append currentNode at the end and make it the tail
+            tail.next = currentNode;
+            currentNode.prev = tail;
+            currentNode.next = null;
+            tail = currentNode;
+            
+        } else {
+            
+            if(cache.size() == capacity){
+                //find evicted node = next node after head
+                Node evictedNode = head.next;
+                 //System.out.println("before eviction: "+head +" incoming key: "+key+" incoming value: "+value);
+                //set head to next of evictedNode
+                head.next = evictedNode.next;
+                if(evictedNode != tail) {
+                    evictedNode.next.prev = head;
+                    head.next = evictedNode.next;
+                } else {
+                    tail = head;
+                }
+                
+                
+                evictedNode.next = null;
+                evictedNode.prev = null;
+                
+                cache.remove(evictedNode.key);
+                   
+            }
+            
+            //System.out.println("after eviction: "+head +" incoming key: "+key+" incoming value: "+value);
+            //create newNode
+            Node newNode = new Node(key, value);
+            cache.put(key, newNode);
+            //append to end 
+            tail.next = newNode;
+            newNode.prev = tail;
+            newNode.next = null;
+            tail = newNode;
+            //System.out.println("node added: "+head +" incoming key: "+key+" incoming value: "+value);
+            
+        }
+        
+        
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
