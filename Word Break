@@ -38,3 +38,43 @@ class Solution {
      return   wordBreakHelper(s);
     }
 }
+
+
+
+class Solution {
+    
+    Map<String,Boolean> dp;
+    public boolean canWordBeFormedFromDictionary(String s, Set<String> wordDict) {
+        
+        if(s.length() == 0) {
+            return true;
+        }
+        
+        if(dp.containsKey(s)){
+            return dp.get(s);
+        }
+        
+        for(int i=1;i<=s.length();i++){
+            
+            String prefix = s.substring(0,i);
+            String suffix = s.substring(i);
+            if(wordDict.contains(prefix) && canWordBeFormedFromDictionary(suffix, wordDict)){
+                dp.put(s, true);
+                return true;
+            }
+        }
+        
+        dp.put(s, false);
+        return false;
+        
+    }
+    
+    public boolean wordBreak(String s, List<String> wordDict) {
+        
+        dp = new HashMap<>();
+        Set<String> dictionary = new HashSet<String>(wordDict);
+        dictionary.add("");
+  
+        return canWordBeFormedFromDictionary(s, dictionary);
+    }
+}
