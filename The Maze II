@@ -1,0 +1,76 @@
+class Solution {
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->a[2]-b[2]);
+        Set<String> visited = new HashSet<String>();
+        int[][] shortestDistances = new int[maze.length][maze[0].length];
+        
+        for(int[] shortestDistance: shortestDistances){
+            Arrays.fill(shortestDistance , Integer.MAX_VALUE);
+        }
+        
+        pq.add(new int[]{start[0], start[1], 0}); //x,y,moves
+        
+        
+        while(!pq.isEmpty()){
+            
+            int[] node = pq.poll();
+            
+            int srcX = node[0];
+            int srcY = node[1];
+            int distance = node[2];
+            
+            if(srcX == destination[0] && srcY == destination[1]){
+                return distance;
+            }
+            
+            if(distance >= shortestDistances[srcX][srcY]){
+                continue;
+            }
+            
+            shortestDistances[srcX][srcY] = distance;
+            
+            // UP
+            int[] newNodeByGoingUp = move(srcX,srcY,0,1,maze.length,maze[0].length, maze);
+            //DOWN
+            int[] newNodeByGoingDown = move(srcX,srcY,0,-1,maze.length,maze[0].length, maze);
+            //LEFT
+            int[] newNodeByGoingLeft = move(srcX,srcY,-1,0,maze.length,maze[0].length, maze);
+            //RIGHT
+            int[] newNodeByGoingRight = move(srcX,srcY,1,0,maze.length,maze[0].length, maze);
+            
+            if (newNodeByGoingUp[2] != 0){
+                pq.add(new int[] {newNodeByGoingUp[0], newNodeByGoingUp[1], distance + newNodeByGoingUp[2] });
+            }
+            
+            if (newNodeByGoingDown[2] != 0){
+                pq.add(new int[] {newNodeByGoingDown[0], newNodeByGoingDown[1], distance + newNodeByGoingDown[2] });
+            }
+            
+            if (newNodeByGoingLeft[2] != 0){
+                pq.add(new int[] {newNodeByGoingLeft[0], newNodeByGoingLeft[1], distance + newNodeByGoingLeft[2] });
+            }
+            
+            if (newNodeByGoingRight[2] != 0){
+                pq.add(new int[] {newNodeByGoingRight[0], newNodeByGoingRight[1], distance + newNodeByGoingRight[2] });
+            }
+            
+        }
+        
+        return -1;
+    }
+    
+    private int[] move(int srcX, int srcY, int incrementX, int incrementY, int n, int m, int[][] maze){
+        
+        int distance = 0;
+        
+        while(srcX+incrementX<n && srcX+incrementX>=0 && srcY+incrementY<m && srcY+incrementY>=0 && 
+             maze[srcX+incrementX][srcY+incrementY] != 1){
+            srcX = srcX+incrementX;
+            srcY = srcY+incrementY;
+            distance++;
+        }
+        
+        return new int[] {srcX, srcY, distance};
+    }
+}
