@@ -1,0 +1,167 @@
+/* My solution
+Use Dikstra to find distance from desitnation to all nodes and apply DFS to travel from source to destination and use Dp to store total that can be formed from a node.
+*/
+/*class Solution {
+    
+   PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a,b)->a[1]-b[1]);
+   int[] shortestDistances;
+   Map<Integer,List<Integer>> graph = new HashMap<>();
+   Map<String,Integer> edgesWeight = new HashMap<>();
+    
+    //DFS + Dp
+    public int findPathInDecreasingOrderOfDistance(int currentNode, int destination, Set<Integer> visited, Map<Integer,Integer> dp, String path) {
+        
+        if(currentNode == destination){
+            return 1;
+        }
+    
+        
+        if(dp.containsKey(currentNode)){
+            return dp.get(currentNode);
+        }
+        
+        List<Integer> neighbours = graph.get(currentNode);
+            int count = 0;
+            for(int neighbour : neighbours){
+
+                if(shortestDistances[neighbour] < shortestDistances[currentNode] && !visited.contains(neighbour)) {
+                    visited.add(neighbour);
+                    count = (count + findPathInDecreasingOrderOfDistance(neighbour, destination, visited, dp, path+","+neighbour) % 1000_000_007 ) % 1000_000_007;
+                    visited.remove(neighbour);
+                }
+                
+            }
+        
+        dp.put(currentNode, count);
+        return count;
+            
+        }
+        
+    public int countRestrictedPaths(int n, int[][] edges) {
+        
+        //Dikstra algorithm
+        shortestDistances = new int[n+1];
+        Arrays.fill(shortestDistances, Integer.MAX_VALUE);
+        
+        for(int[] edge : edges){
+            
+            if(!graph.containsKey(edge[0])){
+                graph.put(edge[0], new ArrayList<Integer>());
+            }
+            
+            if(!graph.containsKey(edge[1])){
+                graph.put(edge[1], new ArrayList<Integer>());
+            }
+            
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+            edgesWeight.put(edge[0]+","+edge[1], edge[2]);
+            edgesWeight.put(edge[1]+","+edge[0], edge[2]);
+            
+        }
+        
+        pq.add(new int[]{n,0});
+        
+        while(!pq.isEmpty()) {
+        
+            int[] node = pq.poll();
+            int nodeId = node[0];
+            int currentDistance = node[1];
+            
+            if(shortestDistances[nodeId] < currentDistance){
+                continue;
+            }
+            
+            shortestDistances[nodeId] = currentDistance;
+            
+            
+            if(!graph.containsKey(nodeId) || (graph.containsKey(nodeId) && graph.get(nodeId) == null)){
+                continue;
+            }
+            
+            List<Integer> neighbours = graph.get(nodeId);
+            
+            for(int neighbour : neighbours){
+                
+                String edge = nodeId+","+neighbour;
+                int newDistance = currentDistance + edgesWeight.get(edge);
+                
+                pq.add(new int[]{neighbour,newDistance});
+                
+            }
+            
+        }
+        
+        Map<Integer,Integer> dp = new HashMap<Integer,Integer>();
+        Set<Integer> visited = new HashSet<Integer>();
+        visited.add(1);
+        findPathInDecreasingOrderOfDistance(1, n, visited, dp, "1");
+        
+        return dp.get(1);
+    }
+}*/
+
+// Dijkstra + DFS Solution
+// Dijkstra Algorithm to the shortest distances from n to other nodes.
+// Then DFS to explore the restricted pathes.
+// Time complexity: O(ElogN + N)
+// Space complexity: O(N + E)
+class Solution {
+    private static final int MOD = (int) 1E9 + 7;
+    public int countRestrictedPaths(int n, int[][] edges) {
+        if (n <= 0) return 0;  // Or throw exception
+        List<Node>[] graph = buildGraph(n, edges);
+        int[] dists = new int[n + 1];
+        Arrays.fill(dists, Integer.MAX_VALUE);
+        dists[n] = 0;
+        PriorityQueue<Node> minHeap = new PriorityQueue<>((n1, n2) -> Integer.compare(n1.dist, n2.dist));
+        minHeap.add(new Node(n, 0));
+        while (!minHeap.isEmpty()) {
+            Node node = minHeap.poll();
+            for (Node neighbor : graph[node.id]) {
+                if (dists[neighbor.id] > dists[node.id] + neighbor.dist) {
+                    dists[neighbor.id] = dists[node.id] + neighbor.dist;
+                    minHeap.add(new Node(neighbor.id, dists[neighbor.id]));
+                }
+            }
+        }
+        int[] memo = new int[n + 1];
+        Arrays.fill(memo, -1);
+        memo[n] = 1;
+        return dfs(1, n, graph, dists, memo);
+    }
+    
+    private int dfs(int start, int target, List<Node>[] graph, int[] dists, int[] memo) {
+        if (start == target) return 1;
+        if (memo[start] >= 0) return memo[start];
+        int paths = 0;
+        for (Node neighbor : graph[start]) {
+            if (dists[start] > dists[neighbor.id]) {
+                paths = (paths + dfs(neighbor.id, target, graph, dists, memo)) % MOD;
+            }
+        }
+        memo[start] = paths;
+        return paths;
+    }
+    
+    private List<Node>[] buildGraph(int n, int[][] edges) {
+        List<Node>[] graph = new List[n + 1];
+        for (int i = 1; i <= n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1], w = edge[2];
+            graph[u].add(new Node(v, w));
+            graph[v].add(new Node(u, w));
+        }
+        return graph;
+    }
+    
+    class Node {
+        int id, dist;
+        Node(int id, int dist) {
+            this.id = id;
+            this.dist = dist;
+        }
+    }
+}
