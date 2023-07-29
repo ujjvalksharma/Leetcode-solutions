@@ -1,0 +1,51 @@
+class Solution {
+    public int minimumEffortPath(int[][] heights) {
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a,b)->a[2]-b[2]);
+        pq.add(new int[]{0,0,0});
+        int[][] minimumEffortToReachNodes = new int[heights.length][heights[0].length];
+        int minimumEffort = Integer.MAX_VALUE;
+        int[][] directions = new int[][]{{0,1},{1,0},{0,-1},{-1,0}};
+        
+        for(int[] minimumEffortToReachNode : minimumEffortToReachNodes){
+            Arrays.fill(minimumEffortToReachNode, Integer.MAX_VALUE);
+        }
+        
+        while(!pq.isEmpty()) {
+            int[] node = pq.poll();
+            int x = node[0];
+            int y = node[1];
+            int effort = node[2];
+            //System.out.println("current node: "+Arrays.toString(node));
+            if(x == heights.length -1 && y == heights[0].length-1) {
+                minimumEffort = Math.min(minimumEffort, effort);
+                continue;
+            }
+            
+            if(effort >= minimumEffortToReachNodes[x][y]){
+                continue;
+            }
+            
+            minimumEffortToReachNodes[x][y] = effort;
+            
+             for(int[] direction : directions){
+                
+                int newX = direction[0] + x;
+                int newY = direction[1] + y;
+                
+                if(newX >= 0 && newX < heights.length && newY>= 0 && newY < heights[0].length) {
+                   
+                    int newDistance = Math.abs(heights[newX][newY] - heights[x][y]);
+                    newDistance  = Math.max(newDistance, effort);
+                    pq.add(new int[]{newX,newY,newDistance});
+                    
+                }
+            
+        }
+        
+    }
+                
+        return minimumEffort;
+        
+    }
+}
