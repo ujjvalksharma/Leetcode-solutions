@@ -161,3 +161,84 @@ class Solution {
         return result;
     }
 }
+
+
+class Solution {
+    
+    class Node {
+        
+        public Node[] children;
+        public List<String> words;
+        
+        public Node(){
+            this.children = new Node[26];
+            this.words = new ArrayList<String>();
+        }
+            
+    }
+    
+    private void insertInTrie(String product, Node head) {
+
+    Node temphead = head;
+        
+    for(int i=0; i<product.length(); i++) {
+
+        if(temphead.children[getIndex(product.charAt(i))] == null) {
+
+            temphead.children[getIndex(product.charAt(i))] = new Node();
+
+        }
+
+        temphead = temphead.children[getIndex(product.charAt(i))];
+        temphead.words.add(product);
+
+    }
+
+}
+    
+    Node head;
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        
+        head = new Node();
+        Arrays.sort(products);
+        List<List<String>> result = new ArrayList<>();
+        
+        Stream.of(products).forEach((product) -> insertInTrie(product, head));
+        
+        //System.out.println("words: "+head.children[getIndex('m')].children[getIndex('o')].words);
+        // we can use head since we don't need after this
+        // Arrays.stream(searchWord.toCharArray()).map((c) ->);
+        for(int i=0; i<searchWord.length(); i++) {
+           
+            char c = searchWord.charAt(i);
+          if(head == null) {
+            List<String> temp = new ArrayList<String>();
+              result.add(temp);
+              continue;
+        }
+       // System.out.println("incoming character: "+c);
+        if(head.children[getIndex(c)] == null) {
+         //   System.out.println("no children");
+            head = null;
+            List<String> temp = new ArrayList<String>();
+            result.add(temp);
+            continue;
+        }
+        
+        head = head.children[getIndex(c)];
+        // System.out.println("words: "+head.children[getIndex('o')] == null);
+         result.add(head.words.stream().limit(3).collect(Collectors.toList()));
+
+        }
+        
+        return result;
+        
+    }
+    
+    
+    private int getIndex(char c) {
+        return (int) (c -'a');
+    }
+    
+    
+}
