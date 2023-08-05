@@ -1,0 +1,62 @@
+class Solution {
+    
+    public void constructLpsTable(int[] lpsTable, String str ) {
+        
+        int movingIndex = 1;
+        int lenFromStart = 0;
+        lpsTable[0] = 0;
+        while(movingIndex < str.length()) {
+            
+            if(str.charAt(movingIndex) == str.charAt(lenFromStart)) {
+                lenFromStart++;
+                lpsTable[movingIndex] = lenFromStart ;
+                movingIndex++;
+            } else {
+                
+                if(lenFromStart != 0 ) {
+                    
+                    lenFromStart = lpsTable[lenFromStart - 1];
+                } else {
+                    movingIndex++;
+                }
+            }
+        }
+        
+    }
+    
+    public int getFirstOccurance(String haystack, String needle, int[] lpsTable) {
+        
+        int indexOfHayStack = 0;
+        int indexOfNeedle = 0;
+        
+        while(indexOfHayStack < haystack.length() && indexOfNeedle < needle.length() ) {
+            
+            if(needle.charAt(indexOfNeedle) == haystack.charAt(indexOfHayStack)) {
+                indexOfNeedle ++;
+                indexOfHayStack ++;
+                if(indexOfNeedle >= needle.length()) {
+                    return indexOfHayStack - needle.length();
+                }
+            } else {
+                
+                if(indexOfNeedle != 0) {
+                    indexOfNeedle = lpsTable[indexOfNeedle - 1];
+                } else {
+                    indexOfHayStack++;
+                }
+            }
+        }
+        
+        return -1;
+    }
+    public int strStr(String haystack, String needle) {
+        
+        if(needle.length() > haystack.length()) {
+            return -1;
+        }
+        
+        int[] lpsTable = new int[needle.length()]; //store the length of longest prefix from left to right
+        constructLpsTable(lpsTable, needle);
+        return getFirstOccurance(haystack, needle, lpsTable);
+    }
+}
