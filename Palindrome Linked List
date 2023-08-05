@@ -8,6 +8,93 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        
+        if(head.next == null) {
+            return true;
+        }
+        
+        if(head.next.next == null) {
+            if(head.val == head.next.val) {
+                return true;
+            }
+            return false;
+        }
+
+        ListNode[] splittedLinkList = splitTheLinklistInTwoHalf(head);
+        ListNode firstHalf = splittedLinkList[0];
+        ListNode secondHalf = splittedLinkList[1];
+        
+        ListNode headOfSecondHalf = reverse(secondHalf);
+        
+        while(headOfSecondHalf != null && firstHalf != null) {
+            
+            if(headOfSecondHalf.val != firstHalf.val) {
+                return false;
+            }
+            
+            headOfSecondHalf = headOfSecondHalf.next;
+            firstHalf = firstHalf.next;
+        }
+        return true;
+    }
+    
+    public ListNode reverse(ListNode head) {
+        
+        ListNode prevNode = null;
+        ListNode currentNode = head;
+        while(currentNode.next != null) {
+            ListNode nextNode = currentNode.next;
+            currentNode.next = prevNode;
+            prevNode = currentNode;
+            currentNode = nextNode;
+        }
+        currentNode.next = prevNode; //no more nodes left after this
+        return currentNode;
+    }
+    
+    public ListNode[] splitTheLinklistInTwoHalf(ListNode head) {
+        
+        ListNode firstHalf = null;
+        ListNode secondHalf = null;
+        ListNode tempHead = head;
+        ListNode rabbit = head;
+        ListNode tortoise = head;
+        ListNode prevToTortoise = null;
+        while(true) {
+           
+           prevToTortoise = tortoise;
+           rabbit = rabbit.next.next;
+           tortoise = tortoise.next;
+           
+           if(rabbit == null){
+               prevToTortoise.next = null;
+               secondHalf = tortoise;
+               break;
+           } else if(rabbit.next == null) {
+               prevToTortoise.next = null;
+               secondHalf = tortoise.next;
+               break;
+           }
+
+        }
+        firstHalf = head;
+        
+        return new ListNode[]{firstHalf, secondHalf};
+    }
+}
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
 /*
 Reverse first half of linklist and then compare node val from by iterating two pointer moving forward and backward from mid.
 
