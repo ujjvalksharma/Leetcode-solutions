@@ -15,6 +15,106 @@
  */
 class Solution {
     
+    List<TreeNode> leftBoundary = new ArrayList<TreeNode>();
+    List<TreeNode> leafBoundary = new ArrayList<TreeNode>();
+    List<TreeNode> rightBoundary = new ArrayList<TreeNode>();
+    List<Integer> result = new ArrayList<Integer>();
+    Set<TreeNode> visited = new HashSet<TreeNode>();
+    
+    public void findLeafBoundary(TreeNode root) {
+        
+        if(root == null){
+            return;
+        }
+        
+        if(root.left == null && root.right == null){
+            leafBoundary.add(root);
+        }
+        
+        findLeafBoundary(root.left);
+        findLeafBoundary(root.right);
+        
+    }
+    
+        public void findLeftBoundary(TreeNode root) {
+        
+        if(root == null){
+            return;
+        }
+       leftBoundary.add(root);
+       if(root.left != null) {
+           findLeftBoundary(root.left);
+       } else if(root.right != null) {
+           findLeftBoundary(root.right);
+       }
+        
+    }
+                 
+            public void findRightBoundary(TreeNode root) {
+        
+        if(root == null){
+            return;
+        }
+        rightBoundary.add(root);
+       if(root.right != null) {
+           findRightBoundary(root.right);
+       } else if(root.left != null) {
+           findRightBoundary(root.left);
+       }
+        
+    }
+    
+    public void fillResultFromBoundary(List<Integer> result,List<TreeNode> boundary, Set<TreeNode> visited) {
+        
+        for(TreeNode node: boundary){
+            if(visited.contains(node)){
+                continue;
+            }
+            visited.add(node);
+            result.add(node.val);
+        }
+        
+    }
+    public List<Integer> boundaryOfBinaryTree(TreeNode root) {
+        
+        if(root == null){
+            return result;
+        }
+        leftBoundary.add(root);
+        if(root.left == null && root.right == null){
+            result.add(root.val);
+            return result;
+        }
+        findLeftBoundary(root.left);
+        findLeafBoundary(root);
+        findRightBoundary(root.right);
+        Collections.reverse(rightBoundary);
+        fillResultFromBoundary(result, leftBoundary, visited);
+        fillResultFromBoundary(result, leafBoundary, visited);
+        fillResultFromBoundary(result, rightBoundary, visited);
+        
+        return result;
+    }
+}
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
     List<Integer> leftBoundary=new ArrayList<Integer>();
     List<Integer> rightBoundary=new ArrayList<Integer>();
     List<Integer> leafBoundary=new ArrayList<Integer>();
