@@ -1,0 +1,36 @@
+class Solution {
+    
+    public void constructLps(int[] lpsTable, String str) {
+        
+        
+        int movingIndex = 1;
+        int lenFromStart = 0;
+        lpsTable[0] = 0;
+        while(movingIndex < str.length()) {
+            
+            if(str.charAt(movingIndex) == str.charAt(lenFromStart)) {
+                lenFromStart++;
+                lpsTable[movingIndex] = lenFromStart ;
+                movingIndex++;
+            } else {
+                
+                if(lenFromStart != 0 ) {
+                    
+                    lenFromStart = lpsTable[lenFromStart - 1];
+                } else {
+                    movingIndex++;
+                }
+            }
+        }
+        
+    }
+    
+    public String longestPrefix(String s) {
+        
+        int[] lps = new int[s.length()];
+        constructLps(lps, s);
+        System.out.println("lps: "+Arrays.toString(lps));
+        return s.substring(0, lps[s.length() -1]);
+        
+    }
+}
