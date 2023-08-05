@@ -1,0 +1,69 @@
+class Solution {
+    class Pair {
+        
+        public char c;
+        public int count;
+        
+        public Pair(char c, int count) {
+            this.c = c;
+            this.count = count;
+        }
+        
+        @Override
+        public String toString() {
+            return "c: "+c+" count: "+count;
+        }
+    }
+    public String reorganizeString(String s) {
+        
+        HashMap<Character,Integer> map = new HashMap<Character,Integer>();
+        
+        for(int i=0; i<s.length(); i++){
+            if(!map.containsKey(s.charAt(i))){
+                map.put(s.charAt(i), 0);
+            }
+            map.put(s.charAt(i), map.get(s.charAt(i)) + 1);
+        }
+        
+        PriorityQueue<Pair> pq = new PriorityQueue<Pair>((p1,p2) -> p2.count - p1.count);
+        
+        for(Character c : map.keySet()) {
+            pq.add(new Pair(c, map.get(c)));
+        }
+        
+        StringBuilder result = new StringBuilder("");
+        //System.out.println("pq: "+pq);
+        while(!pq.isEmpty()) {
+            
+            Pair pair1 = pq.poll();
+            
+            if(pair1.count > 1 && pq.isEmpty()) {
+                return "";
+            }else if(!pq.isEmpty()){
+                
+                Pair pair2 = pq.poll();
+                result.append(pair1.c);
+                result.append(pair2.c);
+                pair1.count = pair1.count -1;
+                pair2.count = pair2.count -1;
+                
+                if(pair1.count > 0) {
+                    pq.add(pair1);
+                }
+                
+                if(pair2.count > 0) {
+                    pq.add(pair2);
+                }
+            } else {
+                result.append(pair1.c);
+                pair1.count = pair1.count -1;
+                if(pair1.count > 0) {
+                    pq.add(pair1);
+                }
+            }
+            
+        }
+        
+        return result.toString();
+    }
+}
