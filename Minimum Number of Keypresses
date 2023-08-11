@@ -1,0 +1,42 @@
+
+/*
+
+Store frequency of each character and now sort it. So you want to minimize the cost of character that occus the most. Now keep a priorityQueue of digits and count of character in it. As you iterate the character frequency we pick the digit which has the least numbers filled in it.
+
+*/
+class Solution {
+    public int minimumKeypresses(String s) {
+        
+        int[] charCount = new int[26];
+        PriorityQueue<int[]> digits = new PriorityQueue<int[]>((a,b)->a[1]-b[1]);
+        
+        for(int digit=1; digit<=9; digit++) {
+            
+            digits.add(new int[]{digit,0});
+            
+        }
+        
+        for(int i=0;i<s.length();i++) {
+            int index = (int) (s.charAt(i) - 'a');
+            charCount[index]++;                       
+        }
+        Arrays.sort(charCount);
+        
+        int minKeyPress = 0;
+        for(int i=25;i>=0;i--) {
+            
+            int characterFrequeny = charCount[i];
+            if(characterFrequeny == 0) {
+                continue;
+            }
+            
+            int[] digitFrequenyPair = digits.poll();
+            minKeyPress += characterFrequeny*(digitFrequenyPair[1] + 1);
+            digits.add(new int[]{digitFrequenyPair[0],digitFrequenyPair[1] + 1});
+            
+        }
+        
+        return minKeyPress;
+        
+    }
+}
