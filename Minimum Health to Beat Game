@@ -1,3 +1,35 @@
+/*
+In a greedy approach I will iterate through all the damages and keep adding it to health. If I see a damage[i] >= armour that means my armour can provide its maximum defense, so i use it, but after itering the all the damages and none of them were >= armour that means I should the damage that is closest to armour and add the end I would 1 to my result as when I take the last damage I don't want to have 0 health remaning.
+
+*/
+class Solution {
+    public long minimumHealth(int[] damage, int armor) {
+        
+        boolean isArmourUsed = false;
+        long longMinHealth = 0;
+        int maxDamage = 0;
+        for(int i=0;i<damage.length;i++){
+            
+            longMinHealth += (long) damage[i];
+            maxDamage = Math.max(maxDamage, damage[i]);
+            if(!isArmourUsed && damage[i] >= armor) {
+                longMinHealth -= (long) armor;
+                isArmourUsed = true;
+                
+            }
+            
+        }
+        
+        if(!isArmourUsed) {
+            longMinHealth -= (long) maxDamage;
+        }
+        
+        return longMinHealth + 1;
+        
+    }
+}
+
+
 class Solution {
     public long minimumHealth(int[] damage, int armor) {
         
