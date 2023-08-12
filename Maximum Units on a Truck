@@ -1,5 +1,31 @@
 class Solution {
     public int maximumUnits(int[][] boxTypes, int truckSize) {
+        
+        int maxUnits = 0;
+        Arrays.sort(boxTypes, (b1, b2) -> b2[1] - b1[1]);
+        int totalTakenBoxes = 0;
+        
+        for(int[] boxType : boxTypes) {
+            
+            int boxCount = boxType[0];
+            int totalUnits = boxType[1];
+            int totalBoxesThatCanBeTaken = totalTakenBoxes + boxCount > truckSize ? truckSize - totalTakenBoxes : boxCount;
+           // System.out.println("boxCount: "+boxCount+" boxCount: "+boxCount+" totalBoxesThatCanBeTaken: "+totalBoxesThatCanBeTaken);
+            maxUnits += totalBoxesThatCanBeTaken * totalUnits;
+            totalTakenBoxes += totalBoxesThatCanBeTaken;
+            if(totalTakenBoxes == truckSize) {
+                break;
+            }
+            
+        }
+        
+        return maxUnits;
+        
+    }
+}
+
+class Solution {
+    public int maximumUnits(int[][] boxTypes, int truckSize) {
        
          Arrays.sort(boxTypes,(int[] box1, int[] box2)->{
              return box2[1]-box1[1];
