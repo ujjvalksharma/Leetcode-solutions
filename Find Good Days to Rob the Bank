@@ -1,0 +1,46 @@
+class Solution {
+    public List<Integer> goodDaysToRobBank(int[] security, int time) {
+        
+        int[] countOfSecurityIncreasingRightToLeft = new int[security.length];
+        Arrays.fill(countOfSecurityIncreasingRightToLeft, 1);
+        for(int i=1;i < security.length; i++) {
+            
+            if(security[i] <= security[i - 1]) {
+                countOfSecurityIncreasingRightToLeft[i] = countOfSecurityIncreasingRightToLeft[i - 1] + 1;
+            } 
+            
+        }
+        
+        
+        int[] countOfSecurityDecreasingLeftToRight = new int[security.length];
+        Arrays.fill(countOfSecurityDecreasingLeftToRight, 1);
+        for(int i=security.length - 2; i >=0; i--) {
+            
+            if(security[i] <= security[i + 1]) {
+                countOfSecurityDecreasingLeftToRight[i] = countOfSecurityDecreasingLeftToRight[i + 1] + 1;
+            } 
+            
+        }
+        
+        // System.out.println("countOfSecurityIncreasingRightToLeft: "+Arrays.toString(countOfSecurityIncreasingRightToLeft));
+        // System.out.println("countOfSecurityDecreasingLeftToRight: "+Arrays.toString(countOfSecurityDecreasingLeftToRight));
+        
+        List<Integer> result = new ArrayList<Integer>();
+        for(int i = 0; i < security.length; i++) {
+            
+            int possibleLeftIndex = i - time;
+            int possibleRightIndex = i + time;
+            
+            if(possibleLeftIndex < 0 && possibleRightIndex >= security.length) {
+                continue;
+            }
+            
+            if((countOfSecurityIncreasingRightToLeft[i] >= time + 1 && countOfSecurityDecreasingLeftToRight[i] >= time + 1) || time == 0) {
+                result.add(i);
+            }
+        }
+        
+        return result;
+        
+    }
+}
