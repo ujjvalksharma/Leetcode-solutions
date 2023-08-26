@@ -1,0 +1,33 @@
+class Solution {
+    
+    private int getTotalSubString(int n) {
+        return n*(n+1)/2;
+    }
+    public int countLetters(String s) {
+        
+        int count = 0; //each index themselves is a distinct substring
+        int[] freq = new int[26];
+        
+        char prevChar = s.charAt(0);
+        int prevCharFrequency = 1;
+        for(int i=1; i<s.length(); i++) {
+            
+            if(prevChar != s.charAt(i)) {
+                
+                count += getTotalSubString(prevCharFrequency); 
+                prevCharFrequency = 1;
+                
+            } else {
+                prevCharFrequency++;
+            }
+            
+            prevChar = s.charAt(i);
+            
+        }
+        
+        count += getTotalSubString(prevCharFrequency); 
+                
+        return count;
+        
+    }
+}
