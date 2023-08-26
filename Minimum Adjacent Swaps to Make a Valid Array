@@ -1,0 +1,30 @@
+class Solution {
+    public int minimumSwaps(int[] nums) {
+        
+        int leftMostIndexOfSmallestElement = Integer.MAX_VALUE;
+        int smallestElement = Integer.MAX_VALUE;
+        int rightMostIndexOfLargestElement = Integer.MIN_VALUE;
+        int largestElement = Integer.MIN_VALUE;
+        
+        for(int i=0; i<nums.length; i++) {
+            
+            if(nums[i] < smallestElement) {
+                smallestElement = nums[i];
+                leftMostIndexOfSmallestElement = i;
+            }
+            
+             if(nums[i] >= largestElement) {
+                largestElement = nums[i];
+                rightMostIndexOfLargestElement = Math.max(rightMostIndexOfLargestElement, i);
+            }
+        }
+        
+        int moves = leftMostIndexOfSmallestElement + (nums.length - 1 - rightMostIndexOfLargestElement);
+        
+        if(leftMostIndexOfSmallestElement > rightMostIndexOfLargestElement) {
+            return moves - 1;
+        }
+        return moves;
+        
+    }
+}
