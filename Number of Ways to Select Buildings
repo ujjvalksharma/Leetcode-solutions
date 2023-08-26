@@ -1,0 +1,73 @@
+class Solution {
+    public long numberOfWays(String s) {
+        
+        int[] countOf10 = new int[s.length()];
+        int[] countOf01 = new int[s.length()];
+        int[] tempResult = new int[s.length()];
+        int countOf0 = 0;
+        int countOf1 = 0;
+        for(int i=s.length() - 1; i >= 0; i--){
+            
+            if(s.charAt(i) == '0') {
+                countOf0++;
+            } else {
+                countOf10[i] = countOf0;
+            }
+            
+            
+        }
+        System.out.println("countOf10: "+Arrays.toString(countOf10));
+
+        for(int i=s.length() - 1; i >= 0; i--){
+            
+            if(s.charAt(i) == '1') {
+                countOf1++;
+            } else {
+                countOf01[i] = countOf1;
+            }
+              
+        }
+        System.out.println("countOf01: "+Arrays.toString(countOf01));
+                int sum = 0;
+        for(int i=0; i<s.length(); i++) {
+            
+            sum += countOf10[i];
+            if(s.charAt(i) == '0') {
+                tempResult[i] = sum;
+            }
+            
+        }
+        
+                sum = 0;
+        
+        for(int i=0; i<s.length(); i++) {
+            
+            sum += countOf01[i];
+            if(s.charAt(i) == '1') {
+                tempResult[i] = sum;
+            }
+            
+        }
+        
+        
+        int totalSum = 0;
+        
+        for(int currentSum: tempResult) {
+            totalSum += currentSum;
+        }
+            
+        return (long) totalSum;
+        
+    }
+}
+
+/*
+
+"001101"
+    
+0 : 0 , 1, 4
+
+1: 2, 3, 5
+
+
+*/
