@@ -1,0 +1,15 @@
+class Solution {
+    public int triangularSum(int[] nums) {
+        int len = nums.length, i = 0;
+        while (nums.length > 1) {
+            int[] temp = new int[len - i - 1];
+            for (int j = 0; j < temp.length; j++) {
+                temp[j] = (nums[j] + nums[j + 1]) % 10;
+            }
+            nums = temp;
+            i++;
+        }
+        
+        return nums[0];
+    }
+}
