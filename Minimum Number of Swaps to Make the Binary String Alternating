@@ -1,0 +1,49 @@
+class Solution {
+    public int minSwaps(String s) {
+        if (s.length()==0) return 0;
+        int n = s.length();
+        int ones = 0;
+        for (int i=0; i<n; i++) {
+            if (s.charAt(i)=='1') ones++;
+        }
+        if (Math.abs(ones-(n-ones))>1) return -1;
+        if (n%2==0) {
+            StringBuilder sb1 = new StringBuilder();
+            StringBuilder sb2 = new StringBuilder();
+            for (int i=0; i<n; i++) {
+                if (i%2==0) {
+                    sb1.append('1');
+                    sb2.append('0');
+                } else {
+                    sb1.append('0');
+                    sb2.append('1');
+                }
+            }
+            int s1 = 0;
+            int s2 = 0; //string can start with 0 or 1
+            for (int i=0; i<n; i++) {
+                if (sb1.charAt(i)!=s.charAt(i)) s1++;
+                if (sb2.charAt(i)!=s.charAt(i)) s2++;
+            }
+            int min = Math.min(s1, s2)/2;
+            return min;
+            
+        } else {
+            if (n-ones>ones) { //more zeroes, string is going to start with 0
+                int c = 0;
+                for (int i=0; i<n; i++) {
+                    if ((i%2==0 && s.charAt(i)!='0')) c++;
+                    if (i%2!=0 && s.charAt(i)!='1') c++;
+                }
+                return c/2;
+            } else { //less zeroes, string is going to start with 1
+                int c = 0;
+                for (int i=0; i<n; i++) {
+                    if (i%2==0 && s.charAt(i)!='1') c++;
+                    if (i%2!=0 && s.charAt(i)!='0') c++;
+                }
+                return c/2;
+            }
+        }
+    }
+}
