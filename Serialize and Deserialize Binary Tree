@@ -9,6 +9,98 @@
  */
 public class Codec {
 
+    public void serializeHelper(TreeNode root, StringBuilder serializeSb) {
+        
+        if(root.left != null) {
+            serializeSb.append(","+root.left.val);
+        } else {
+            serializeSb.append(",null");
+        }
+        
+        if(root.right != null) {
+            serializeSb.append(","+root.right.val);
+        } else {
+            serializeSb.append(",null");
+        }
+        
+        if(root.left != null) {
+            serializeHelper(root.left, serializeSb);
+        }
+        
+        if(root.right != null) {
+            serializeHelper(root.right, serializeSb);
+        }
+        
+    }
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        
+        if(root == null) {
+            return "";
+        }
+        
+        StringBuilder serializeSb = new StringBuilder("");
+        serializeSb.append(root.val);
+        serializeHelper(root, serializeSb);
+        return serializeSb.toString();
+        
+    }
+    
+    public void deserializeHelper(TreeNode root, int[] index, String[] treeArr) {
+        
+        if(index[0] >= treeArr.length || root == null) {
+            return;
+        }
+        
+        index[0]++;
+        if(!"null".equals(treeArr[index[0]])) {
+            TreeNode leftNode = new TreeNode(Integer.parseInt(treeArr[index[0]]));
+            root.left = leftNode;
+        }
+        
+        index[0]++;
+        if(!"null".equals(treeArr[index[0]])) {
+            TreeNode rightNode = new TreeNode(Integer.parseInt(treeArr[index[0]]));
+            root.right = rightNode;
+        }
+         deserializeHelper(root.left, index, treeArr);
+         deserializeHelper(root.right, index, treeArr);
+        
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        
+        if(data.length() == 0) {
+            return null;
+        }
+        String[] treeArr = data.split(",");
+        int[] index = new int[]{0};
+        TreeNode root = new TreeNode(Integer.parseInt(treeArr[index[0]]));
+        deserializeHelper(root, index, treeArr);
+        
+        return root;
+        
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// TreeNode ans = deser.deserialize(ser.serialize(root));
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
     public String serializeHelper(TreeNode root){
         if(root==null){
             return "X";
