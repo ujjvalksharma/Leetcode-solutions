@@ -1,0 +1,60 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    
+    public Node() {
+        children = new ArrayList<Node>();
+    }
+    
+    public Node(int _val) {
+        val = _val;
+        children = new ArrayList<Node>();
+    }
+    
+    public Node(int _val,ArrayList<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+class Solution {
+    
+    int diameter = 0;
+    
+    public int findDiameter(Node root) {
+        
+        if(root == null) {
+            return 0;
+        }
+        
+        List<Integer> lengths = new ArrayList<Integer>();
+        
+        List<Node> children = root.children;
+        int maxLen = -1;
+        
+        for(Node child: children) {
+            
+            int currentLen = findDiameter(child) + 1;
+            diameter = Math.max(diameter, currentLen + maxLen);
+            diameter = Math.max(diameter, currentLen);
+            maxLen = Math.max(maxLen, currentLen);
+           // System.out.println("root: "+root.val+" maxLen: "+maxLen+" diameter: "+diameter);
+        }
+        
+       // System.out.println("root: "+root.val+" maxLen: "+maxLen+" diameter: "+diameter);
+        // System.out.println("diameter: "+diameter);
+        return maxLen == -1 ? 0 : maxLen;
+    }
+    public int diameter(Node root) {
+        
+        int currentLen = findDiameter(root);
+        //System.out.println("diameter: "+diameter+" currentLen: "+currentLen);
+        diameter = Math.max(diameter, currentLen);
+        
+        return diameter;
+    }
+}
