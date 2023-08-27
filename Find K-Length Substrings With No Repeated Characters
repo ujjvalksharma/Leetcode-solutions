@@ -1,0 +1,60 @@
+/*
+2 pointer with start end pointer to keep note of substring
+*/
+class Solution {
+    
+    public boolean isRepeatedCharPresent(int[] freqs) {
+        
+        for(int freq : freqs) {
+            if(freq > 1) {
+                return true;
+            }
+        }
+        
+        return false;
+        
+    }
+    
+    public int removeRepeatedChar(int start,int end,String s,int[] freqs) {
+        
+        while(start < end && isRepeatedCharPresent(freqs)) {
+            freqs[s.charAt(start) - 'a']--;
+            start++;
+        }
+        
+        return start;
+    }
+    
+    public int numKLenSubstrNoRepeats(String s, int k) {
+        
+        int start = 0;
+        int end = 0;
+        int[] freqs = new int[26];
+        int kLenSubString = 0;
+        freqs[s.charAt(end) - 'a']++;
+        while(end < s.length()) {
+            if(isRepeatedCharPresent(freqs)) {
+                int newStartPosition = removeRepeatedChar(start, end, s, freqs);
+                start = newStartPosition;
+            }
+            
+            if(end - start + 1 == k) {
+                System.out.println("result: "+s.substring(start, end +1));
+                kLenSubString++;
+                freqs[s.charAt(start) - 'a']--;
+                end++;
+                start++;
+                if(end < s.length())
+                freqs[s.charAt(end) - 'a']++;
+            } else {
+                end++;
+                if(end < s.length())
+                freqs[s.charAt(end) - 'a']++;
+            }
+   
+        }
+        
+        return kLenSubString;
+        
+    }
+}
