@@ -1,0 +1,42 @@
+/*
+ We can track of prefixSum and at each index track the contribution in prefix sum
+ 
+ [startIdxi, endIdxi, inci]
+  it means from startIdxi we add prefix sum by inci and at endIdxi+1 we decrement by inci
+
+*/
+class Solution {
+    public int[] getModifiedArray(int length, int[][] updates) {
+        
+        HashMap<Integer,Integer> indexToIncrement = new HashMap<Integer,Integer>();
+        
+        int[] result = new int[length];
+        
+        for(int[] update : updates) {
+            
+            if(!indexToIncrement.containsKey(update[0])) {
+                indexToIncrement.put(update[0], update[2]);
+            } else {
+                indexToIncrement.put(update[0], indexToIncrement.get(update[0]) + update[2]);   
+            }
+            
+            if(!indexToIncrement.containsKey(update[1] + 1)) {
+                indexToIncrement.put(update[1] + 1, -update[2]);
+            } else {
+                indexToIncrement.put(update[1] + 1, indexToIncrement.get(update[1] + 1) - update[2]); 
+            }
+        }
+        
+        int currentSum = 0;
+        for(int i=0; i < length; i++) {
+            
+            if(indexToIncrement.containsKey(i)) {
+                currentSum += indexToIncrement.get(i);
+            }
+            
+            result[i] += currentSum;
+            
+        }
+        return result;
+    }
+}
