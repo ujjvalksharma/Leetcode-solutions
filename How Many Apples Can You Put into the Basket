@@ -1,0 +1,35 @@
+//bucket sort
+/*
+Since I am not going to consider any weight[i] > 5000. We create a bucket of size 5000 and for each weight[i], we increment frequency bucket[weight[i]]++, then we iterate through all the buckets and substract from 5000.
+
+*/
+class Solution {
+    public int maxNumberOfApples(int[] arr) {
+        // initialize the bucket to store all elements
+        int size = 5000;
+        int[] bucket = new int[size + 1];
+        for (Integer weight: arr) {
+            bucket[weight]++;
+        }
+
+        int apples = 0;
+        int units = 0;
+        for (int i = 0; i < size + 1; i++) {
+            // if we have apples of i units of weight
+            if (bucket[i] != 0) {
+                // we need to make sure that:
+                // 1. we do not take more apples than those provided
+                // 2. we do not exceed 5000 units of weight
+                int take = Math.min(bucket[i], (5000 - units) / i);
+
+                if (take == 0) {
+                    break;
+                }
+                units += take * i;
+                apples += take;
+
+            }
+        }
+        return apples;
+    }
+}
