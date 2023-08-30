@@ -1,0 +1,65 @@
+//since all nodes are connected, do a simple dfs from any node and consider any node as root.
+class Solution {
+    
+    int diameter = 0;
+    Map<Integer,List<Integer>> graph = new HashMap<>();
+    Set<Integer> visited = new HashSet<Integer>();
+    
+    public int findDiameter(int currentNode) {
+        
+        List<Integer> neighbours = graph.get(currentNode);
+        
+        int firstLargest = 0;
+        int secondLargest = 0;
+
+        for(Integer neighbour : neighbours) {
+            
+            if(!visited.contains(neighbour)) {
+                
+                visited.add(neighbour);
+                int len = findDiameter(neighbour);
+                
+                if(len >= firstLargest) {
+                    secondLargest = firstLargest;
+                    firstLargest = len;
+                } else {
+                    secondLargest = Math.max(secondLargest, len);
+                }
+                
+            }
+        }
+        
+        diameter = Math.max(diameter, firstLargest + secondLargest);
+        
+        return firstLargest + 1;
+    }
+    public int treeDiameter(int[][] edges) {
+        
+        if(edges.length == 0) {
+            return 0;
+        }
+        
+        for(int[] edge : edges) {
+            
+            if(!graph.containsKey(edge[0])) {
+                graph.put(edge[0], new ArrayList<Integer>());
+            }
+            
+            if(!graph.containsKey(edge[1])) {
+                graph.put(edge[1], new ArrayList<Integer>());
+            }
+            
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+            
+        }
+        
+        visited.add(edges[0][0]);
+        int len = findDiameter(edges[0][0]);
+        //diameter = Math.max(diameter, len);
+        
+        return diameter;
+        
+        
+    }
+}
