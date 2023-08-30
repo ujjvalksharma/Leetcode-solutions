@@ -1,0 +1,171 @@
+class FileSystem {
+
+    // The TrieNode data structure.
+    class TrieNode {
+        
+        String name;
+        int val = -1;
+        Map<String, TrieNode> map = new HashMap<>();
+        
+        TrieNode (String name) {
+            this.name = name;
+        }
+    }
+    
+    TrieNode root;
+    
+    // Root node contains the empty string.
+    public FileSystem() {
+        this.root = new TrieNode("");
+    }
+    
+    public boolean createPath(String path, int value) {
+        
+        // Obtain all the components
+        String[] components = path.split("/");
+        
+        // Start "curr" from the root node.
+        TrieNode cur = root;
+        
+        // Iterate over all the components.
+        for (int i = 1; i < components.length; i++) {
+            
+            String currentComponent = components[i];
+            
+            // For each component, we check if it exists in the current node's dictionary.
+            if (cur.map.containsKey(currentComponent) == false) {
+                
+                // If it doesn't and it is the last node, add it to the Trie.
+                if (i == components.length - 1) {
+                    cur.map.put(currentComponent, new TrieNode(currentComponent));
+                } else {
+                    return false;
+                }    
+            }
+            
+            cur = cur.map.get(currentComponent);
+        }
+        
+        // Value not equal to -1 means the path already exists in the trie. 
+        if (cur.val != -1) {
+            return false;
+        }
+        
+        cur.val = value;
+        return true;
+    }
+    
+    public int get(String path) {
+        
+        // Obtain all the components
+        String[] components = path.split("/");
+        
+        // Start "curr" from the root node.
+        TrieNode cur = root;
+        
+        // Iterate over all the components.
+        for (int i = 1; i < components.length; i++) {
+            
+            String currentComponent = components[i];
+            
+            // For each component, we check if it exists in the current node's dictionary.
+            if (cur.map.containsKey(currentComponent) == false) {
+                return -1;   
+            }
+            
+            cur = cur.map.get(currentComponent);
+        }
+        
+        return cur.val;
+    }
+}
+//my solution : trie
+/*class FileSystem {
+
+    class Folder {
+        public String name;
+        public Map<String, Folder> subFolders;
+        public int value; 
+        public int count;
+        public Folder(String name) {
+           this.name = name;
+           this.subFolders = new HashMap<String, Folder>();
+           this.value = -1;
+           this.count = 0;
+        }
+        
+    }
+    Folder head;
+    public FileSystem() {
+        this.head = new Folder("");
+    }
+    
+    public boolean createPath(String path, int value) {
+        
+        String[] files = path.split("/");
+        Folder tempHead = head;
+        boolean pathExist = true;
+        for(int i=1; i<files.length; i++) {
+            if(files[i].length() == 0) {
+                return false;
+            }
+        }
+        
+        if(!tempHead.subFolders.containsKey(files[1]) && files.length  == 2) {
+            tempHead.subFolders.put(files[1], new Folder(files[1]));
+            pathExist = false;
+        }
+        
+        if(!tempHead.subFolders.containsKey(files[1]) && files.length > 2) {
+            return false;
+        }
+
+        for(int i=2; i < files.length; i++) {
+            
+            if(tempHead.subFolders.containsKey(files[i - 1])) {
+                tempHead = tempHead.subFolders.get(files[i - 1]);
+                if(!tempHead.subFolders.containsKey(files[i])) {
+                    pathExist = false;
+                    tempHead.subFolders.put(files[i], new Folder(files[i]));
+                }
+                
+            } else {
+                return false;
+            }
+            
+        }
+        
+        if(pathExist) {
+            return false;
+        }
+        tempHead = tempHead.subFolders.get(files[files.length - 1]);
+        tempHead.value = value;
+        
+        return true;
+        
+    }
+    
+    public int get(String path) {
+        
+        String[] files = path.split("/");
+        Folder tempHead = head;
+        System.out.println("files: "+Arrays.toString(files));
+        for(int i = 1; i < files.length; i++) {
+            if(!tempHead.subFolders.containsKey(files[i])) {
+                return -1;
+            }
+            tempHead = tempHead.subFolders.get(files[i]);
+    
+        }
+        
+        return tempHead.value;
+        
+    }
+}
+*/
+/**
+ * Your FileSystem object will be instantiated and called as such:
+ * FileSystem obj = new FileSystem();
+ * boolean param_1 = obj.createPath(path,value);
+ * int param_2 = obj.get(path);
+ */
