@@ -1,0 +1,69 @@
+/**
+ * // This is the HtmlParser's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface HtmlParser {
+ *     public List<String> getUrls(String url) {}
+ * }
+ */
+
+/*
+Simple DFS starting from startUrl.
+
+*/
+class Solution {
+    
+    String hostName;
+    Set<String> visited = new HashSet<String>();
+    List<String> result = new ArrayList<>();
+    
+    public String getHostname(String url) {
+        
+        int totalForwardSlash = 0;
+        StringBuilder hostName = new StringBuilder("");
+        
+        for(int i=0; i<url.length(); i++) {
+            
+            if(url.charAt(i) == '/') {
+                totalForwardSlash++;
+                if(totalForwardSlash == 2) {
+                    continue;
+                }
+            }
+            
+            if(totalForwardSlash == 2) {
+                hostName.append(url.charAt(i));
+            }
+            
+        }
+        
+        return hostName.toString();
+    }
+    
+    public void crawlHelper(String startUrl, HtmlParser htmlParser, String hostName) {
+        
+        List<String> urls = htmlParser.getUrls(startUrl);
+            
+            for(String url : urls ) {
+                
+                String urlHostName = getHostname(url);
+                //System.out.println("url: "+url+" urlHostName: "+urlHostName+" hostName: "+hostName);
+                if(urlHostName.equals(hostName) && !visited.contains(url)) {
+                    result.add(url);
+                    visited.add(url);
+                    crawlHelper(url, htmlParser, hostName);
+                }
+                
+            }
+        }
+        
+    
+    public List<String> crawl(String startUrl, HtmlParser htmlParser) {
+        //System.out.println("startUrl: "+startUrl);
+        hostName = getHostname(startUrl);
+        result.add(startUrl);
+        visited.add(startUrl);
+        crawlHelper(startUrl, htmlParser, hostName);
+        return result;
+        
+    }
+}
