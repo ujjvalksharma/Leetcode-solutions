@@ -1,0 +1,40 @@
+/*
+each warehouse at i cannot hold a box greater than the minimum warehouse[k=0... i], so warehouse[i] = minWarehouseFoundYet then we we sort boxes and insert in warehouse from right to left and insert the minimumbox left as warehouse should have boxes in increasing length from left to right.
+
+*/
+class Solution {
+    public int maxBoxesInWarehouse(int[] boxes, int[] warehouse) {
+        
+        Arrays.sort(boxes);
+        int start = 0;
+        int[] boxInWarehouses = new int[warehouse.length];
+        
+        Arrays.fill(boxInWarehouses, -1);
+        
+           for (int i = 1; i < warehouse.length; i++) {
+            warehouse[i] = Math.min(warehouse[i - 1], warehouse[i]);
+        }
+        
+        
+        for(int i=warehouse.length - 1; i>=0; i--) {
+            
+            if(start >= boxes.length) {
+                break;
+            }
+            
+            if(warehouse[i] >= boxes[start]) {
+                boxInWarehouses[i] = boxes[start];
+                start++;
+            }
+        }
+        int totalBoxes = 0;
+        
+        for(int boxInWarehouse: boxInWarehouses) {
+            if(boxInWarehouse > 0) {
+                totalBoxes++;
+            }
+        }
+        
+        return totalBoxes;
+    }
+}
