@@ -1,0 +1,46 @@
+class Solution {
+    public List<List<Integer>> removeInterval(int[][] intervals, int[] toBeRemoved) {
+        
+        List<List<Integer>> result = new ArrayList<>();
+        
+        for(int[] interval : intervals) {
+            
+            //interval is inside the toBeRemoved
+            if(toBeRemoved[0] <= interval[0] && toBeRemoved[1] >= interval[1]) {
+                continue;
+            }else if(toBeRemoved[0] <= interval[0] && toBeRemoved[1] >= interval[0]) {
+            // there is a left overlap
+                List<Integer> newInterval = new ArrayList<Integer>();
+                newInterval.add(toBeRemoved[1]);
+                newInterval.add(interval[1]);
+                result.add(newInterval);
+            } else if(toBeRemoved[1] >= interval[1] && toBeRemoved[0] <= interval[1]) {
+                //right over lap
+                List<Integer> newInterval = new ArrayList<Integer>();
+                newInterval.add(interval[0]);
+                newInterval.add(toBeRemoved[0]);
+                result.add(newInterval);
+            } else if(toBeRemoved[0] > interval[0] && toBeRemoved[1] < interval[1]) {
+                //toBeRemoved is inside the interval
+                List<Integer> newInterval = new ArrayList<Integer>();
+                newInterval.add(interval[0]);
+                newInterval.add(toBeRemoved[0]);
+                result.add(newInterval);
+                
+                List<Integer> newInterval1 = new ArrayList<Integer>();
+                newInterval1.add(toBeRemoved[1]);
+                newInterval1.add(interval[1]);
+                result.add(newInterval1);
+            } else {
+                 List<Integer> newInterval = new ArrayList<Integer>();
+                newInterval.add(interval[0]);
+                newInterval.add(interval[1]);
+                result.add(newInterval);
+            }
+            // there is a right overlap
+        }
+        
+        return result;
+        
+    }
+}
