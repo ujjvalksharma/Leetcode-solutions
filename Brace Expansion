@@ -1,0 +1,56 @@
+//simple recursion
+class Solution {
+    
+    List<String> tempResult = new ArrayList<String>();
+    
+    public void expandHelper(String s, int index, StringBuilder currentResult) {
+        
+        if(index >= s.length()) {
+            tempResult.add(currentResult.toString());
+            return;
+        }
+        
+        if(s.charAt(index) !='{' && s.charAt(index) !='}') {
+            currentResult.append(s.charAt(index));
+            expandHelper(s, index + 1, currentResult);
+            currentResult.deleteCharAt(currentResult.length() - 1); 
+        } else {
+            
+            StringBuilder possibleCharsWithComma = new StringBuilder("");
+            
+            while(index < s.length() && s.charAt(index) != '}') {
+                
+                if(s.charAt(index) != '}' && s.charAt(index) != '{') {
+                    possibleCharsWithComma.append(s.charAt(index));
+                }
+                index++;
+            }
+            
+            String[] possibleChars = possibleCharsWithComma.toString().split(",");
+            
+            for(String possibleChar : possibleChars) {
+                
+                currentResult.append(possibleChar);
+                expandHelper(s, index + 1, currentResult);
+                currentResult.deleteCharAt(currentResult.length() - 1); 
+            }
+            
+        }
+        
+    }
+    
+    public String[] expand(String s) {
+        
+        StringBuilder currentResult = new StringBuilder("");
+        expandHelper(s, 0, currentResult);
+        
+        String[] result = new String[tempResult.size()];
+        
+        for(int i=0; i<tempResult.size(); i++) {
+            result[i] = tempResult.get(i);
+        }
+        Arrays.sort(result);
+        return result;
+        
+    }
+}
