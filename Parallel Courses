@@ -1,0 +1,90 @@
+class Solution {
+    
+    boolean isCyclePresent = false;
+    int minimumNumberOfSemesters = -1;
+    public void iterateConnectedCourses(int courseId, Set<Integer> visited, Map<Integer,List<Integer>> graph, int count) {
+        
+        minimumNumberOfSemesters = Math.max(minimumNumberOfSemesters, count);
+        List<Integer> neighbours = graph.get(courseId);
+        //System.out.println("courseId: "+courseId +" neighbours: "+neighbours);
+        for(int neighbour : neighbours) {
+            
+            if(visited.contains(neighbour)) {
+                continue;
+            }
+            visited.add(neighbour);
+            iterateConnectedCourses(neighbour, visited, graph, count + 1);
+        }
+    }
+    public void findCycle(int node, Set<Integer> visited, Map<Integer, List<Integer>> graph) {
+        
+        if(isCyclePresent) {
+            return;
+        }
+        List<Integer> neighbours = graph.get(node);
+        
+        for(int neighbour : neighbours) {
+            
+            if(visited.contains(neighbour)) {
+                isCyclePresent = true;
+                continue;
+            }
+            
+            findCycle(neighbour, visited, graph);
+        }
+        
+        
+    }
+    public int minimumSemesters(int N, int[][] relations) {
+        
+        Map<Integer,List<Integer>> graph = new HashMap<>();
+        
+        int[] coursePrerequisiteCount = new int[N + 1];
+        for(int i=1; i<=N; i++) {
+            graph.put(i, new ArrayList<Integer>());
+        }
+        
+        for(int[] relation : relations) {
+            graph.get(relation[0]).add(relation[1]);
+            coursePrerequisiteCount[relation[1]]++;
+        }
+        
+        
+        
+//         Set<Integer> visited = new HashSet<Integer>();
+        
+//         for(int i=1; i<=N; i++) {
+            
+//             if(!visited.contains(i)) {
+//                 visited.add(i);
+//                 findCycle(i, visited, graph);
+//                 if(isCyclePresent) {
+//                     return -1;
+//                 }
+//             }
+//         }
+        int count = 0;
+        int semesters = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i = 1; i < N; i++) {
+            if (coursePrerequisiteCount[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (--size >= 0) {
+                count++; // if there are no loop, count will be N after topogical sorting
+                int node = queue.poll();
+                for (int adj: graph.getOrDefault(node, new ArrayList<>())) {
+                    coursePrerequisiteCount[adj]--;
+                    if (coursePrerequisiteCount[adj] == 0) {
+                        queue.add(adj);
+                    }
+                }
+            }
+            semesters++;
+        }
+        return count == N? semesters: -1;
+    }
+}
