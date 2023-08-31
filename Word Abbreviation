@@ -1,0 +1,66 @@
+class Solution {
+    class TrieNode {
+        Map<Character, TrieNode> children = new HashMap<>();
+        int count = 0;
+    }
+    
+    class IndexedWord {
+        String word;
+        int index;
+        public IndexedWord(String word, int index) {
+            this.word = word;
+            this.index = index;
+        }
+    }
+    
+    public List<String> wordsAbbreviation(List<String> dict) {
+        Map<String, List<IndexedWord>> abbMap = new HashMap<>();
+        for (int i = 0; i<dict.size(); i++) {
+            String word = dict.get(i);
+            String ab = abb(word, 0);
+            List<IndexedWord> list = abbMap.getOrDefault(ab, new ArrayList<>());
+            list.add(new IndexedWord(word, i));
+            abbMap.put(ab, list);
+        }
+        
+        String[] results = new String[dict.size()];
+        //add value to trie
+        for (List<IndexedWord> group: abbMap.values()) {
+            TrieNode root = new TrieNode();
+            for (int i = 0; i<group.size(); i++) {
+                String w = group.get(i).word;
+                TrieNode node = root;
+                for (char c: w.toCharArray()) {
+                    if (!node.children.containsKey(c)) {
+                        node.children.put(c, new TrieNode());
+                    }
+                    node = node.children.get(c);
+                    node.count ++;
+                }
+            }
+            
+            // get value from trie
+            for (int i = 0; i<group.size(); i++) {
+                String w = group.get(i).word;
+                TrieNode node = root;
+                for (int j = 0; j<w.length(); j++) {
+                    char c = w.charAt(j);
+                    node = node.children.get(c);
+                    if (node.count == 1) {
+                        results[group.get(i).index] = abb(group.get(i).word, j);
+                        break;
+                    }
+                }
+            }
+            
+        }
+        return Arrays.asList(results);
+    }
+    
+    public String abb(String word, int i) {
+        if (i+3<word.length()) {
+            word = word.substring(0, i+1) + (word.length() - i - 2) + word.substring(word.length() - 1);
+        }
+        return word;
+    }
+}
