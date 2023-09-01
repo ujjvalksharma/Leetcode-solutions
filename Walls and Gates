@@ -1,0 +1,62 @@
+//simple bfs like rotten oranges
+class Solution {
+    
+    class Point {
+        
+        public int x;
+        public int y;
+        public int distanceFromGate;
+        
+        public Point(int x, int y, int distanceFromGate) {
+            this.x = x;
+            this.y = y;
+            this.distanceFromGate = distanceFromGate;
+        }
+        
+        @Override
+        public String toString() {
+            return "x: "+x+" y: "+y;
+        }
+        
+    }
+    
+    public void wallsAndGates(int[][] rooms) {
+        
+        Queue<Point> bfs = new LinkedList<Point>();
+        Set<String> visited = new HashSet<String>();
+        
+        for(int i=0; i<rooms.length; i++) {
+            
+            for(int j=0; j<rooms[0].length; j++) {
+                
+                if(rooms[i][j] == 0) {
+                    visited.add(i+","+j);
+                    bfs.add(new Point(i, j, 0));
+                }
+            }
+        }
+        
+        int[][] directions = new int[][]{{0,1},{1,0},{-1,0},{0,-1}};
+        while(!bfs.isEmpty()) {
+            
+            Point point = bfs.poll();
+            
+            for(int[] direction : directions) {
+                
+                int newX = point.x + direction[0];
+                int newY = point.y + direction[1];
+                int newDistance = point.distanceFromGate + 1;
+                String key = newX+","+newY;
+                if(newX >= 0 && newX < rooms.length && newY>=0 && newY < rooms[0].length && !visited.contains(key) && rooms[newX][newY] != 0 && rooms[newX][newY] != -1) {
+                    visited.add(key);
+                    rooms[newX][newY] = newDistance;
+                    bfs.add(new Point(newX, newY, newDistance));
+                }
+            }
+            
+            
+        }
+        
+        
+    }
+}
