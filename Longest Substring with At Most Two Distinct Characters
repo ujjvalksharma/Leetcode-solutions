@@ -1,0 +1,65 @@
+class Solution {
+    //O(n) sliding window and 2 pointer and use hasmap to keep track of distinct items
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        
+        Map<Character,Integer> map = new HashMap<>();
+        int start = 0;
+        int end = 0;
+        int len = 0;
+        while(end < s.length()) {
+            
+            if(map.size() == 3) {
+                
+                while(start<end && map.size() == 3) {
+                    
+                    map.put(s.charAt(start), map.get(s.charAt(start)) - 1);
+                    
+                    if(map.get(s.charAt(start)) == 0) {
+                        map.remove(s.charAt(start));
+                    }
+                    start++;
+                }
+                
+            } else {
+                
+                if(!map.containsKey(s.charAt(end))) {
+                    map.put(s.charAt(end), 0);
+                }
+                
+                map.put(s.charAt(end), map.get(s.charAt(end)) + 1);
+                end++;
+            }
+            
+            
+            if(map.size() < 3) {
+                System.out.println("buzz start: "+start+" end: "+end);
+              len = Math.max(len, end - 1 - start + 1);  
+            }
+            
+            
+            
+        }
+        end--;
+        
+             if(map.size() == 3) {
+                
+                while(start<end && map.size() == 3) {
+                    
+                    map.put(s.charAt(start), map.get(s.charAt(start)) - 1);
+                    
+                    if(map.get(s.charAt(start)) == 0) {
+                        map.remove(s.charAt(start));
+                    }
+                    start++;
+                }
+            }
+        
+             if(map.size() < 3) {
+              System.out.println("start: "+start+" end: "+end);
+              len = Math.max(len, end - start + 1);  
+            }
+        
+        return len;
+        
+    }
+}
