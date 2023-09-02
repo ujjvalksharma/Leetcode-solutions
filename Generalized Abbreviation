@@ -1,0 +1,38 @@
+class Solution {
+    
+    List<String> answer = new ArrayList<String>();
+        
+    public void generateAbbreviationsHelper(String word, int index, boolean isAbbreviated, String currentWord) {
+        
+        if(index >= word.length()) {
+            answer.add(currentWord);
+            return;
+        }
+        
+        if(isAbbreviated) {
+            generateAbbreviationsHelper(word, index + 1, false, currentWord+""+word.charAt(index));
+        } else {
+            
+            generateAbbreviationsHelper(word, index + 1, false, currentWord+""+word.charAt(index));
+            
+            for(int i=index; i<word.length(); i++) {
+                
+                int len = i - index + 1;
+                generateAbbreviationsHelper(word, i + 1, true, currentWord+""+len);
+            }
+            
+        }
+        
+        
+    }
+    
+    public List<String> generateAbbreviations(String word) {
+        
+        generateAbbreviationsHelper(word, 0, false, "");
+            
+        return answer;
+        
+    }
+}
+
+//["4","3d","2r1","2rd","1o2","1o1d","1or1","1ord","w3","w2d","w1r1","w1rd","wo2","wo1d","wor1","word"]
