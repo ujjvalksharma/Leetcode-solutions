@@ -14,6 +14,87 @@
  * }
  */
 
+/*
+Since in inorder traversal elements come in order we know that once a dequeue of size K is formed the sliding window will shift only if 0th element of sliding window diff is large than current node diff and we do it by 
+if(deque.peekFirst().diff > diff) {
+                deque.removeFirst();
+                deque.addLast(new Node(num, diff));
+            }
+            
+otherwise we have foud the best window for us.
+
+*/
+class Solution {
+    
+    class Node {
+        
+        double num;
+        double diff;
+        
+        public Node(double num, double diff) {
+            this.num = num;
+            this.diff = diff;
+        }
+        
+    }
+    
+    double target;
+    int SIZE;
+    Deque<Node> deque = new ArrayDeque<Node>();
+    public void inOrder(TreeNode root) {
+        
+        if(root == null) {
+            return;
+        }
+        
+        inOrder(root.left);
+        
+        double num = (double) root.val;
+        double diff = Math.abs(num - target);
+        if(deque.size() < SIZE) {
+            deque.addLast(new Node(num, diff));
+        } else {
+            if(deque.peekFirst().diff > diff) {
+                deque.removeFirst();
+                deque.addLast(new Node(num, diff));
+            }
+        }
+        
+        inOrder(root.right);
+        
+        
+    }
+    
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+        this.target = target;
+        this.SIZE = k;
+        List<Integer> result = new ArrayList<Integer>();
+       inOrder(root);
+        
+        while(!deque.isEmpty()) {
+            result.add((int)deque.poll().num);
+        }
+        return result;
+        
+    }
+}
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
 //solution 1: heap + BST
 // solution 2: BST + dequeue
 //solution 3: BST + sliding window
