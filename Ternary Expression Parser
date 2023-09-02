@@ -1,0 +1,32 @@
+class Solution {
+    public String parseTernary(String expression) {
+        
+        Stack<Character> chars = new Stack<Character>();
+        int colon = 0;
+        int i = expression.length() - 1;
+        while(i >= 0) {
+            
+            if(expression.charAt(i) !=':' && expression.charAt(i) != '?') {
+                //System.out.println("chars1: "+chars);
+                chars.push(expression.charAt(i));
+            } else if(expression.charAt(i) =='?') {
+                //System.out.println("chars2: "+chars);
+                char leftChar = chars.pop();
+                char rightChar = chars.pop();
+                i--;
+                if(expression.charAt(i) == 'T') {
+                    chars.push(leftChar);
+                } else {
+                    chars.push(rightChar);
+                }
+            }
+            i--;
+            
+        }
+        
+        return ""+chars.pop();
+    }
+}
+
+//
+
