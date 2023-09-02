@@ -1,4 +1,59 @@
 class Solution {
+    //Using O(N) mainting a list of 2 indexs in w1 and w2 and then we always move the index of list of w1 and we move the index of list of w2 when I know next element in W2 should give me a shorter range. and list of w1 and w2 is sorted in increasing order.
+    public int shortestWordDistance(String[] wordsDict, String word1, String word2) {
+        
+        List<Integer> indexsOfW1 = new ArrayList<Integer>();
+        List<Integer> indexsOfW2 = new ArrayList<Integer>();
+        int shortestDistance = Integer.MAX_VALUE;
+        for(int i=0; i<wordsDict.length; i++) {
+            if(word1.equals(wordsDict[i])) {
+                indexsOfW1.add(i);
+            }
+            if(word2.equals(wordsDict[i])) {
+                indexsOfW2.add(i);
+            }
+        }
+        
+        if(word1.equals(word2)) {
+            
+            for(int i=1; i<indexsOfW1.size(); i++) {
+                shortestDistance = Math.min(shortestDistance, Math.abs(indexsOfW1.get(i) - indexsOfW1.get(i - 1)));
+            }
+            
+            return shortestDistance;
+        }
+        
+        int indexOfW1 = 0;
+        int indexOfW2 = 0;
+        
+        System.out.println("indexsOfW1:"+indexsOfW1);
+        System.out.println("indexsOfW2:"+indexsOfW2);
+        while(indexOfW1 < indexsOfW1.size() && indexOfW2 < indexsOfW2.size()) {
+            
+            int D1 = Math.abs(indexsOfW1.get(indexOfW1) - indexsOfW2.get(indexOfW2));
+            if(indexOfW2 + 1 < indexsOfW2.size()) {
+                int D2 = Math.abs(indexsOfW1.get(indexOfW1) - indexsOfW2.get(indexOfW2 + 1));
+                if( D2 < D1) {
+                    shortestDistance = Math.min(D2, shortestDistance);
+                    indexOfW2++;
+                } else {
+                    shortestDistance = Math.min(D1, shortestDistance);
+                    indexOfW1++;
+                }
+                
+            } else {
+                shortestDistance = Math.min(D1, shortestDistance);
+                indexOfW1++;
+            }
+        }
+        
+        
+        
+        return shortestDistance;
+    }
+}
+
+class Solution {
     //Using treeset (heap)
     public int shortestWordDistance(String[] wordsDict, String word1, String word2) {
         
