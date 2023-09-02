@@ -1,0 +1,51 @@
+class Solution {
+    //Using treeset (heap)
+    public int shortestWordDistance(String[] wordsDict, String word1, String word2) {
+        
+        List<Integer> indexOfW1 = new ArrayList<Integer>();
+        List<Integer> indexOfW2 = new ArrayList<Integer>();
+        int shortestDistance = Integer.MAX_VALUE;
+        for(int i=0; i<wordsDict.length; i++) {
+            if(word1.equals(wordsDict[i])) {
+                indexOfW1.add(i);
+            }
+            if(word2.equals(wordsDict[i])) {
+                indexOfW2.add(i);
+            }
+        }
+        
+        if(word1.equals(word2)) {
+            
+            for(int i=1; i<indexOfW1.size(); i++) {
+                shortestDistance = Math.min(shortestDistance, Math.abs(indexOfW1.get(i) - indexOfW1.get(i - 1)));
+            }
+            
+            return shortestDistance;
+        }
+        
+        TreeSet<Integer> ts = new TreeSet<Integer>();
+        for(int index : indexOfW2) {
+            ts.add(index);
+        }
+        
+        for(int index : indexOfW1) {
+            
+            if(ts.floor(index) != null) {
+                
+                int index1 = ts.floor(index);
+                
+                shortestDistance = Math.min(shortestDistance, Math.abs(index1 - index));
+                
+            }
+            
+            if(ts.ceiling(index) != null) {
+                
+                int index1 = ts.ceiling(index);
+                shortestDistance = Math.min(shortestDistance, Math.abs(index1 - index));
+            }
+            
+        }
+        
+        return shortestDistance;
+    }
+}
