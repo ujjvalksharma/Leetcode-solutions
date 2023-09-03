@@ -1,5 +1,41 @@
 class Solution {
     
+        Map<String,Integer> map = new HashMap<>();
+    public int uniquePathsHelper(int[][] obstacleGrid, int x, int y, int m, int n) {
+        
+        if(x < 0 || x >= n || y < 0 || y >= m || obstacleGrid[x][y] == 1) {
+            return 0;
+        }
+        
+        if(x == n -1 && y == m - 1) {
+            return 1;
+        }
+        
+        String key = x+","+y;
+        if(map.containsKey(key)) {
+            return map.get(key);
+        }
+
+        //right
+        int totalPath1 = uniquePathsHelper(obstacleGrid, x, y + 1, m, n);
+        //bottom
+        int totalPath2 = uniquePathsHelper(obstacleGrid, x + 1, y, m, n);
+        
+        int totalPath = totalPath1 + totalPath2;
+        map.put(key, totalPath);
+        
+        return totalPath;
+        
+    }
+    
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        
+         return uniquePathsHelper(obstacleGrid, 0, 0, obstacleGrid[0].length, obstacleGrid.length);
+    }
+}
+
+class Solution {
+    
      int[][] mem;
     /*
     Use recursion+ memory and keep note of the steps at row and column to avoid recursive tarvel at that node again and then return the final sum. At any position we know to we have to calcuate the paths from it would be paths from left + paths from right.
