@@ -1,0 +1,26 @@
+//reucrision + memo On2
+class Solution {
+    Map<String, Integer> memo = new HashMap<>();
+    
+    public boolean isValidPalindrome(String s, int k) {
+        return isValid(s,0, s.length()-1) <= k;
+    }
+    
+    public int isValid(String s, int i, int j){
+        
+        if(i == j) {
+            return 0;
+        }
+        
+        if(i == j - 1) {
+            return s.charAt(i) == s.charAt(j) ? 0 : 1;
+        }
+        var key = i+","+j;
+        if(memo.containsKey(key)) return memo.get(key);
+        char a = s.charAt(i), b= s.charAt(j);
+        var res = a==b? isValid(s,i+1,j-1) : Math.min(isValid(s,i+1,j),isValid(s,i,j-1)) + 1;
+        memo.put(key,res);
+        return res;
+    }
+    
+}
