@@ -1,5 +1,40 @@
 class Solution {
     
+    Map<String,Integer> map = new HashMap<>();
+    public int uniquePathsHelper(int x, int y, int m, int n) {
+        
+        if(x < 0 || x >= n || y < 0 || y >= m) {
+            return 0;
+        }
+        
+        if(x == n -1 && y == 0) {
+            return 1;
+        }
+        
+        String key = x+","+y;
+        if(map.containsKey(key)) {
+            return map.get(key);
+        }
+        
+        //right
+        int totalPath1 = uniquePathsHelper(x + 1, y, m, n);
+        //bottom
+        int totalPath2 = uniquePathsHelper(x, y - 1, m, n);
+        
+        int totalPath = totalPath1 + totalPath2;
+        map.put(key, totalPath);
+        
+        return totalPath;
+        
+    }
+    public int uniquePaths(int m, int n) {
+        
+        return uniquePathsHelper(0, m - 1, m, n);
+    }
+}
+
+class Solution {
+    
     int[][] mem;
     int maxRow;
     int maxCol;
