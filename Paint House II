@@ -1,3 +1,89 @@
+// https://www.youtube.com/watch?v=jGywRalvoRw
+public class Solution {
+    public int minCostII(int[][] costs) {
+        int n = costs.length, minCost = 0;
+        
+        if (n > 0) {
+            int k = costs[0].length;
+            int[] dp = new int[k];
+            for (int i = 0; i < k; i++) dp[i] = costs[0][i];
+            
+            for (int i = 1; i < n; i++) {
+                int[] tmp = new int[k];
+                int[] minLeft = new int[k];
+                int[] minRight = new int[k];
+                minLeft[0] = minRight[k - 1] = Integer.MAX_VALUE;
+                
+                for (int j = 1; j < k; j++) {
+                    minLeft[j] = Math.min(minLeft[j - 1], dp[j - 1]);
+                    minRight[k - 1 - j] = Math.min(minRight[k - j], dp[k - j]);
+                }
+                
+                for (int j = 0; j < k; j++) {
+                    tmp[j] = Math.min(minLeft[j], minRight[j]) + costs[i][j];
+                }
+                
+                dp = tmp;
+            }
+
+            minCost = dp[0];
+            for (int i = 1; i < k; i++) {
+                minCost = Math.min(dp[i], minCost);
+            }
+        }
+        
+        return minCost;
+    }
+}
+
+/*
+class Solution {
+    
+    public void minCostIIHelper(int[][] costs, int row, int[][] minSumExcludingThatIndex) {
+        
+        if(row >= costs.length) {
+            return;
+        }
+        
+        int minFromRightToLeft = costs[row][costs[0].length - 1];
+        int minFromLeftToRight = costs[row][0];
+        System.out.println("minSumExcludingThatIndex: "+Arrays.toString(minSumExcludingThatIndex[row]));
+        for(int i=costs[0].length - 2; i>=0; i--) {
+            System.out.println("minFromRightToLeft: "+minFromRightToLeft);
+            minSumExcludingThatIndex[row + 1][i] = Math.min(minSumExcludingThatIndex[row + 1][i], costs[row][i] + minSumExcludingThatIndex[row][i]);
+            minFromRightToLeft = Math.min(minFromRightToLeft, minSumExcludingThatIndex[row][i]);
+        }
+         //System.out.println("minSumExcludingThatIndex[row + 1]: "+Arrays.toString(minSumExcludingThatIndex[row + 1]));
+        for(int i=1; i < costs[0].length; i++) {
+            minSumExcludingThatIndex[row + 1][i] = Math.min(minSumExcludingThatIndex[row + 1][i], costs[row][i] + minSumExcludingThatIndex[row][i]);
+            minFromLeftToRight = Math.min(minFromLeftToRight, minSumExcludingThatIndex[row][i]);
+        }
+        
+        minCostIIHelper(costs, row + 1, minSumExcludingThatIndex);
+    }
+    public int minCostII(int[][] costs) {
+        
+        int[][] minSumExcludingThatIndex = new int[costs.length + 1][costs[0].length];
+        
+        for(int i=1; i<minSumExcludingThatIndex.length; i++) {
+            Arrays.fill(minSumExcludingThatIndex[i], Integer.MAX_VALUE);
+        }
+       
+        //System.out.println("minSumExcludingThatIndex[1]: "+Arrays.toString(minSumExcludingThatIndex[1]));
+        minCostIIHelper(costs, 0, minSumExcludingThatIndex);
+        
+        int minCost = Integer.MAX_VALUE;
+        System.out.println("minSumExcludingThatIndex: "+Arrays.toString(minSumExcludingThatIndex[costs.length]));
+        for(int col=0; col < costs[0].length; col++) {
+            minCost = Math.min(minCost, minSumExcludingThatIndex[costs.length][col]);
+        }
+        return minCost;
+        
+        
+    }
+}
+
+*/
 
 //simple dp solution = recurison + memo
 class Solution {
