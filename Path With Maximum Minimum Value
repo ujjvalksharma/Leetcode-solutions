@@ -1,0 +1,47 @@
+//Dikstra algorithm
+class MaxValue {
+    int value;
+    int row;
+    int col;
+
+    public MaxValue(int value, int row, int col) {
+        this.value = value;
+        this.row = row;
+        this.col = col;
+    }
+}
+
+class Solution {
+      public int maximumMinimumPath(int[][] board) {
+        int ROWS = board.length;
+        int COLS = board[0].length;
+        boolean[][] visited = new boolean[ROWS][COLS];
+        PriorityQueue<MaxValue> pq = new PriorityQueue<>((a, b) -> Integer.compare(b.value, a.value));
+        
+        int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        pq.offer(new MaxValue(board[0][0], 0, 0));
+        visited[0][0] = true;
+        int minimumValueAlongMaxValuePath = board[0][0];
+        while (!pq.isEmpty()) {
+            // System.out.println(pq);
+            MaxValue currCell = pq.poll();
+            int row = currCell.row, col = currCell.col;
+            minimumValueAlongMaxValuePath = Math.min(minimumValueAlongMaxValuePath, board[row][col]);;                    
+            if (row == ROWS - 1 && col == COLS - 1)
+                return minimumValueAlongMaxValuePath;
+            for (int[] it : dirs) {
+                int newRow = row + it[0];
+                int newCol = col + it[1];
+                if (0 <= newRow && newRow < ROWS && 0 <= newCol && newCol < COLS && !visited[newRow][newCol]) {
+                     
+                    // System.out.print(minimumValueAlongMaxValuePath);
+                    pq.offer(new MaxValue(board[newRow][newCol], newRow, newCol));
+                    visited[newRow][newCol] = true;
+
+                }
+            }
+
+        }
+        return -1;
+    }
+}
