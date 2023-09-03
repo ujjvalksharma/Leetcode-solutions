@@ -1,0 +1,20 @@
+//O(n), find the value of d using arithemitic formula
+class Solution {
+    public int missingNumber(int[] arr) {
+      
+       // an = a + (n - 1)d find value of D
+        int d = (arr[arr.length - 1] - arr[0])/(arr.length + 1 - 1);
+        System.out.println("d: "+d);
+        int missingNum = 0;
+        
+        for(int i=0; i<arr.length -1; i++) {
+            if(arr[i] + d != arr[i + 1]) {
+                return arr[i] + d;
+            }
+        }
+        
+        
+        
+        return arr[0]; //all nunbers are the same
+    }
+}
