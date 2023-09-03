@@ -1,0 +1,49 @@
+
+//simple dp solution = recurison + memo
+class Solution {
+    
+    Map<String,Integer> map = new HashMap<String,Integer>();
+    
+    public int minCostIIHelper(int[][] costs, int row, int prevCol) {
+        
+        if(row >= costs.length) {
+            return 0;
+        }
+        
+        int minCost = Integer.MAX_VALUE;
+        String key = row+","+prevCol;
+        
+        if(map.containsKey(key)) {
+            //System.out.println("I am here");
+            return map.get(key);
+        }
+        
+        for(int col = 0; col<costs[0].length; col++ ) {
+            
+            if(prevCol != col) {
+                int newCost = minCostIIHelper(costs, row + 1, col) + costs[row][col];
+               // System.out.println("newCost: "+newCost);
+                minCost = Math.min(minCost, newCost);
+            }
+            
+        }
+        
+        map.put(key, minCost);
+        
+        return minCost;
+        
+    }
+    public int minCostII(int[][] costs) {
+        
+        
+        int minCost = Integer.MAX_VALUE;
+        
+        for(int col = 0; col<costs[0].length; col++ ) {
+            
+            minCost = Math.min(minCost, minCostIIHelper(costs, 1, col) + costs[0][col]);
+        }
+        
+        return minCost;
+        
+    }
+}
