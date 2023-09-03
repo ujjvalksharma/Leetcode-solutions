@@ -1,3 +1,28 @@
+//O(log(n)) now we know if a value is missing then all the elements are after that will be give incorrect value of D as elements are not placed at the correct index if missing value is added to the arr. Since all elements after are missing value would shift by 1 index. Now if we see incorrect value of D the we go to left of binary search to find more previous incorrect index else we go to right.
+class Solution {
+    public int missingNumber(int[] arr) {
+        int start = 0;
+        int end = arr.length - 1;
+        int oringalD = (arr[arr.length - 1] - arr[0])/(arr.length + 1 - 1);
+        int leftMostInvalidIndex = 0;
+       // System.out.println("oringalD: "+oringalD);
+        while(start <= end) {
+            
+            int mid = start + (end-start)/2;
+            int currentD = (arr[arr.length - 1] - arr[mid])/(arr.length + 1 - mid -1);
+           // System.out.println("start: "+start+" mid: "+mid+" end : "+end+" currentD: "+currentD);
+            if(currentD == oringalD) {
+                leftMostInvalidIndex = Math.max(leftMostInvalidIndex, mid);
+                start = mid +1;
+            } else {
+                end = mid -1 ;
+            }
+            
+        }
+        
+        return arr[leftMostInvalidIndex] + oringalD;
+    }
+}
 //O(n), find the value of d using arithemitic formula
 class Solution {
     public int missingNumber(int[] arr) {
