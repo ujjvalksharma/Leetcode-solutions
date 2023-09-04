@@ -1,0 +1,125 @@
+//recursion
+
+class Solution {
+    
+    String pattern;
+    String str;
+    int m;
+    int n;
+    
+    public boolean wordPatternMatch(String pattern, String str) {
+        
+        this.pattern = pattern;
+        this.str = str;
+        this.m = pattern.length();
+        this.n = str.length();
+        
+        if (m + n == 0) return true;
+        if (m == 0 || m > n) return false;
+        
+        return backtrack(0, 0, new HashMap());
+    }
+    
+    boolean backtrack(int pos, int start, Map<Character, String> map) {
+        
+        if (pos == m && start == n) return true;
+        else if (pos >= m && start < n) return false;
+        else if (pos < m && start >= n) return false;
+        
+        char c = pattern.charAt(pos);
+        
+        if (!map.containsKey(c)) {
+            for (int end = start + 1; end <= n; end++) {
+                String sub = str.substring(start, end);
+                if (map.containsValue(sub)) continue;
+                map.put(c, sub);
+                if (backtrack(pos+1, end, map)) return true;
+                map.remove(c);
+            }
+        }
+        else {
+            if (!str.startsWith(map.get(c), start)) return false;
+            return backtrack(pos+1, map.get(c).length() + start, map);
+        }
+        return false;
+    }
+}
+
+/* my solution
+class Solution {
+    
+    boolean isPatternPossible = false;
+    
+    public boolean isSameValMappedToDifferentKey(Map<Character,String> map) {
+        Set<String> values = new HashSet<String>();
+        
+        for(char key : map.keySet()) {
+            if(values.contains(map.get(key))) {
+                return true;
+            }
+            values.add(map.get(key));
+        }
+        
+        return false;
+    }
+    public void checkIfPatternIsPossible(String pattern, String s, Map<Character,String> map) {
+        
+        if(isSameValMappedToDifferentKey(map)) {
+            return;
+        }
+        StringBuilder result = new StringBuilder("");
+        System.out.println("map: "+map);
+        for(int i=0; i<pattern.length(); i++) {
+            result.append(map.get(pattern.charAt(i)));
+        }
+        System.out.println("result: "+result.toString());
+        isPatternPossible = isPatternPossible | result.toString().equals(s);
+    }
+    public void wordPatternMatchHelper(String pattern, String s, int indexOfUniqueChar, int indexOfS, List<Character> uniqueChars, Map<Character,String> map) {
+        
+        if(isPatternPossible == true) {
+            return;
+        }
+        
+        if(indexOfUniqueChar >= uniqueChars.size()) {
+            checkIfPatternIsPossible(pattern, s, map);
+            return;
+        }
+        
+        if(indexOfS >= s.length()) {
+            return;
+        }
+        
+        StringBuilder sb = new StringBuilder("");
+        for(int i=indexOfS; i<s.length();i++) {
+            
+            sb.append(s.charAt(i));
+            if(!map.containsKey(uniqueChars.get(indexOfUniqueChar))) {
+                map.put(uniqueChars.get(indexOfUniqueChar), sb.toString());
+            }
+            wordPatternMatchHelper(pattern, s, indexOfUniqueChar + 1, i + 1, uniqueChars, map);
+            map.remove(uniqueChars.get(indexOfUniqueChar));
+               
+        }
+        
+    }
+    public boolean wordPatternMatch(String pattern, String s) {
+        
+        Set<Character> setOfChars = new HashSet<Character>();
+        List<Character> uniqueChars = new ArrayList<Character>();
+        
+        for(int i=0; i<pattern.length(); i++) {
+            setOfChars.add(pattern.charAt(i));
+        }
+        
+        for(char c : setOfChars) {
+            uniqueChars.add(c);
+        }
+        System.out.println("uniqueChars: "+uniqueChars);
+        Map<Character,String> map = new HashMap<>();
+        wordPatternMatchHelper(pattern, s, 0, 0, uniqueChars, map);
+        return isPatternPossible;
+        
+        
+    }
+}*/
