@@ -1,0 +1,87 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
+    public void constructGraphandBfsQueue(TreeNode root, Map<Integer, List<Integer>> graph, int parent, Queue<int[]> bfs, Set<Integer> visited, int k) {
+        
+        if(root == null) {
+            return;
+        }
+        
+        if(!graph.containsKey(root.val)) {
+            graph.put(root.val, new ArrayList<>());
+        }
+        
+        graph.get(root.val).add(parent);
+        
+        if(root.left != null) {
+            graph.get(root.val).add(root.left.val);
+        }
+        
+        if(root.right != null) {
+            graph.get(root.val).add(root.right.val);
+        }
+        
+        if(root.val == k) {
+            bfs.add(new int[]{root.val, 1}); //nodevalue, distancefromK
+            visited.add(root.val);
+        }
+        
+        constructGraphandBfsQueue(root.left, graph, root.val, bfs, visited, k);
+        constructGraphandBfsQueue(root.right, graph, root.val, bfs, visited, k);
+        
+    }
+    
+    public int getMinDistanceByBfs(Queue<int[]> bfs, Map<Integer, List<Integer>> graph, int k, Set<Integer> visited) {
+        
+        while(!bfs.isEmpty()) {
+            
+            int[] node = bfs.poll();
+            
+            if(node[0] <= 0) {
+                continue;
+            }
+            
+            List<Integer> neighbours = graph.get(node[0]);
+        
+            if(neighbours.size() <= 1) {
+                return node[0];
+            }
+            
+            for(int neighbour : neighbours) {
+                
+                if(!visited.contains(neighbour)) {
+                    visited.add(neighbour);
+                    bfs.add(new int[] {neighbour, node[1] + 1});
+                }
+            }
+        }
+        
+        return -1;
+        
+    }
+    public int findClosestLeaf(TreeNode root, int k) {
+        
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        Queue<int[]> bfs = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        
+        constructGraphandBfsQueue(root, graph, -1, bfs, visited, k);
+        
+        return getMinDistanceByBfs(bfs, graph, k, visited);
+        
+    }
+}
