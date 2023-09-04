@@ -1,0 +1,36 @@
+class Solution {
+    /*
+    Keep track of ones count in currentOnesCount and keep track of count of ones before 0 in prevConsecutiveOnes and keep ading them. if isZeroSeen = false then we keep track of currentOnesCount
+    
+    */
+    public int findMaxConsecutiveOnes(int[] nums) {
+        
+        int prevConsecutiveOnes = 0;
+        int currentOnesCount = 0;
+        int maxOnes = 0;
+        boolean isZeroSeen = false;
+        for(int i=0; i<nums.length; i++) {
+            
+            if(nums[i] == 1) {
+                
+                currentOnesCount++;
+                if(isZeroSeen) {
+                    maxOnes = Math.max(maxOnes, currentOnesCount + prevConsecutiveOnes + 1);
+                } else {
+                    maxOnes = Math.max(maxOnes, currentOnesCount);
+                }
+                
+            } else {
+                isZeroSeen = true;
+                prevConsecutiveOnes = currentOnesCount;
+                maxOnes = Math.max(maxOnes, prevConsecutiveOnes + 1);
+                currentOnesCount = 0;
+            }
+            
+        }
+        
+        
+        
+        return maxOnes;
+    }
+}
