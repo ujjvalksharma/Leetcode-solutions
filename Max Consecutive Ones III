@@ -1,3 +1,43 @@
+class Solution {
+    public int longestOnes(int[] nums, int k) {
+        //sliding window with start and end and maintain totalZero = k
+        
+        int start = 0;
+        int end = 0;
+        int maxOnes = 0;
+        int zeroCount = 0;
+        int oneCount = 0;
+        
+        while(end < nums.length) {
+            
+            if(nums[end] == 1) {
+                oneCount++;
+                maxOnes = Math.max(maxOnes, oneCount + zeroCount);
+            } else {
+                zeroCount++;
+                
+                while(start<=end && zeroCount > k) {
+                    
+                    if(nums[start] == 1) {
+                        oneCount--;
+                    } else {
+                        zeroCount--;
+                    }
+                    start++;
+                }
+                
+                if(zeroCount <= k) {
+                    maxOnes = Math.max(maxOnes, oneCount + zeroCount);
+                }
+            }
+            
+            end++;
+        }
+        
+        return maxOnes;
+    }
+}
+
 /*
 Simple acquire and release concept. Keep a start and moving pointer and acquire all the time and release when we know totalZeros has exceed the limit (>K)
 
