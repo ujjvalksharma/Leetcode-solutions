@@ -1,3 +1,39 @@
+class Solution {
+    
+    Map<String,Integer> dp = new HashMap<>();
+    public int longestPalindromeSubseqHelper(String s, int start, int end) {
+        
+        if(start > end) {
+            return 0;
+        }
+        
+        if(start == end) {
+            return 1;
+        }
+        
+        String key = start+","+end;
+        
+        if(dp.containsKey(key)) {
+            return dp.get(key);
+        }
+        
+        int maxLen = 0;  
+        if(s.charAt(start) == s.charAt(end)) {
+            maxLen = longestPalindromeSubseqHelper(s, start + 1, end - 1) + 2;
+        } else {
+            int len1 = longestPalindromeSubseqHelper(s, start + 1, end);
+            int len2 = longestPalindromeSubseqHelper(s, start, end - 1);
+            maxLen = Math.max(len1, len2);
+        }
+        //System.out.println("start: "+start+" end: "+end+" maxLen: "+maxLen);
+        dp.put(key, maxLen);
+        return maxLen;
+    }
+    public int longestPalindromeSubseq(String s) {
+        return longestPalindromeSubseqHelper(s, 0, s.length() - 1);
+    }
+}
+
 /*
 same as longest common subsequence just reverse the string and then find longest common subsequence between two strings
 
