@@ -1,0 +1,41 @@
+//recursion + memorization. For visited we are using treeset so toString always come in specific order
+//we can algo use dikstra algorithm since we have to find minimum
+class Solution {
+    
+    public int getDistance(int[][] workers, int[][] bikes, int workerIndex,int bikesIndex) {
+        return Math.abs(workers[workerIndex][0] - bikes[bikesIndex][0]) + Math.abs(workers[workerIndex][1] - bikes[bikesIndex][1]);
+    }
+    
+    Map<String,Integer> dp = new HashMap<>();
+    public int assignBikesHelper(int[][] workers, int[][] bikes, int workerIndex, TreeSet<Integer> visitedBikes) {
+        
+        if(workerIndex >= workers.length) {
+            return 0;
+        }
+        
+        String key = workerIndex+","+visitedBikes;
+        
+        if(dp.containsKey(key)) {
+           // System.out.println("I am here");
+            return dp.get(key);
+        }
+        
+        int minDistance = Integer.MAX_VALUE;
+        for(int i=0; i<bikes.length; i++) {
+            if(!visitedBikes.contains(i)) {
+                visitedBikes.add(i);
+                int currentDistance = getDistance(workers, bikes, workerIndex, i);
+                int totalDistance = assignBikesHelper(workers, bikes, workerIndex + 1, visitedBikes) + currentDistance;
+                minDistance = Math.min(minDistance, totalDistance);
+                visitedBikes.remove(i);
+            }
+        }
+        dp.put(key, minDistance);
+        return minDistance;
+    }
+    public int assignBikes(int[][] workers, int[][] bikes) {
+        
+        return assignBikesHelper(workers, bikes, 0, new TreeSet<>());
+        
+    }
+}
