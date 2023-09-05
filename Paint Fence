@@ -1,0 +1,24 @@
+class Solution {
+    public int numWays(int n, int k) {
+        
+        if (n == 1) return k;
+        if (n == 2) return k * k;
+        
+        int[] lastTwoSameColour = new int[n + 1];
+        int[] lastTwoDifferentColour = new int[n + 1];
+        int[] totalWaysToBePainted = new int[n + 1];
+        
+        lastTwoSameColour[2] = k;
+        lastTwoDifferentColour[2] = (k - 1) * k;
+        totalWaysToBePainted[2] = lastTwoSameColour[2] + lastTwoDifferentColour[2];
+        //System.out.println("totalWaysToBePainted[2]: "+totalWaysToBePainted[2]);
+        for(int i=3; i<=n; i++) {
+            lastTwoSameColour[i] = lastTwoDifferentColour[i - 1];
+            lastTwoDifferentColour[i] = (k - 1) * totalWaysToBePainted[i - 1];
+            totalWaysToBePainted[i] = lastTwoDifferentColour[i] + lastTwoSameColour[i];
+        }
+        
+        
+        return totalWaysToBePainted[n];
+    }
+}
