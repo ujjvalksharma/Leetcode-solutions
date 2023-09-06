@@ -1,0 +1,75 @@
+//append length to start to differenciate between the string
+public class Codec {
+
+    // Encodes a list of strings to a single string.
+    public String encode(List<String> strs) {
+        
+        StringBuilder sb = new StringBuilder("");
+        
+        for(String s : strs) {
+            sb.append(s.length()).append(",");
+        }
+        
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append("#");
+    //    System.out.println("sb: "+sb.toString());
+        for(String s : strs) {
+            sb.append(s);
+        }
+        
+        return sb.toString();
+        
+    }
+
+    // Decodes a single string to a list of strings.
+    public List<String> decode(String s) {
+        System.out.println("s: "+s.toString());
+        List<String> result = new ArrayList<>();
+        List<Integer> lengths = new ArrayList<>();
+        StringBuilder strLen = new StringBuilder("");
+        int start = 0;
+        StringBuilder temp = new StringBuilder("");
+        for(int i=0; i<s.length(); i++) {
+            
+            if(s.charAt(i) == '#') {
+                start = i + 1;
+                break;
+            }
+            strLen.append(s.charAt(i));
+        }
+    //    System.out.println("strLen: "+strLen.toString());
+        String[] arr = strLen.toString().split(",");
+        for(String len : arr) {
+       //     System.out.println("len: "+len.toString());
+            lengths.add(Integer.parseInt(len));
+        }
+      //  System.out.println("lengths: "+lengths);
+        int index = 0;
+        do {
+            
+            if(lengths.get(index) == 0) {
+                temp.setLength(0);
+                index++;
+               result.add("");
+                continue;
+            }
+            temp.append(s.charAt(start));
+            
+            if(temp.length() == lengths.get(index)) {
+                
+                result.add(temp.toString());
+                temp.setLength(0);
+                index++;
+                
+            }
+            start++;
+        }while(index < lengths.size());
+        
+        return result;
+        
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.decode(codec.encode(strs));
