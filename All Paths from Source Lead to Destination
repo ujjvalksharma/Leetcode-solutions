@@ -1,0 +1,59 @@
+class Solution {
+    
+    public void buildGraph(int n, Map<Integer, List<Integer>> graph, int[][] edges) {
+        
+         for(int i=0; i<n; i++) {
+            if(!graph.containsKey(i)) {
+                graph.put(i, new ArrayList<>());
+            }
+        }
+        
+        for(int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+        }
+        
+    }
+    
+    public boolean isAllPathLeadingToDestination(int currentNode, int destination, Map<Integer, List<Integer>> graph, int[] visited) {
+        
+        if(currentNode == destination && graph.get(currentNode).size() == 0) {
+            return true;
+        }
+        
+        if(graph.get(currentNode).size() == 0) {
+            return false;
+        }
+        
+        List<Integer> neighbours = graph.get(currentNode);
+        visited[currentNode] = 1; //this node is in the path/ is still processing
+        boolean isAllNodesReachable = true;
+        for(int neighbour : neighbours) {
+            //this node is going to give the same result as all its path is explored, so we can ignore it as its result is known
+            if(visited[neighbour] == 2) { 
+                continue;
+                
+            } else if(visited[neighbour] == 1) {
+                
+                return false;
+                
+            } else {
+                
+                isAllNodesReachable = isAllNodesReachable & isAllPathLeadingToDestination(neighbour, destination, graph, visited);
+                
+            }
+            
+        }
+        
+        visited[currentNode] = 2; 
+        return isAllNodesReachable;
+    }
+    public boolean leadsToDestination(int n, int[][] edges, int source, int destination) {
+        
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        int[] visited = new int[n];
+        
+        buildGraph(n, graph, edges);
+        return isAllPathLeadingToDestination(source, destination, graph, visited);
+        
+    }
+}
