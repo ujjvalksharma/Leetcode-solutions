@@ -1,0 +1,48 @@
+class Vector2D {
+
+    int row;
+    int col;
+    int[][] vec;
+    public Vector2D(int[][] vec) {
+        
+        this.vec = vec;
+        this.row = 0;
+        this.col = 0;
+        
+                    //while as some row/inner can be empty
+            while(this.row < vec.length && this.vec[row].length == 0) {
+                this.row++;
+            }
+        
+    }
+    
+    public int next() {
+        
+        int result = vec[row][col];
+        col++;
+        if(col == vec[row].length) {
+            col = 0;
+            row++;
+            
+            //while as some row/inner can be empty
+            while(row < vec.length && vec[row].length == 0) {
+                row++;
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean hasNext() {
+        
+        
+        return row < vec.length;
+    }
+}
+
+/**
+ * Your Vector2D object will be instantiated and called as such:
+ * Vector2D obj = new Vector2D(vec);
+ * int param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
+ */
