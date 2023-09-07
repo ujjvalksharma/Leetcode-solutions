@@ -1,0 +1,93 @@
+// keep all element in heap/priorityqueue and then poll elements by frequency. now the problem is what is all elements in queue are of frequency 1 and you want to maintain k distance then in that case we will pick the element which was picked earlist, so we know we can maintain k distance.
+class Solution {
+    
+    class Node {
+        
+        public char c;
+        public int frequency;
+        public int prevIndexInResult;
+        
+        public Node(char c, int frequency, int prevIndexInResult) {
+            this.c = c;
+            this.frequency = frequency;
+            this.prevIndexInResult = prevIndexInResult;
+        }
+        
+        @Override
+        public String toString() {
+            return "c: "+c+" frequency: "+frequency;
+        }
+        
+    }
+    public String rearrangeString(String s, int k) {
+        
+        Map<Character,Integer> map = new HashMap<>();
+        
+        for(int i=0; i<s.length(); i++) {
+            
+            if(!map.containsKey(s.charAt(i))) {
+                map.put(s.charAt(i), 0);
+            }
+            
+            map.put(s.charAt(i), map.get(s.charAt(i)) + 1);
+            
+        }
+        
+        PriorityQueue<Node> pq = new PriorityQueue<Node>((n1,n2) -> {
+            if(n2.frequency != n1.frequency) {
+                return n2.frequency - n1.frequency;
+            }
+            
+            return n1.prevIndexInResult - n2.prevIndexInResult;
+        });
+        
+        for(char key : map.keySet()) {
+            pq.add(new Node(key, map.get(key), 0));
+        }
+        
+        //System.out.println("pq: "+pq);
+        
+        StringBuilder result = new StringBuilder("");
+        
+        while(!pq.isEmpty()) {
+           
+            Node currentNode = pq.poll();
+            List<Node> previousNodes = new ArrayList<Node>();
+            
+            result.append(currentNode.c);
+            
+            if(currentNode.frequency > 1) {
+                
+                currentNode.frequency--;
+                previousNodes.add(new Node(currentNode.c, currentNode.frequency, result.length() - 1));
+                
+                if(pq.size() < k - 1) {
+                return "";
+                }
+                
+                int size = k - 1;
+                
+                while(size > 0) {
+                
+                Node tempNode = pq.poll();
+                result.append(tempNode.c);
+                if(tempNode.frequency > 1) {
+                    tempNode.frequency--;
+                    previousNodes.add(new Node(tempNode.c, tempNode.frequency, result.length() - 1));
+                }
+                
+                size--;
+            }
+            
+            }
+            
+            for(int i=0; i<previousNodes.size(); i++) {
+                pq.add(previousNodes.get(i));
+            }
+            
+          //  System.out.println("pq: "+pq);
+        }
+        
+        return result.toString();
+    }
+}
