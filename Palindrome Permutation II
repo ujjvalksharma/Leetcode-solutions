@@ -1,0 +1,104 @@
+/*
+Store all character and their frequency and then recusrively travel the map for each character and first use character that frequency > 2 and then last character with frequency == 1 and since we are traverse a forloop for a to z recusrive we generate all permutation of palindrome as each gets to picked in any order.
+
+*/
+
+class Solution {
+    
+    List<String> result = new ArrayList<String>();
+    
+    public void generatePalindromeStr(List<Character> firstHalf, List<Character> secondHalf) {
+        
+        StringBuilder tempResult = new StringBuilder("");
+        
+        for(char c : firstHalf) {
+            tempResult.append(c);
+        }
+        
+        for(int i=secondHalf.size() - 1; i >= 0; i--) {
+            tempResult.append(secondHalf.get(i));
+        }
+        
+        result.add(tempResult.toString());
+    }
+    
+    public void generatePalindromesHelper(Map<Character,Integer> map, List<Character> firstHalf, List<Character> secondHalf) {
+      //  System.out.println("map: "+map+" firstHalf: "+firstHalf+" secondHalf: "+secondHalf);
+        if(map.size() == 0) {
+            
+            generatePalindromeStr(firstHalf, secondHalf);
+            return;
+            
+        }
+        
+        
+                for(char c='a'; c<='z'; c++) {
+                if(map.containsKey(c)) {
+                    
+                   int prevCount = map.get(c);
+                    
+                    if(prevCount == 1 && map.size() > 1) { // use it only when map has nothing left, but the last character of odd
+                        continue;
+                    }
+                    
+                    if(prevCount == 1) { // for the last character in odd length string
+                        firstHalf.add(c);
+                        map.remove(c);
+                        generatePalindromesHelper(map, firstHalf, secondHalf);
+                        firstHalf.remove(firstHalf.size() - 1);
+                        
+                    } else if(prevCount == 2) {
+                        firstHalf.add(c);
+                        secondHalf.add(c);
+                        map.remove(c);
+                        generatePalindromesHelper(map, firstHalf, secondHalf);
+                        firstHalf.remove(firstHalf.size() - 1);
+                        secondHalf.remove(secondHalf.size() - 1);
+                    } else {
+                        firstHalf.add(c);
+                        secondHalf.add(c);
+                        map.put(c, prevCount - 2);
+                        generatePalindromesHelper(map, firstHalf, secondHalf);
+                        firstHalf.remove(firstHalf.size() - 1);
+                        secondHalf.remove(secondHalf.size() - 1);
+                    }
+                    
+                    map.put(c, prevCount);
+                    
+                }
+            }
+        
+        
+    }
+    
+    public List<String> generatePalindromes(String s) {
+        
+        Map<Character,Integer> map = new HashMap<>();
+        
+        for(int i = 0; i<s.length(); i++) {
+            
+            if(!map.containsKey(s.charAt(i))) {
+                map.put(s.charAt(i), 0);
+            }
+            
+            map.put(s.charAt(i), map.get(s.charAt(i)) + 1);
+        }
+        
+        int charWithOddCount = 0;
+        
+        for(char c : map.keySet()) {
+            
+            if(map.get(c)%2 != 0) {
+                charWithOddCount++;
+            }
+        }
+        
+        if(charWithOddCount > 1) {
+            return result;
+        }
+        
+        generatePalindromesHelper(map, new ArrayList<>(), new ArrayList<>());
+        
+        return result;
+    }
+}
