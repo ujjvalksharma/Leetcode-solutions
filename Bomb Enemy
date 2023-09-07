@@ -1,0 +1,87 @@
+//dp prefix sum in all direction
+class Solution {
+    public int maxKilledEnemies(char[][] grid) {
+        
+        int[][] rowSumLeftToRight = new int[grid.length][grid[0].length];
+        int[][] rowSumRightToLeft = new int[grid.length][grid[0].length];
+        int[][] colSumTopToBottom = new int[grid.length][grid[0].length];
+        int[][] colSumBottomToTop = new int[grid.length][grid[0].length];
+        
+        for(int i=0; i<grid.length; i++) {
+            int enemies = 0;
+            for(int j=0; j<grid[0].length; j++) {
+                
+                if(grid[i][j] == 'E') {
+                   enemies++; 
+                } else if(grid[i][j] == 'W') {
+                    enemies = 0;
+                }
+                
+                rowSumLeftToRight[i][j] = enemies;
+                
+            }
+        }
+        
+        for(int i=0; i<grid.length; i++) {
+            int enemies = 0;
+            for(int j=grid[0].length - 1; j>=0; j--) {
+                
+                if(grid[i][j] == 'E') {
+                   enemies++; 
+                } else if(grid[i][j] == 'W') {
+                    enemies = 0;
+                }
+                
+                rowSumRightToLeft[i][j] = enemies;
+                
+            }
+        }
+        
+        for(int j=0; j<grid[0].length; j++) {
+            int enemies = 0;
+            for(int i=0; i<grid.length; i++){
+                
+                if(grid[i][j] == 'E') {
+                   enemies++; 
+                } else if(grid[i][j] == 'W') {
+                    enemies = 0;
+                }
+                
+                colSumTopToBottom[i][j] = enemies;
+                
+            }
+        }
+        
+        for(int j=0; j<grid[0].length; j++) {
+            int enemies = 0;
+            for(int i=grid.length - 1; i>=0; i--){
+                
+                if(grid[i][j] == 'E') {
+                   enemies++; 
+                } else if(grid[i][j] == 'W') {
+                    enemies = 0;
+                }
+                
+                colSumBottomToTop[i][j] = enemies;
+                
+            }
+        }
+        
+        int maxEnimesThatCanKill = 0;
+        
+        for(int i=0; i<grid.length; i++) {
+            
+            for(int j=0; j<grid[0].length; j++) {
+                
+                if(grid[i][j] != 'W' && grid[i][j] != 'E') {
+                    
+                    int totalSum = rowSumLeftToRight[i][j] + rowSumRightToLeft[i][j] + colSumTopToBottom[i][j] + colSumBottomToTop[i][j];
+                    
+                    maxEnimesThatCanKill = Math.max(maxEnimesThatCanKill, totalSum);
+                }
+            }
+        }
+        
+        return maxEnimesThatCanKill;  
+    }
+}
