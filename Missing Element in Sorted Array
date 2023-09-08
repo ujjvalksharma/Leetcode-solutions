@@ -1,3 +1,49 @@
+//O(n) Binary search and move left to right based total numbers present between 0 to mid and if we see missingnumbers < k that means we need to move to right as range is less and if missingnumbers > k then we need to left to ith index can be closed to kth missing number
+class Solution {
+    public int missingElement(int[] nums, int k) {
+
+        int low = 0;
+        int high = nums.length - 1;
+        
+        while(low <= high) {
+            int mid = low + (high - low) / 2;
+            System.out.println("low: "+low+" high: "+high+" mid: "+mid);
+            int leastNumber = nums[0];
+            int totalNumBetweenMinAndMid = nums[mid] - leastNumber - 1;
+            int numbersPresent = mid - 1;
+            int numbersMissing = totalNumBetweenMinAndMid - numbersPresent;
+            if(numbersMissing < k) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        
+        if(low !=0 && low != nums.length - 1) {
+            low--;
+        }
+        int leastNumber = nums[0];
+        int totalNumBetweenMinAndMid = nums[low] - leastNumber - 1;
+        int numbersPresent = low - 1;
+        int numbersMissing = totalNumBetweenMinAndMid - numbersPresent;
+        if(low == nums.length - 1 && numbersMissing > k) {
+            low--;
+        }
+        
+        
+         totalNumBetweenMinAndMid = nums[low] - leastNumber - 1;
+         numbersPresent = low - 1;
+         numbersMissing = totalNumBetweenMinAndMid - numbersPresent;
+        
+        
+        k -= numbersMissing;
+        
+        return nums[low] + k;
+        
+    }
+}
+    
+
 //O(n) similar linear soltuion
 class Solution {
     public int missingElement(int[] nums, int k) {
