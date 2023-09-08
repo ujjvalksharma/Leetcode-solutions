@@ -1,0 +1,26 @@
+//O(n) similar linear soltuion
+class Solution {
+    public int missingElement(int[] nums, int k) {
+    
+        
+        for(int i=0; i<nums.length - 1; i++) {
+            
+            int low = nums[i];
+            int high = nums[i + 1];
+            
+            if(low + 1 == high) {
+                continue;
+            }
+            
+            int gapOfNumbers = high - low - 1;
+            
+            if(gapOfNumbers >= k) {
+                return low + k;
+            } else {
+                k -= gapOfNumbers;
+            }
+        }
+        
+        return nums[nums.length - 1] + k;
+    }
+}
