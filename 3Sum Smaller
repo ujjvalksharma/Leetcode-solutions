@@ -1,0 +1,47 @@
+/*class Solution {
+    public int threeSumSmaller(int[] nums, int target) {
+        Arrays.sort(nums);
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+        int left = i + 1;
+        int right = nums.length - 1;
+        int tempTarget = target - nums[i];
+        while (left < right) {
+            if (nums[left] + nums[right] < tempTarget) {
+                sum += (right - left); // all the numbers to left of nums[right] is smaller than nums[right], so they will form a pair with nums[left]
+                 left++;
+            } else {
+                right--;
+            }
+        }
+        return sum;
+            
+        }
+        return sum;
+    }
+}*/
+class Solution {
+    public int threeSumSmaller(int[] nums, int target) {
+        Arrays.sort(nums);
+        int sum = 0;
+        for (int i = 0; i < nums.length - 2; i++) {
+            sum += twoSumSmaller(nums, i + 1, target - nums[i]);
+        }
+        return sum;
+    }
+
+    private int twoSumSmaller(int[] nums, int startIndex, int target) {
+        int sum = 0;
+        int left = startIndex;
+        int right = nums.length - 1;
+        while (left < right) {
+            if (nums[left] + nums[right] < target) {
+                sum += right - left;
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return sum;
+    }
+}
