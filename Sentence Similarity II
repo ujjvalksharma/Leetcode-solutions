@@ -1,0 +1,85 @@
+
+//union-find, make cluster of word and assign a common parent to that cluster
+class Solution {
+    
+    public void fillParentMap(Map<String,String> parentToChild,String[] sentence1, String[] sentence2, List<List<String>> similarPairs) {
+        
+        for(String sentence : sentence1) {
+            parentToChild.put(sentence,sentence);
+        }
+
+        for(String sentence : sentence2) {
+            parentToChild.put(sentence,sentence);
+        }
+        
+        for(List<String> similarPair : similarPairs) {
+            parentToChild.put(similarPair.get(0),similarPair.get(0));
+             parentToChild.put(similarPair.get(1),similarPair.get(1));
+        }
+
+    }
+    
+    public String findParent(Map<String,String> parentToChild, String word) {
+        
+        if(parentToChild.get(word).equals(word)) {
+            return word;
+        }
+        
+        return findParent(parentToChild, parentToChild.get(word));
+    }
+    
+    public void union_find(Map<String,String> parentToChild, List<List<String>> similarPairs) {
+        
+            for(List<String> similarPair : similarPairs) {
+            
+            String parent1 = findParent(parentToChild, similarPair.get(0));
+            String parent2 = findParent(parentToChild, similarPair.get(1));
+            
+            parentToChild.put(parent2, parent1);
+            
+        }
+    }
+    
+    public void pointToRealParent(Map<String,String> parentToChild,String[] sentence1, String[] sentence2) {
+        
+        for(String sentence : sentence1) {
+            String parent = findParent(parentToChild, sentence);
+            parentToChild.put(sentence, parent);
+            
+        }
+        
+        for(String sentence : sentence2) {
+            String parent = findParent(parentToChild, sentence);
+            parentToChild.put(sentence, parent);
+        }
+    }
+    
+    public boolean areSentencesSimilarTwo(String[] sentence1, String[] sentence2, List<List<String>> similarPairs) {
+        
+        if(sentence1.length != sentence2.length) {
+            return false;
+        }
+        
+        Map<String,String> parentToChild = new HashMap<String,String>();
+        
+        fillParentMap(parentToChild, sentence1, sentence2, similarPairs);
+       // System.out.println("parentToChild1: "+parentToChild);
+        union_find(parentToChild, similarPairs);
+      //   System.out.println("parentToChild2: "+parentToChild);
+        pointToRealParent(parentToChild, sentence1, sentence2);
+        
+        for(int i=0; i<sentence1.length; i++) {
+            
+            String parent1 = parentToChild.get(sentence1[i]);
+            String parent2 = parentToChild.get(sentence2[i]);
+            
+            if(!parent1.equals(parent2)) {
+                return false;
+            }
+            
+        }
+        
+        return true;
+        
+    }
+}
