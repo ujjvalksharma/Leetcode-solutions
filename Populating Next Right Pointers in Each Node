@@ -1,0 +1,65 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+    
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+*/
+
+class Solution {
+    public Node connect(Node root) {
+        
+        Queue<Node> levelOrderQueue = new LinkedList<Node>();
+        if(root != null) {
+            levelOrderQueue.add(root);
+        }
+        
+        
+        while(!levelOrderQueue.isEmpty()) {
+            
+            int size = levelOrderQueue.size();
+         //   System.out.println("current size: "+size);
+            Node prevNode = null;
+            while(size > 0) {
+                
+                Node node = levelOrderQueue.poll();
+                
+                if(prevNode == null) {
+                    prevNode = node;
+                } else {
+                 //   System.out.println("prevNode: "+prevNode.val+" node: "+node.val);
+                    prevNode.next = node;
+                    prevNode = node;
+                }
+                
+                if(node.left != null) {
+                    levelOrderQueue.add(node.left);
+                }
+                
+                if(node.right != null) {
+                    levelOrderQueue.add(node.right);
+                }
+                size--;
+                
+            }
+        }
+        
+        return root;
+        
+    }
+}
