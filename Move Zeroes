@@ -1,0 +1,42 @@
+class Solution {
+    
+    public int findFirstZeroIndex(int[] nums) {
+        
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] == 0) {
+                return i;
+            }
+        }
+        
+        return Integer.MAX_VALUE;
+    }
+    
+    public int findNextZeroIndex(int[] nums, int lastZeroIndex) {
+        
+        for(int i=lastZeroIndex + 1; i < nums.length; i++) {
+            if(nums[i] == 0) {
+                return i;
+            }
+        }
+        
+        return Integer.MAX_VALUE;
+    }
+    public void moveZeroes(int[] nums) {
+        
+        int lastZeroIndex = findFirstZeroIndex(nums);
+        
+        for(int i=0; i<nums.length; i++) {
+            
+            if(nums[i] != 0) {
+                
+                if(lastZeroIndex < i) {
+                    nums[lastZeroIndex] = nums[i];
+                    nums[i] = 0;
+                    lastZeroIndex = findNextZeroIndex(nums, lastZeroIndex);
+                }
+                
+            }
+        }
+        
+    }
+}
