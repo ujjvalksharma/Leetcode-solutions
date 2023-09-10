@@ -1,4 +1,52 @@
 class Solution {
+    
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    
+    //using 2 while loops
+    public void sortColors(int[] nums) {
+        
+        int index = 0;
+        int i=0;
+        while(i<nums.length) {
+            
+            if(nums[i] != 0) { //nums[i] can be 1/2
+                i++;
+            } else if(index != i) {
+                swap(nums,i,index);
+                index++;
+            } else {
+                i++;
+                index++;
+            }
+        }
+        index = nums.length - 1;
+        i=0;
+        while(i<nums.length && i <= index) {
+            
+            if(nums[i] != 2) {
+                i++;
+            } else {
+                swap(nums,i,index);
+                index--;
+            }
+        }
+        
+        
+    }
+}
+
+/*
+
+Solution 1
+1) push all the zero to left
+2) push all the ones to right
+
+*/
+class Solution {
     /*
     https://www.youtube.com/watch?v=sEQk8xgjx64&t=242s
     */
