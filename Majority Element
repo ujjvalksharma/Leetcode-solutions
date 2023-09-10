@@ -1,0 +1,30 @@
+class Solution {
+    public int majorityElement(int[] nums) {
+        
+        int frequencyOfMajorityElement = 1;
+        int majorityElement = nums[0];
+        
+        for(int i=1; i<nums.length; i++) {
+            
+            if(nums[i] == majorityElement) {
+                frequencyOfMajorityElement++;
+            } else {
+                frequencyOfMajorityElement--;
+                if(frequencyOfMajorityElement == 0) {
+                    frequencyOfMajorityElement = 1;
+                    majorityElement = nums[i];
+                }
+            }
+        }
+        
+        frequencyOfMajorityElement = 0;
+        
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] == majorityElement) {
+                frequencyOfMajorityElement++;
+            }
+        }
+        
+        return frequencyOfMajorityElement > nums.length/2 ? majorityElement : -1;
+    }
+}
