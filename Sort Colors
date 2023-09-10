@@ -9,6 +9,77 @@ class Solution {
     //using 2 while loops
     public void sortColors(int[] nums) {
         
+    /*  int index1 = 0;
+        int i=0;
+        while(i<nums.length) {
+            
+            if(nums[i] != 0) { //nums[i] can be 1/2
+                i++;
+            } else if(index1 != i) {
+                swap(nums,i,index1);
+                index1++;
+            } else {
+                i++;
+                index1++;
+            }
+        }
+        
+        index2 = nums.length - 1;
+        i=0;
+        while(i<nums.length && i <= index2) {
+            
+            if(nums[i] != 2) {
+                i++;
+            } else {
+                swap(nums,i,index2);
+                index--;
+            }
+        }
+        
+       */
+        
+        //Just combine the above 2 while loops into one while loop
+        int i=0;
+        int indexToPutZero = 0;
+        int indexToPutTwo = nums.length - 1;
+        while(i<nums.length && i <= indexToPutTwo) {
+            if(nums[i] == 0 && indexToPutZero != i) {
+                swap(nums,i,indexToPutZero);
+                indexToPutZero++;
+                
+            } else if(nums[i] == 2 && indexToPutTwo != i) {
+                swap(nums,i,indexToPutTwo);
+                indexToPutTwo--;
+            } else {
+                i++;
+            }
+        
+        }
+        
+        
+    }
+}
+
+/*
+
+Solution 1
+1) push all the zero to left
+2) push all the ones to right
+
+*/
+
+
+class Solution {
+    
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    
+    //using 2 while loops
+    public void sortColors(int[] nums) {
+        
         int index = 0;
         int i=0;
         while(i<nums.length) {
