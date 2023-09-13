@@ -1,4 +1,39 @@
 class Solution {
+    
+    public int getHappyNumber(int n) {
+        
+        int totalSquare = 0;
+        
+        while( n > 0) {
+            int lastDigit = n%10;
+            totalSquare += lastDigit*lastDigit;
+            n = n/10;
+        }
+        
+        return totalSquare;
+    }
+    public boolean isHappy(int n) {
+        
+        int slow = n;
+        int fast = n;
+        
+        do {
+            
+            slow = getHappyNumber(slow);
+            fast = getHappyNumber(getHappyNumber(fast));
+            
+        }while(slow != fast && slow != 1 && fast != 1);
+        
+        if(slow == 1 || fast == 1) {
+            return true;
+        }
+        
+        return false;
+        
+    }
+}
+
+class Solution {
     public boolean isHappy(int n) {
         
         int slowPointer=getNextNum(n);
