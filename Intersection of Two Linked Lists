@@ -9,6 +9,87 @@
  *     }
  * }
  */
+
+/*
+
+If I know lenA > lenB then I know when when I increment head of of both list together. HeadA is going to be behind and headB would reach the finish line. The distance of behind is excatly the length difference between the list. Now, let say I introduce another variable headA2 = headA and increment till headA1 reaches the end. Now headA1 and headA2 would travel the distance of difference between l1 and l2. Now we know headB and headA2 are at same distance from end and we can find the common point by incrementing by 1.
+
+*/
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        
+        ListNode headA1 = headA;
+        ListNode headB1 = headB;
+        
+        while(headA1 != null && headB1!= null) {
+            
+            if(headA1 == headB1) { // no len diff, lenA == lenB
+                return headA1;
+            }
+            
+            headA1 = headA1.next;
+            headB1 = headB1.next;
+
+        }
+        
+        if(headB1 != null && headA1 == null) { //lenB > lenA
+            
+            ListNode headB2 = headB;
+            ListNode headA2 = headA;
+            
+            while(headB1 != null && headB2 != null) {
+                headB2 = headB2.next;
+                headB1 = headB1.next;
+            }
+            
+            while(headA2 != null && headB2!= null) {
+                if(headA2 == headB2) { // no len diff
+                    return headA2;
+                }
+            
+            headA2 = headA2.next;
+            headB2 = headB2.next;
+
+        }
+        
+        } else if(headB1 == null && headA1 != null) { //lenA > lenB 
+            
+            ListNode headB2 = headB;
+            ListNode headA2 = headA;
+            
+            while(headA1 != null && headA2 != null) {
+                headA2 = headA2.next;
+                headA1 = headA1.next;
+            }
+            
+            while(headA2 != null && headB2!= null) {
+                if(headA2 == headB2) { // no len diff
+                    return headA2;
+                }
+            
+            headA2 = headA2.next;
+            headB2 = headB2.next;
+
+        }
+            
+            }
+        
+        return null; //no intersection
+        
+    }
+}
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
 /*
 youtube.com/watch?v=u4FWXfgS8jw
 Move both nodes together when one of the longer link nodes reaches the end the send it to shorter linlist start which means when shorter ones completes this would be l2-l1 places ahead from start as that was the difference
