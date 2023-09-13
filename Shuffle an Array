@@ -1,3 +1,62 @@
+class Solution {
+
+    int[] originalNums;
+    int[] mutatedNums;
+    public Solution(int[] nums) {
+        
+        this.originalNums = new int[nums.length];
+        this.mutatedNums = new int[nums.length];
+        for(int i=0; i<nums.length; i++) {
+            this.originalNums[i] = nums[i];
+        }
+    }
+    
+    public int[] reset() {
+        
+        for(int i=0; i<originalNums.length; i++) {
+            this.mutatedNums[i] = originalNums[i];
+        }
+        
+        return this.mutatedNums;
+    }
+    
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[j];
+        nums[j] = nums[i];
+        nums[i] = temp;
+    }
+    public int[] shuffle() {
+        
+        int start = 0;
+        int[] tempNums = new int[originalNums.length];
+        
+         for(int i=0; i<originalNums.length; i++) {
+            tempNums[i] = originalNums[i];
+        }
+        
+        for(int i=tempNums.length - 1; i>=0; i--) {
+            int randomIndex = getRandomIndex(0, i);
+            mutatedNums[start] = tempNums[randomIndex];
+            swap(tempNums, randomIndex, i);
+            start++;
+        }
+        
+        
+        return mutatedNums;
+    }
+    
+    public int getRandomIndex(int min, int max) {
+        return (int ) Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(nums);
+ * int[] param_1 = obj.res      et();
+ * int[] param_2 = obj.shuffle();
+ */
+
 //https://www.youtube.com/watch?v=4zx5bM2OcvA
 class Solution {
     private int[] nums;
