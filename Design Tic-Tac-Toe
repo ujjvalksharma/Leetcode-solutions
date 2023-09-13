@@ -1,3 +1,80 @@
+class TicTacToe {
+
+    class Score {
+        
+        int p1Score;
+        int p2Score;
+        
+        public Score(int p1Score, int p2Score) {
+            this.p2Score = p2Score;
+            this.p1Score = p1Score;
+        }
+        
+    }
+    
+    Score[] rowScore;
+    Score[] colScore;
+    Score diag1;
+    Score diag2;
+    int n;
+    public TicTacToe(int n) {
+        
+        this.rowScore = new Score[n];
+        this.colScore = new Score[n];
+        this.diag1 = new Score(0,0); //row == col
+        this.diag2 = new Score(0,0); //
+        this.n = n;
+        for(int i=0; i<n; i++) {
+            this.rowScore[i] = new Score(0,0);
+            this.colScore[i] = new Score(0,0);
+        }
+        
+    }
+    
+    public int getWinner(int playerId, Score score) {
+        
+        if(playerId == 1) {
+            score.p1Score++;
+        } else {
+            score.p2Score++;
+        }
+        
+        if(score.p1Score + score.p2Score == this.n) {
+            return score.p1Score > score.p2Score ? 1 : 2;
+        }
+        
+        return 0;
+    }
+    
+    public int move(int row, int col, int player) {
+    
+        int winner1 = 0;
+        int winner2 = 0;
+        int winner3 = 0;
+        int winner4 = 0;
+        
+        if(row == col) {
+            winner1 = getWinner(player, diag1);
+        }
+        
+        if(row + col == n - 1) {
+            winner2 = getWinner(player, diag2);
+        }
+        
+        winner3 = getWinner(player, rowScore[row]);
+        winner4 = getWinner(player, colScore[col]);
+        
+        return Math.max(winner1, Math.max(winner2, Math.max(winner3, winner4)));
+        
+    }
+}
+
+/**
+ * Your TicTacToe object will be instantiated and called as such:
+ * TicTacToe obj = new TicTacToe(n);
+ * int param_1 = obj.move(row,col,player);
+ */ 
+
 //https://www.youtube.com/watch?v=3iONGQqlj_I
 class TicTacToe {
 
