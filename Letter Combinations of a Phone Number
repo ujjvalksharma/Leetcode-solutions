@@ -1,3 +1,46 @@
+//simple dfs
+class Solution {
+    
+    List<String> result = new ArrayList<>();
+    Map<Character,String> map = new HashMap<>();
+    
+    public void letterCombinationsHelper(String digits, int index, StringBuilder tempResult) {
+        
+        if(index >= digits.length()) {
+            result.add(tempResult.toString());
+            return;
+        }
+        
+        
+        String letters = map.get(digits.charAt(index));
+        
+        for(int i=0; i<letters.length(); i++) {
+            tempResult.append(letters.charAt(i));
+            letterCombinationsHelper(digits, index + 1, tempResult);
+            tempResult.setLength(tempResult.length() - 1);
+        }
+    }
+    public List<String> letterCombinations(String digits) {
+        
+        if(digits.length() == 0) { 
+            return result;
+        }
+        
+        map.put('2', "abc");
+        map.put('3', "def");
+        map.put('4', "ghi");
+        map.put('5', "jkl");
+        map.put('6', "mno");
+        map.put('7', "pqrs");
+        map.put('8', "tuv");
+        map.put('9', "wxyz");
+        
+        letterCombinationsHelper(digits, 0, new StringBuilder(""));
+        return result;
+        
+    }
+}
+
 class Solution {
 /*
 Simple recursion in which each digit is mapped to 3 or 4 character, and then we form the string using a recursive tree.
