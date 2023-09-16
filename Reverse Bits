@@ -1,0 +1,41 @@
+
+/*
+if i know ith from right is 1 then I know in reverse 31 - ith from right is 1
+
+
+*/
+    
+    
+    
+public class Solution {
+    
+    // you need treat n as an unsigned value
+    public int reverseBits(int n) {
+
+        int result = 0;
+        for(int i=0; i<32; i++) {
+            
+            int temp = 1;
+            
+            temp = (temp<<(i));
+            if((n&temp) != 0) { //dont use >0 since result of (n&temp) can be negative
+                int kth = 31 - i;
+                temp = 1;
+                temp = temp<<kth;
+                result = (result|temp);
+            }
+            
+        }
+        
+        return result;
+    }
+}
+
+
+/*
+32                           3 1
+00000010100101000001111010011100
+ 30
+00111001011110000010100101000000
+
+*/
