@@ -1,3 +1,42 @@
+/*
+Since nums1.length is capable of storing nums1 and nums2 and store elements from end of nums1 by keeping greater numbers of num1 and num2 first
+
+*/
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        
+        int nums1Index = m - 1;
+        int nums2Index = n - 1;
+        int index = nums1.length - 1;
+        
+        while(nums1Index >= 0 && nums2Index >= 0) {
+            
+            if(nums1[nums1Index] > nums2[nums2Index]) {
+                nums1[index] = nums1[nums1Index];
+                nums1Index--;
+                index--;
+            } else {
+                nums1[index] = nums2[nums2Index];
+                nums2Index--;
+                index--;
+            }
+        }
+        
+        while(nums1Index >=0 ) {
+            nums1[index] = nums1[nums1Index];
+            nums1Index--;
+            index--;
+        }
+        
+        while(nums2Index >=0 ) {
+            nums1[index] = nums2[nums2Index];
+            nums2Index--;
+            index--;
+        }
+        
+    }
+}
+
 class Solution {
     /**
     This solution is without taking extra space and putting it in place. we keep 3 pointer last of both filled array and last on unfilled in num1 and fill nums1 if we find a greater starting from descending order.
