@@ -1,3 +1,30 @@
+/*
+Pick a row,col and that point we check if element is in the row range or column and then do row++ and col--. we pick the first row and right most column as we know elements to left are lesser and below are greater, so we know target is either below or left.
+
+*/
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        
+        int row = 0;
+        int col = matrix[0].length - 1;
+        
+        while(row >=0 && row < matrix.length && col >= 0 && col < matrix[0].length ) {
+            int num = matrix[row][col];
+            //System.out.println("row : "+row+" col: "+col+" num: "+num);
+            if(num == target) {
+                return true;
+            } else if(target < num ) {
+                col--;
+            } else if(target > num) {
+                row++;
+            }
+            
+        }
+        
+        return false;
+        
+    }
+}
 class Solution {
     public boolean searchMatrix(int[][] matrix, int target) {
         
