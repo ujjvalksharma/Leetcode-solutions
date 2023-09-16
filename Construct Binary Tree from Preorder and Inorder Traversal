@@ -1,0 +1,65 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+We make node out of preoder array and increment the index of it starting from 0. We check the index of the node in inorder which tells how many elemnents to the left and to the right. so we can narrow down start and end of inorder. if no range left then we return null else we keep making nodes.
+
+*/
+class Solution {
+    
+    Map<Integer,Integer> map = new HashMap<>();
+     int indexOfPreOrder;
+    
+    public TreeNode buildTreeHelper(int[] preorder, int start, int end) {
+        
+        if(start > end ) {
+            return null;
+        }
+        
+        indexOfPreOrder++;
+        int value = preorder[indexOfPreOrder];
+        TreeNode node = new TreeNode(value);
+        int indexOfNodeInOrder = map.get(value);
+        
+        node.left = buildTreeHelper(preorder, start, indexOfNodeInOrder - 1);
+        node.right = buildTreeHelper(preorder, indexOfNodeInOrder + 1, end);
+        
+        return node;
+        
+        
+    }
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        
+        for(int i=0; i<inorder.length; i++) {
+            map.put(inorder[i], i);
+        }
+        this.indexOfPreOrder = -1;
+        return buildTreeHelper(preorder, 0, inorder.length-1);
+    }
+}
+/*
+preorder :
+root
+root.left
+root.right
+
+inorder
+root.left
+root
+root.right
+
+[3,9,20,15,7]
+
+*/
