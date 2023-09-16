@@ -1,4 +1,60 @@
 class RandomizedSet {
+
+    Map<Integer,Integer> map = new HashMap<>();
+    List<Integer> list = new ArrayList<Integer>();
+    
+    public RandomizedSet() {
+        
+    }
+    
+    public boolean insert(int val) {
+        
+        if(!map.containsKey(val)) {
+            map.put(val,list.size());
+            list.add(val);
+            return true;
+        }
+        
+        return false;
+        
+    }
+    
+    public void swap(List<Integer> list, int i, int j) {
+         list.set(i, list.get(list.size()-1));
+    }
+    public boolean remove(int val) {
+        
+        if(map.containsKey(val)) {
+            int index = map.get(val);
+            swap(list,index, list.size() - 1);
+            map.put(list.get(list.size() - 1), index);
+            list.remove(list.size() - 1);
+            map.remove(val);
+            return true;
+        }
+        
+        return false;
+        
+    }
+    
+    public int getRandom() {
+        int randomIndex = randomIntFromInterval(0, list.size() - 1);
+        return list.get(randomIndex);
+    }
+    
+    public int randomIntFromInterval(int min, int max) { // min and max included 
+  return (int) Math.floor(Math.random() * (max - min + 1) + min);
+}
+}
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet obj = new RandomizedSet();
+ * boolean param_1 = obj.insert(val);
+ * boolean param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
+ */
+class RandomizedSet {
     
     /*
     We use hashmap to check presence of an element and find its index and list of find index and removal. we can do removal of an element in 0(1) if find index of that element swap at it last element in list and then remove the last element in list.
