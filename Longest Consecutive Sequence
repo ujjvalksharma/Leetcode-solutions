@@ -1,3 +1,47 @@
+/*
+Put all numbers in set so look up is O(1), then put elements in list and if I know that num-1 exist in set then skip that num else we know it is first number in its consecutive list and iterate the consecutive list such that elements are present in set and we keep removing elements from set on the go and calculate the length.
+
+*/
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        
+        Set<Integer> set = new HashSet<Integer>();
+        int maxLen = 0;
+        
+        for(int num : nums) {
+            set.add(num);
+        }
+        
+        List<Integer> uniqueNumbers = new ArrayList<Integer>();
+        
+        for(int num : set) {
+            uniqueNumbers.add(num);
+        }
+       // System.out.println("uniqueNumbers : "+uniqueNumbers);
+        for(int num : uniqueNumbers) {
+            
+            if(set.contains(num - 1)) {
+                continue;
+            }
+            
+            int len = 1;
+            
+            while(set.contains(num + 1)) {
+                set.remove(num + 1);
+                len++;
+                num++;
+            }
+            set.remove(num);
+            maxLen = Math.max(maxLen, len);
+            
+        }
+        
+        return maxLen;
+    }
+}
+    
+    
+
 class Solution {
     public int longestConsecutive(int[] nums) {
         
