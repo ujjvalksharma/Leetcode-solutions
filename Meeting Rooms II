@@ -1,0 +1,35 @@
+class Solution {
+    
+    /*
+    
+    Sort intervals by start and end time to read them in order and then keep Queue/PriorityQeueu and when I read a another interval I know that I have reached a startTime and I need remove elements from the queue and since intervals where in order of their start/end time. I know queue has elements in order of their endtime.
+    
+    */
+    public int minMeetingRooms(int[][] intervals) {
+        
+        Arrays.sort(intervals, (i1, i2) -> {
+            if(i1[0] == i2[0]) {
+                return i1[1] - i2[1];
+            }
+            return i1[0] - i2[0];
+        });
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>(); // sort by end time in ascening order
+        int totalMeetingRooms = 0;
+        for(int[] interval : intervals) {
+            
+            int startTime = interval[0];
+            int endTime = interval[1];
+            
+            while(!pq.isEmpty() && pq.peek() <= startTime) {
+                pq.poll();
+            }
+            
+            pq.add(endTime);
+            
+            totalMeetingRooms = Math.max(totalMeetingRooms, pq.size());
+        }
+        
+        return totalMeetingRooms;
+    }
+}
