@@ -1,4 +1,99 @@
 class Solution {
+    
+    public boolean findCycle(int node, Map<Integer,List<Integer>> graph, int[] visiteded) {
+        
+        List<Integer> neighbours = graph.get(node);
+        
+        boolean isCyclePresent = false;
+        for(int neighbour : neighbours) {
+            
+            if(visiteded[neighbour] == 1) {
+                return true;
+            }
+            
+            if(visiteded[neighbour] == 2) {
+                continue;
+            }
+            visiteded[neighbour] = 1;
+            isCyclePresent = isCyclePresent | findCycle(neighbour, graph, visiteded);
+        }
+        
+        visiteded[node] = 2;
+        
+        return isCyclePresent;
+    }
+    
+        public void topologicalSort(int node, Map<Integer,List<Integer>> graph, int[] visiteded, Stack<Integer> stk) {
+        
+        List<Integer> neighbours = graph.get(node);
+        
+        for(int neighbour : neighbours) {
+            
+            if(visiteded[neighbour] == 1) {
+                continue;
+            }
+            
+            visiteded[neighbour] = 1;
+            topologicalSort(neighbour, graph, visiteded, stk);
+        }
+            
+        stk.push(node);
+    }
+    
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        
+        Map<Integer,List<Integer>> graph = new HashMap<>();
+        
+        for(int i=0; i<numCourses; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        
+        for(int[] prerequisite : prerequisites) {
+            
+                graph.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        
+       
+       int[] visiteded = new int[numCourses]; 
+       boolean isCyclePresent = false;
+        for(int i=0; i<numCourses; i++) {
+            if(visiteded[i] == 0) {
+                visiteded[i] = 1;
+                isCyclePresent = isCyclePresent | findCycle(i, graph, visiteded);
+            }
+        }
+        
+        
+        if(isCyclePresent) {
+            return new int[]{};
+        }
+        
+        visiteded = new int[numCourses]; 
+        Stack<Integer> stk = new Stack<Integer>();
+        for(int i=0; i<numCourses; i++) {
+            if(visiteded[i] == 0) {
+                visiteded[i] = 1;
+                topologicalSort(i, graph, visiteded, stk);
+            }
+        }
+        
+        int[] result = new int[stk.size()];
+        int index = 0;
+        
+        while(!stk.isEmpty()) {
+            int node = stk.pop();
+            result[index] = node;
+            index++;
+        }
+        
+        return result;
+        
+    }
+}
+
+
+
+class Solution {
     //find cycle
     //find topological order
     
