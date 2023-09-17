@@ -9,6 +9,96 @@
  * }
  */
 class Solution {
+    
+    public ListNode[] splitListIntoTwo(ListNode head) {
+        
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode behindSlow = null;
+        
+        while(slow != null & fast != null && fast.next != null) {
+            
+            behindSlow = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        ListNode l2 = null;
+        ListNode l1 = head;
+        
+        if(fast == null) {
+            l2 = slow;
+            behindSlow.next = null;
+        } else if(fast.next == null) {
+        l2 = slow.next;
+        slow.next = null;
+        behindSlow.next = null;
+        }
+        
+        
+        return new ListNode[] {l1, l2};
+    }
+    
+    public ListNode reverse(ListNode head) {
+        
+        ListNode prev = null;
+        ListNode current = head;
+        
+        while(current != null) {
+            ListNode nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+        
+        return prev;
+    }
+    public boolean isPalindrome(ListNode head) {
+        
+        if(head.next == null) {
+            return true; //single node
+        }
+        ListNode[] nodes = splitListIntoTwo(head);
+        
+        ListNode firstHalf = nodes[0];
+        ListNode secondHalf = nodes[1];
+        
+        ListNode headOfSecondHalf = reverse(secondHalf);
+        
+        while(firstHalf != null & headOfSecondHalf != null) {
+            
+            if(firstHalf.val != headOfSecondHalf.val) {
+                return false;
+            }
+            
+            firstHalf = firstHalf.next;
+            headOfSecondHalf = headOfSecondHalf.next;
+        }
+        
+        return true;
+    }
+}
+/*
+
+ p  c n
+   [1,2,2,1]
+
+               s         f
+1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8-->null(fast)
+
+*/
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
     public boolean isPalindrome(ListNode head) {
         
         if(head.next == null) {
