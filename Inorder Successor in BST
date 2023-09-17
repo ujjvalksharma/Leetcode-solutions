@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+
+/*
+
+So lets say we reach a node root and we know root.val > p.val then we know that all elements to right are greater than root.val, hence they are too greater than p.val, so we go to left side of the tree and if I see root.val < p.val then I know p.val and its greater value would lie on the right side of the tree.
+
+*/
+class Solution {
+    
+    TreeNode result = null;
+    int value = Integer.MAX_VALUE;
+    
+    public void inorderSuccessorHelper(TreeNode root, TreeNode p) {
+        
+        if(root == null) {
+            return;
+        }
+        
+        if(root.val > p.val) {
+            
+            if(root.val < value) {
+                result = root;
+                value = root.val;
+            }
+            
+            inorderSuccessorHelper(root.left, p);
+        } else {
+            inorderSuccessorHelper(root.right, p);
+        }
+        
+    }
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        inorderSuccessorHelper(root, p);
+        
+        return result;
+    }
+}
