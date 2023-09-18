@@ -1,4 +1,76 @@
 class MedianFinder {
+
+    int totalNumbers;
+    //greater element at top
+    PriorityQueue<Integer> leftArr; //if totalNumbers is odd then leftArr.size() is greater by 1 than rightArr.size()
+    //smaller element on top
+    PriorityQueue<Integer> rightArr;
+    
+    public MedianFinder() {
+        
+        this.totalNumbers = 0;
+        this.leftArr = new PriorityQueue<Integer>((a,b)->b-a);
+        this.rightArr = new PriorityQueue<Integer>();
+        
+    }
+    
+    public void addNum(int num) {
+        
+        if(leftArr.isEmpty()) {
+            leftArr.add(num);
+        } else {
+            
+            int size = leftArr.size() + rightArr.size();
+            if(size%2 == 0) { 
+                if(num <= rightArr.peek()) {
+                    leftArr.add(num);
+                } else {
+                    leftArr.add(rightArr.poll());
+                    rightArr.add(num);
+                }
+                
+                
+            } else {
+                if(num >= leftArr.peek()) {
+                    rightArr.add(num);
+                } else {
+                    rightArr.add(leftArr.poll());
+                    leftArr.add(num);
+                }
+            }
+            
+        }
+        
+        totalNumbers++;
+       // System.out.println("leftArr: "+leftArr+" rightArr: "+rightArr);
+    }
+    
+    public double findMedian() {
+        
+     //   System.out.println("leftArr: "+leftArr+" rightArr: "+rightArr);
+        if(totalNumbers%2 == 0) {
+            int num1 = leftArr.peek();
+            int num2 = rightArr.peek();
+            return (double) (num1+num2)/2;
+        }
+        
+        int num1 = leftArr.peek();
+        return num1;
+        
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
+
+    
+
+
+class MedianFinder {
     
     PriorityQueue<Integer> leftHeap;
     PriorityQueue<Integer> rightHeap;
