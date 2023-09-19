@@ -1,3 +1,40 @@
+class Solution {
+    public String countAndSay(int n) {
+        
+        String result = "1";
+        
+        for(int i=1; i<n; i++) {
+            result = getNextSequence(result);
+        }
+        
+        return result;
+        
+    }
+    
+    public String getNextSequence(String s) {
+        
+        char prevChar = s.charAt(0);
+        int freq = 1;
+        StringBuilder result = new StringBuilder("");
+        
+        for(int i=1; i<s.length(); i++) {
+            
+            if(prevChar != s.charAt(i)) {
+                result.append(freq).append(prevChar);
+                freq = 1;
+                prevChar = s.charAt(i);
+            } else {
+                freq++;
+            }
+            
+        }
+        
+        result.append(freq).append(prevChar);
+
+        return result.toString();
+    }
+}
+
 /*
 We can do it iterativly and recursivly. The idea is to start from big n and go to the base condition of n==1, then we make string for n=2, then n=3 and finally return the overall string.
 */
