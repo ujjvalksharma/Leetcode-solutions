@@ -1,4 +1,98 @@
+class Solution {
+    /*
+    
+    a height can contribute to area till it finds a height smaller to left and right.
+    
+    */
+    public int largestRectangleArea(int[] heights) {
+        
+        Stack<Integer> stkNextSmallerIndexToRight = new Stack<>();
+        Stack<Integer> stkNextSmallerIndexToLeft = new Stack<>();
+        int[] nextSmallerIndexToRight = new int[heights.length];
+        int[] nextSmallerIndexToLeft = new int[heights.length];
+        
+        Arrays.fill(nextSmallerIndexToRight, Integer.MAX_VALUE);
+        Arrays.fill(nextSmallerIndexToLeft, Integer.MIN_VALUE);
+        
+        int maxArea = 0;
+        for(int i=0; i<heights.length; i++) {
+            
+            if(stkNextSmallerIndexToRight.isEmpty()) {
+                
+                stkNextSmallerIndexToRight.push(i);
+                
+            } else if(heights[i] >= heights[stkNextSmallerIndexToRight.peek()]) {
+                
+                stkNextSmallerIndexToRight.push(i);
+                
+            } else {
+                
+                while(!stkNextSmallerIndexToRight.isEmpty() && heights[i] < heights[stkNextSmallerIndexToRight.peek()]){
+                   nextSmallerIndexToRight[stkNextSmallerIndexToRight.pop()] = i; 
+                }
+                
+                stkNextSmallerIndexToRight.push(i);
+                    
+            }
+        }
+        
+        while(!stkNextSmallerIndexToRight.isEmpty()) {
+            nextSmallerIndexToRight[stkNextSmallerIndexToRight.pop()] = heights.length; 
+        }
+        
+        for(int i=heights.length - 1; i>=0; i--) {
+            
+            if(stkNextSmallerIndexToLeft.isEmpty()) {
+                
+                stkNextSmallerIndexToLeft.push(i);
+                
+            } else if(heights[i] >= heights[stkNextSmallerIndexToLeft.peek()]) {
+                
+                stkNextSmallerIndexToLeft.push(i);
+                
+            } else {
+                
+                while(!stkNextSmallerIndexToLeft.isEmpty() && heights[i] < heights[stkNextSmallerIndexToLeft.peek()]){
+                   nextSmallerIndexToLeft[stkNextSmallerIndexToLeft.pop()] = i; 
+                }
+                
+                stkNextSmallerIndexToLeft.push(i);
+                    
+            }
+        }
+        
+        while(!stkNextSmallerIndexToLeft.isEmpty()) {
+            nextSmallerIndexToLeft[stkNextSmallerIndexToLeft.pop()] = -1; 
+        }
+        
+        for(int i=0; i<heights.length; i++) {
+            
+            int length = heights[i];
+            int width = 1; //width of itself
+            
+            if(nextSmallerIndexToLeft[i] != Integer.MIN_VALUE) {
+                width += i - nextSmallerIndexToLeft[i] - 1;
+            }
+            
+            if(nextSmallerIndexToRight[i] != Integer.MAX_VALUE) {
+                width += nextSmallerIndexToRight[i] - i -1;
+            }
+            
+            maxArea = Math.max(maxArea, length*width);
+        }
+        
+      //  System.out.println("nextSmallerIndexToLeft: "+Arrays.toString(nextSmallerIndexToLeft));
+      //  System.out.println("nextSmallerIndexToRight: "+Arrays.toString(nextSmallerIndexToRight));
+        
+        return maxArea;
+        
+    }
+}
+
+
+
 /*
+
 we know that the contribution a array index to tallness of rectangle is basically till its next smaller element at right and left as when we reach the smaller element, the height of rectangle is smaller element. and we acheive the rectangle by just going directly to that smaller element index. So, for each index if we know the next smaller element at right and left then we know the range it will cover and we know the length width of that rectangle.
 
 to find the next samller element at right and left we use stack. we insert elements in stack and we see a element samller than top we keep poping till we some element samller than that. so, basically, we try to maintain to stack in increasing order from bottom to top.
