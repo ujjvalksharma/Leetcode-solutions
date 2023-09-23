@@ -14,6 +14,73 @@
  * }
  */
 class Solution {
+    
+    boolean isValidBst;
+    
+    public int[] checkIsBstValid(TreeNode root) {
+        
+        if(root == null) {
+            return new int[]{};
+        }
+        
+        int[] leftSubtree = checkIsBstValid(root.left);
+        int[] rightSubtree = checkIsBstValid(root.right);
+        
+        int[] result = new int[2];
+        int minValue = root.val;
+        int maxValue = root.val;
+        
+        if(leftSubtree.length > 1) {
+          minValue = Math.min(minValue, Math.min(leftSubtree[0], leftSubtree[1]));  
+        }
+        
+        if(rightSubtree.length > 1) {
+          maxValue = Math.max(maxValue, Math.max(rightSubtree[0], rightSubtree[1]));  
+        }
+        
+        if((leftSubtree.length > 1) && (root.val <= leftSubtree[0] || root.val <= leftSubtree[1]) ) {
+            isValidBst = false;
+        }
+        
+        if((rightSubtree.length > 1) && (root.val >= rightSubtree[0] || root.val >= rightSubtree[1]) ) {
+            isValidBst = false;
+        }
+        
+        
+        result[0] = minValue;
+        result[1] = maxValue;
+        
+        return result;
+        
+    }
+    public boolean isValidBST(TreeNode root) {
+        
+        isValidBst = true;
+        
+        checkIsBstValid(root);
+        
+        return isValidBst;
+    }
+}
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
     /*
     Do a post order traversal and keep note of min and max element from left and right subtree and current node value should be less right subtree min and max element and greater and min and max value of left subtree and then it will pass its its min and max to above tree.
     
