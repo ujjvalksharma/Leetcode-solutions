@@ -1,4 +1,45 @@
 class Solution {
+    
+    public boolean isRepeatingCharPresent(int[] charCount) {
+        
+        for(int count : charCount) {
+            
+            if(count > 1) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    public int lengthOfLongestSubstring(String s) {
+        
+        if(s.length() == 0) {
+            return 0;
+        }
+        
+        int start = 0;
+        int end = 0;
+        int longestSubstring = 1;
+        int[] charCount = new int[256];
+        
+        while(end < s.length()) {
+            
+            charCount[s.charAt(end)]++;
+            
+            while(start<end && isRepeatingCharPresent(charCount)) {
+                charCount[s.charAt(start)]--;
+                start++;
+            }
+            
+            longestSubstring = Math.max(longestSubstring, end - start + 1);
+            end++;
+        }
+        
+        return longestSubstring;
+    }
+}
+
+class Solution {
     /**
     We keep a start pointer and move it a to the next index of the character that maches in hashset, so we the new substring from that index to current ith index has no duplicate elements and we can ignore a match is start is ahead of the match index in set because we know that our substring start index is greater than the matched index in set.
     
