@@ -1,4 +1,32 @@
-
+class Solution {
+    public int mySqrt(int x) {
+        
+        if(x == 0) {
+            return 0;
+        }
+        
+        int low = 1;
+        int high = x/2;
+        int result = 1;
+        long answer = (long) x;
+        while(low<=high) {
+            
+            int mid = low + (high - low) / 2;
+            long sqaure = (long) mid*mid;
+            
+            if(sqaure == answer) {
+                return mid;
+            } else if(sqaure < answer) {
+                result = Math.max(result, mid);
+                low = mid + 1; 
+            } else {
+                high = mid - 1;
+            }
+        }
+        
+        return result;
+    }
+}
 /*
 This is a O(root(n)) approach in which we go till root of n / i*i<n we keep track of the minimum difference we find, and if we find a smaller difference we keep that number as a possible square root as i*i should be closed to x, but we know that difference is negative then we have break out as i,i+1,i+2 are not valid possible square root as their square is exceeding x. Also if we find difference zero that means we found the perfect number.
 
