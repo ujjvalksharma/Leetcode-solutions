@@ -1,4 +1,74 @@
 class Solution {
+    
+    public boolean isCountArrEquals(int[] charCountT, int[] charCountS) {
+        
+        for(int i=0; i<256; i++) {
+            
+            if(charCountS[i] < charCountT[i]) {
+                return false;
+            }
+            
+        }
+        
+        return true;
+    }
+    
+    public String minWindow(String s, String t) {
+        
+        
+        int[] charCountT = new int[256];
+        
+        for(int i=0; i<t.length(); i++) {
+            charCountT[t.charAt(i)]++;
+        }
+        
+        int start = 0;
+        int end = 0;
+        int minWindowLen = Integer.MAX_VALUE;
+        String minWindowStr = "";
+        int[] charCountS = new int[256];
+        
+        while(end < s.length()) {
+            
+            
+            if(charCountT[s.charAt(end)] > 0) {
+              //  System.out.println(s.charAt(end));
+                charCountS[s.charAt(end)]++;
+            }
+            
+            
+            if(isCountArrEquals(charCountT, charCountS)) {
+            while(start<=end && isCountArrEquals(charCountT, charCountS)) {
+                
+                int len = end - start + 1;
+                
+                if(len < minWindowLen) {
+                    minWindowStr = s.substring(start, end + 1);
+                    minWindowLen = len;
+                }
+                
+                if(charCountT[s.charAt(start)] > 0) {
+                    charCountS[s.charAt(start)]--;
+                }
+                
+                start++;
+            }
+              
+                start--;
+                charCountS[s.charAt(start)]++;
+                
+            }
+            
+            end++;
+        }
+        
+        return minWindowStr;
+        
+    }
+    
+}
+
+class Solution {
     /*
     Simple acquire and release by 2 pointers we create a hashmap and coun the total character and the window size is increment is if we find all charater in T hashmap with value equal to greater. if we reached a window size the we release character from start till window size is maintained.
 
