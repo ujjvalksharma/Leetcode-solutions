@@ -1,0 +1,32 @@
+class Solution {
+    
+    public void reverse(int[] nums, int start, int end) {
+        
+        while(start<end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+    
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    public void rotate(int[] nums, int k) {
+        int n = nums.length;
+        k %= n;
+        reverse(nums, n - k, n - 1); //shift end of k digits
+        reverse(nums, 0, n - 1); //put end of k digits to start
+        reverse(nums, k, n - 1); //correct the order of last of nums.length - k digits
+    }
+}
+
+/*
+
+[1,2,3,4,5], k = 1 , expected:[5,1,2,3,4]
+[3,2,1,4,5]
+[5,4,1,2,3]
+
+*/
