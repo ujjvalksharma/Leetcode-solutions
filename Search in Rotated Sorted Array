@@ -1,0 +1,87 @@
+class Solution {
+    /*
+    Solution1 :
+    loop through all the numbers and find the target
+    Solution2:
+    
+    //find the minimum element and its index and then decide whether to go left or right from that pivot
+    */
+    public int search(int[] nums, int target) {
+        
+        
+        int start = 0;
+        int end = nums.length - 1;
+        int minValue = Integer.MAX_VALUE;
+        int minValueIndex = nums.length - 1;
+        
+        while(start <= end) {
+            int mid = start + (end - start)/2;
+            int value = nums[mid];
+          //  System.out.println("start: "+start+" end: "+end+" mid: "+mid); 
+            if(nums[mid] < minValue) {
+                minValue = nums[mid];
+                minValueIndex = mid;
+            }
+            
+            if(nums[start] < nums[end]) {
+                
+                if(nums[mid] < nums[start]) {
+                    start = mid + 1;
+                } else {
+                    end = mid - 1;
+                    
+                }
+            } else {
+                if(nums[mid] < nums[end]) {
+                    end = mid - 1;
+                } else {
+                    start = mid + 1;
+                }
+            }
+        }
+        
+        int start1 = minValueIndex;
+        int end1 = nums.length - 1;
+        int end2 = minValueIndex - 1;
+        int start2 = 0;
+        //System.out.println("minValueIndex: "+minValueIndex); 
+        //System.out.println("start1: "+start1+" end1: "+end1+" start2: "+start2+" end2: "+end2);
+            while(start1 <= end1) {
+                int mid = start1 + (end1 - start1)/2;
+                if(target == nums[mid]) {
+                    return mid;
+                } else if(target > nums[mid]) {
+                    start1 = mid + 1;
+                } else {
+                    end1 = mid - 1;
+                }
+            }
+        
+        if(end2 >= 0) {
+            
+                while(start2 <= end2) {
+                int mid = start2 + (end2 - start2)/2;
+                if(target == nums[mid]) {
+                    return mid;
+                } else if(target > nums[mid]) {
+                    start2 = mid + 1;
+                } else {
+                    end2 = mid - 1;
+                }
+            }
+            
+        }
+        
+        
+        return -1;
+    }
+}
+/*
+start = 0;
+end = 6;
+ [7,1,2,3,4,5,6]
+3
+
+*/
+    
+    
