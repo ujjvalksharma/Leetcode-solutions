@@ -1,0 +1,93 @@
+/*
+Make a tire data strucutre of all the words,
+loop through each i,j in board and then perform a search in trie and board parallel Node.isLeaf is true. Insert in set 
+loop through set and put it in result
+
+
+
+*/
+class Solution {
+    
+    class Node {
+        
+        Node[] children;
+        boolean isLeaf;
+        
+        public Node() {
+            
+            this.children = new Node[26];
+            this.isLeaf = false;
+            
+        }
+        
+    }
+    
+    int[][] dirs = new int[][]{{0,1},{1,0},{0,-1},{-1,0}};
+    
+    public void insert(String word, Node root) {
+        
+        for(int i=0; i<word.length(); i++) {
+            
+            if(root.children[word.charAt(i) - 'a'] == null) {
+                root.children[word.charAt(i) - 'a'] = new Node();
+            }
+            root = root.children[word.charAt(i) - 'a'];
+        }
+        
+        root.isLeaf = true;
+        
+    }
+    
+    public void findWordInTrie(Node root, char[][] board, int i, int j, StringBuilder sb, Set<String> setOfResult, boolean[][] visited) {
+        
+        if(i < 0 || j < 0 || i >= board.length || j >= board[0].length || visited[i][j] == true || root.children[board[i][j] - 'a'] == null) {
+            return;
+        }
+        
+        root = root.children[board[i][j] - 'a'];
+        sb.append(board[i][j]);
+        visited[i][j] = true;
+        
+        if(root.isLeaf) {
+            setOfResult.add(sb.toString());
+        }
+        
+        for(int[] dir : dirs) {
+            
+            int newX = dir[0] + i;
+            int newY = dir[1] + j;
+            
+            findWordInTrie(root, board, newX, newY, sb, setOfResult, visited);
+        }
+        
+        visited[i][j] = false;
+        sb.setLength(sb.length() - 1);
+        
+    }
+    public List<String> findWords(char[][] board, String[] words) {
+        
+        Node root = new Node();
+        
+        for(String word : words) {
+            insert(word, root);
+        }
+        
+        Set<String> setOfResult = new HashSet<>();
+        List<String> result = new ArrayList<>();
+        
+        for(int i=0; i<board.length; i++) {
+            for(int j=0; j<board[0].length; j++) {
+                
+                boolean[][] visited = new boolean[board.length][board[0].length];
+                findWordInTrie(root, board, i, j, new StringBuilder(""), setOfResult, visited);
+            }
+        }
+        
+        for(String word: setOfResult) {
+            result.add(word);
+        }
+        
+        return result;
+        
+    }
+}
