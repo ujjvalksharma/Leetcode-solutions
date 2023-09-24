@@ -1,3 +1,58 @@
+class Solution {
+    
+    Map<Integer,Integer> dp = new HashMap<Integer, Integer>();
+    public int numDecodingsHelper(String s, int index) {
+        
+        if(index >= s.length()) {
+            return 1;
+        }
+        
+        if(dp.containsKey(index)) {
+            return dp.get(index);
+        }
+        
+        int firstDigit = Character.getNumericValue(s.charAt(index));
+        
+        if(firstDigit == 0) {
+            return -1;
+        }
+        
+        int way1 = numDecodingsHelper(s, index + 1);
+        int way2 = -1;
+        
+        if(index + 1 < s.length()) {
+            
+            int secondDigit = Character.getNumericValue(s.charAt(index + 1));
+            
+            int num = firstDigit*10 + secondDigit;
+            
+            if(num <= 26) {
+                
+                way2 = numDecodingsHelper(s, index + 2);
+            }
+            
+        }
+        
+        int totalWays = -1;
+        
+        if(way1 != -1 && way2 != -1) {
+            totalWays = way1 + way2;
+        } else if(way1 == -1 && way2 != -1) {
+            totalWays = way2;
+        } else if(way1 != -1 && way2 == -1) {
+            totalWays = way1;
+        }
+        
+        
+        dp.put(index, totalWays);
+        return totalWays;
+    }
+    public int numDecodings(String s) {
+        int totalWays = numDecodingsHelper(s, 0);
+        return totalWays == -1 ? 0 : totalWays;
+    }
+}
+
 /*
 memory+ recursion
 In this question, we iterate the message string index wise and we check if first character is non zero and the we combine second character then it is under bounds then we combine the sum for combination formed on both of them by adding them, We know we have formed a combination when we have reached the message end and we also index in memory/hashmap, so we don't have to iterate over the sub-tree.
