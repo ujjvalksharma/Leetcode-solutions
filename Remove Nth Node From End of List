@@ -8,6 +8,47 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+
+/*
+Let the fast node be head 'n' nodes from slow and now you know when fast is at the last node then slow is at 'n-1' node
+*/
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        
+        ListNode slow = head;
+        ListNode fast = head;
+        
+        while(n > 0) {
+            fast = fast.next;
+            n--;
+        }
+        
+        if(fast == null) {
+            return slow.next;
+        }
+        
+        while(fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        
+        slow.next = slow.next.next;
+        System.out.println("slow: "+slow.val+" fast: "+fast.val);
+        
+        return head;
+    }
+}
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
 class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
         
