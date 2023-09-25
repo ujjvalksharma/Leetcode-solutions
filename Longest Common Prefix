@@ -1,0 +1,71 @@
+//trie and loop through trie
+class Solution {
+    
+    class Node {
+        Node[] children;
+        int count;
+        char c;
+        public Node(char c) {
+            this.children = new Node[26];
+            this.count = 0;
+            this.c = c;
+            
+        }
+    }
+    
+    String longestPrefixStr = "";
+    int longestPrefixLen;
+    public void insert(Node root, String str) {
+        
+        for(int i=0; i<str.length(); i++) {
+            
+            if(root.children[str.charAt(i) - 'a'] == null) {
+                root.children[str.charAt(i) - 'a'] = new Node(str.charAt(i));
+            }
+            
+            root = root.children[str.charAt(i) - 'a'];
+            root.count++;
+          //  System.out.println("root: "+root.c+" root: "+root.count);
+        }
+        
+        
+        
+    }
+    
+    public void iterateTrie(Node root, int maxLen, StringBuilder sequence) {
+
+        if(root == null) {
+            return;
+        }
+        
+        sequence.append(root.c);
+        
+        if(root.count == maxLen) {
+            
+            if(sequence.length() > longestPrefixLen) {
+                longestPrefixLen = sequence.length();
+                longestPrefixStr = sequence.toString();
+            }
+        }
+        
+        for(int i=0; i<26; i++) {
+            iterateTrie(root.children[i], maxLen, sequence);
+        }
+        
+        sequence.setLength(sequence.length() - 1);
+    }
+    public String longestCommonPrefix(String[] strs) {
+        
+        Node root = new Node(' ');
+        
+        for(String str :  strs) {
+            insert(root, str);
+        }
+        
+        longestPrefixLen = Integer.MIN_VALUE;
+        
+        iterateTrie(root, strs.length, new StringBuilder(""));
+        
+        return longestPrefixStr.length() == 0 ? "" : longestPrefixStr.substring(1);
+    }
+}
