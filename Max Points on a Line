@@ -1,0 +1,48 @@
+class Solution {
+    
+    public double getSlope(int[] p1, int[] p2) {
+        
+        if(p1[0] == p2[0]) {
+            return (double) 1000000;
+        }
+        
+        int Ydiff = p2[1] - p1[1];
+        int Xdiff = p2[0] - p1[0];
+        
+        return (double) Ydiff/Xdiff;
+    }
+    
+    public int maxPoints(int[][] points) {
+        
+        if(points.length == 1) {
+            return 1;
+        }
+        
+        
+        int maxPoints = 0;
+        
+        for(int i=0; i<points.length; i++) {
+            Map<Double,Set<String>> map = new HashMap<>();
+            for(int j=0; j<points.length; j++) {
+                
+                if(i == j) {
+                    continue;
+                }
+                
+                double slope = getSlope(points[i], points[j]);
+                
+                if(!map.containsKey(slope)) {
+                    map.put(slope, new HashSet<>());
+                }
+                
+                map.get(slope).add(Arrays.toString(points[i]));
+                map.get(slope).add(Arrays.toString(points[j]));
+                
+                maxPoints = Math.max(maxPoints, map.get(slope).size());
+                
+            }
+        }
+        
+        return maxPoints;
+    }
+}
