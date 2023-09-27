@@ -1,6 +1,100 @@
 class Solution {
     public String fractionToDecimal(int numerator, int denominator) {
         
+        if(numerator == 0) {
+            return "0";
+        }
+        
+        long numeratorL =  (long) numerator;
+        long denominatorL = (long) denominator;
+        
+        boolean isNegative = false;
+        StringBuilder result = new StringBuilder("");
+        boolean isDecimalAdded = false;
+        Map<Long,Integer> map = new HashMap<>();
+        
+        if(numerator < 0 && denominator < 0) {
+            isNegative = false;
+        } else if(numerator < 0) {
+            isNegative = true;
+        } else if(denominator < 0) {
+            isNegative = true;
+        }
+        
+      //  System.out.println("isNegative: "+isNegative);
+        
+        numeratorL = Math.abs(numeratorL);
+        denominatorL = Math.abs(denominatorL);
+        
+        
+            while(numeratorL != 0) {
+                
+                if(numeratorL < denominatorL) {
+                    
+                    if(map.containsKey(numeratorL)) {
+                    
+                        StringBuilder tempResult = new StringBuilder("");
+                        
+                        for(int i=0; i<result.length(); i++) {
+                            
+                            
+                            if(i == map.get(numeratorL)) {
+                                tempResult.append("(");
+                            }
+                            tempResult.append(result.charAt(i));
+                        }
+                        tempResult.append(")");
+                        
+                        return isNegative == true ? "-"+tempResult.toString() : tempResult.toString();
+                        
+                   }
+                    
+                    if(!isDecimalAdded) {
+                        
+                        if(result.length() == 0) {
+                        result.append("0.");
+                        map.put(numeratorL, result.length());
+                    } else {
+                        result.append(".");
+                        map.put(numeratorL, result.length());
+                    }
+                    
+                        isDecimalAdded = true;
+                    } else {
+                        map.put(numeratorL, result.length());
+                    }
+                    
+                    
+                    numeratorL = numeratorL * 10;
+                    
+                    while(numeratorL < denominatorL) {
+                        numeratorL = numeratorL * 10;
+                        result.append("0");
+                    }
+                    
+                    long quotient = (long) (numeratorL/denominatorL);
+                    quotient = Math.abs(quotient);
+                    numeratorL = numeratorL % denominatorL;
+                    result.append(quotient);
+                    
+                    } else if(!isDecimalAdded) {
+                    
+                    long quotient = (long) (numeratorL/denominatorL);
+                    quotient = Math.abs(quotient);
+                    numeratorL = numeratorL % denominatorL;
+                    result.append(quotient);
+                }
+            }
+        
+        return isNegative == true ? "-"+result.toString() : result.toString();
+    }
+}
+
+
+
+class Solution {
+    public String fractionToDecimal(int numerator, int denominator) {
+        
         StringBuilder result=new StringBuilder("");
         HashMap<Integer,Integer> numToIndex=new HashMap<Integer,Integer>();
         boolean isDecimalRecuring=false;
