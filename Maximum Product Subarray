@@ -1,3 +1,135 @@
+/*
+Use the same below logic from start = 0 to n and start=n to 0
+
+So we first assume positiveProduct and negativeProduct have no values Integer.MAX_VALUE and Integer.MIN_VALUE
+No if see a positive number we check is negativeProduct valid, if it is then we multiply else we set positiveProduct = nums[i] or multiply positiveProduct. nums[i] = 0 acts as a break point and if nums[i] < 0 then we check if positiveProduct >0  then we know negativeProduct = positiveProduct*nums[i] that is if negativeProduct == Integer.MIN_VALUE and we make positiveProduct=MAX as it is invalid. negativeProduct!=MIN_VALUE that means we know negativeProduct exist and negativeProduct*nums[i] would give positive and that is equal to positiveProduct and negativeProduct is invalid now.
+
+
+*/
+class Solution {
+    public int maxProduct(int[] nums) {
+        
+        int positiveProduct = Integer.MAX_VALUE;
+        int negativeProduct = Integer.MIN_VALUE;
+        int maxProduct = nums[0];
+        
+        for(int i=0; i<nums.length; i++) {
+            maxProduct = Math.max(maxProduct, nums[i]);
+        }
+        
+        int i=0;
+        while(i<nums.length) {
+            
+            if(nums[i] == 0) {
+                positiveProduct = Integer.MAX_VALUE;
+                negativeProduct = Integer.MIN_VALUE;
+            } else if(nums[i] < 0) {
+                
+                if(negativeProduct == Integer.MIN_VALUE) {
+                    
+                    if(positiveProduct != Integer.MAX_VALUE) {
+                        negativeProduct = positiveProduct*nums[i];
+                        positiveProduct = Integer.MAX_VALUE;
+                    } else {
+                        negativeProduct = nums[i];
+                    }
+                } else {
+                    negativeProduct = negativeProduct * nums[i];
+                    positiveProduct = negativeProduct;
+                    negativeProduct = Integer.MIN_VALUE;
+                }
+                
+                
+            } else {
+                
+                if(positiveProduct == Integer.MAX_VALUE) {
+                  positiveProduct = nums[i];
+                } else {
+                    positiveProduct = positiveProduct*nums[i];
+                }
+                
+                if(negativeProduct != Integer.MIN_VALUE) {
+                    negativeProduct = negativeProduct*nums[i];
+                }
+                
+                
+            }
+            
+     //       System.out.println("positiveProduct: "+positiveProduct+" negativeProduct: "+negativeProduct);
+            if(positiveProduct != Integer.MAX_VALUE) {
+                maxProduct = Math.max(maxProduct, positiveProduct);
+            }
+            
+            if(negativeProduct != Integer.MIN_VALUE) {
+                maxProduct = Math.max(maxProduct, negativeProduct);
+            }
+            
+            i++;
+        }
+        
+        
+        i=nums.length - 1;
+        positiveProduct = Integer.MAX_VALUE;
+        negativeProduct = Integer.MIN_VALUE;
+        while(i>=0) {
+            
+            if(nums[i] == 0) {
+                positiveProduct = Integer.MAX_VALUE;
+                negativeProduct = Integer.MIN_VALUE;
+            } else if(nums[i] < 0) {
+                
+                if(negativeProduct == Integer.MIN_VALUE) {
+                    
+                    if(positiveProduct != Integer.MAX_VALUE) {
+                        negativeProduct = positiveProduct*nums[i];
+                        positiveProduct = Integer.MAX_VALUE;
+                    } else {
+                        negativeProduct = nums[i];
+                    }
+                } else {
+                    negativeProduct = negativeProduct * nums[i];
+                    positiveProduct = negativeProduct;
+                    negativeProduct = Integer.MIN_VALUE;
+                }
+                
+                
+            } else {
+                
+                if(positiveProduct == Integer.MAX_VALUE) {
+                  positiveProduct = nums[i];
+                } else {
+                    positiveProduct = positiveProduct*nums[i];
+                }
+                
+                if(negativeProduct != Integer.MIN_VALUE) {
+                    negativeProduct = negativeProduct*nums[i];
+                }
+                
+                
+            }
+            
+         //   System.out.println("positiveProduct: "+positiveProduct+" negativeProduct: "+negativeProduct);
+            if(positiveProduct != Integer.MAX_VALUE) {
+                maxProduct = Math.max(maxProduct, positiveProduct);
+            }
+            
+            if(negativeProduct != Integer.MIN_VALUE) {
+                maxProduct = Math.max(maxProduct, negativeProduct);
+            }
+            
+            i--;
+        }
+        
+        return maxProduct;
+        
+    }
+}
+
+/*
+
+
++++-+++-+++-
+*/
 class Solution {
     /*
     https://www.youtube.com/watch?v=hJ_Uy2DzE08
