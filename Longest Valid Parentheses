@@ -1,5 +1,65 @@
 class Solution {
     
+    public int longestValidParentheses(String s) {
+        
+ //       List<Integer> invalidIndex = new ArrayList<>(); //this can be made into a boolean list of size n, so we don't have to sort it and this reduces the time complexity to O(n)
+        
+        Stack<Integer> stk = new Stack<Integer>();
+        
+        for(int i=0; i<s.length(); i++) {
+            
+            if(stk.isEmpty()) {
+                
+                if(s.charAt(i) == '(') {
+                    stk.push(i);
+                } else {
+                    invalidIndex.add(i);
+                }
+            } else {
+                
+                if(s.charAt(i) == '(') {
+                    stk.push(i);
+                } else {
+                    if(s.charAt(stk.peek()) == '(') {
+                        stk.pop();
+                    } else {
+                        invalidIndex.add(i);
+                    }
+                }
+                
+            }
+        }
+        
+        
+        while(!stk.isEmpty()) {
+            invalidIndex.add(stk.pop());
+        }
+
+        Collections.sort(invalidIndex);
+        
+        int maxLen = 0;
+        int prevIndex = 0;
+        
+        for(int i=0; i<invalidIndex.size(); i++) {
+            int end = invalidIndex.get(i) - 1;
+            if(end >= 0 && end < s.length() && end > prevIndex) {
+                maxLen = Math.max(maxLen, end - prevIndex + 1);
+            }
+            prevIndex = invalidIndex.get(i) + 1;
+        }
+        
+        int end = s.length() - 1;
+            if(end >= 0 && end < s.length() && end > prevIndex) {
+                maxLen = Math.max(maxLen, end - prevIndex + 1);
+            }
+        
+        return maxLen;
+    }
+}
+
+
+class Solution {
+    
     class Bracket{
         public int index;
         public char type;
