@@ -2,7 +2,39 @@
 https://www.youtube.com/watch?v=C8UjlJZsHBw
 */
     
-    
+    class Solution {
+    public int trap(int[] height) {
+        
+        int[] maxLeftoRight = new int[height.length];
+        int[] maxRightToLeft = new int[height.length];
+        
+        Arrays.fill(maxLeftoRight, Integer.MIN_VALUE);
+        Arrays.fill(maxRightToLeft, Integer.MIN_VALUE);
+        maxLeftoRight[0] = height[0];
+        maxRightToLeft[maxRightToLeft.length - 1] = height[height.length - 1];
+        
+        for(int i=1; i<height.length; i++) {
+            
+            maxLeftoRight[i] = Math.max(height[i], maxLeftoRight[i - 1]);
+        }
+        
+        for(int i=height.length - 2; i >= 0; i--) {
+            
+            maxRightToLeft[i] = Math.max(height[i], maxRightToLeft[i + 1]);
+        }
+        
+        int totalWater = 0;
+        
+        for(int i=0; i<height.length; i++) {
+            
+            int minHeight = Math.min(maxRightToLeft[i], maxLeftoRight[i]);
+            totalWater += Math.abs(minHeight - height[i]);
+        }
+        
+        return totalWater;
+    }
+}
+
     
 class Solution {
     public int trap(int[] height) {
