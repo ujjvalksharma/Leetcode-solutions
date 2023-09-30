@@ -1,3 +1,130 @@
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        
+        if(nums1.length < nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+        
+        if(nums1.length == 0) {
+            
+            if(nums2.length == 1) {
+                return nums2[0];
+            }
+            
+            if(nums2.length%2 == 0) {
+                int mid = (nums2.length - 1)/2;
+                double result = (double) (nums2[mid] + nums2[mid + 1]);
+                return result/2;
+            }
+            
+            int mid = nums2.length/2;
+                
+            return nums2[mid];
+        }
+        
+        
+        if(nums2.length == 0) {
+            
+            if(nums1.length == 1) {
+                return nums1[0];
+            }
+            
+            if(nums1.length%2 == 0) {
+                int mid = (nums1.length - 1)/2;
+                double result = (double) (nums1[mid] + nums1[mid + 1]);
+                return result/2;
+            }
+            
+            int mid = nums1.length/2;
+                
+            return nums1[mid];
+        }
+        
+        
+        int totalSize = nums1.length + nums2.length;
+        int halfSize = totalSize/2;
+        boolean isTotalElementEven = true;
+        if(totalSize%2 != 0) {
+            isTotalElementEven = false;
+            halfSize++;
+        }
+        
+        //taking atleast 1 element of nums1
+        for(int i=-1; i<nums1.length; i++) {
+            
+            
+            int num1Left = i >= 0 ? nums1[i] : Integer.MIN_VALUE;
+            int num1Right = ((i + 1) < nums1.length && (i + 1 ) >= 0 )? nums1[i + 1] : Integer.MAX_VALUE;
+            int totalElementsNeededOnLeftSide = halfSize;
+            
+            if(i >= 0) {
+                totalElementsNeededOnLeftSide = halfSize - (i + 1);
+                if(totalElementsNeededOnLeftSide < 0) {
+                    totalElementsNeededOnLeftSide = 0;
+                }
+            }
+            
+            if(totalElementsNeededOnLeftSide >= 0 && totalElementsNeededOnLeftSide <= nums2.length) {
+                
+                int indexOfNums2= totalElementsNeededOnLeftSide - 1;
+                
+                int num2Left = (indexOfNums2 < nums2.length && indexOfNums2 >= 0)  ? nums2[indexOfNums2] : Integer.MIN_VALUE;
+                int num2right = (indexOfNums2 + 1) < nums2.length ? nums2[indexOfNums2 + 1] : Integer.MAX_VALUE;
+                
+                if(num1Left <= num2right && num2Left <= num1Right) {
+                    System.out.println("I am here1");
+                    int maxOfLeft = Math.max(num2Left, num1Left);
+                    int minOfLeft = Math.min(num1Right, num2right);
+                    
+                    double result = (double) (maxOfLeft + minOfLeft);
+                    
+                    if(isTotalElementEven) {
+                    return result/2;
+                    }
+                    
+                    return maxOfLeft;
+                    
+                }
+            
+            }
+            
+        }
+            //all of num1 on left and all of nums2 on right
+            
+            if(nums1.length == nums2.length && nums1[nums1.length - 1] <= nums2[0]) {
+            //    System.out.println("I am here2");
+                int maxOfLeft = nums1[nums1.length - 1];
+                int minOfLeft = nums2[0];
+                double result = (double) (maxOfLeft + minOfLeft);
+              
+                if(isTotalElementEven) {
+                return result/2;
+                }
+                
+                return maxOfLeft;
+                
+            } else {
+                int mid = totalSize/2;
+                
+                if(isTotalElementEven) {
+                    mid--;
+                    int maxOfLeft = nums1[mid];
+                    int minOfLeft = nums1[mid + 1];
+                    double result = (double) (maxOfLeft + minOfLeft);
+                    return result/2;
+                }
+                
+                return nums1[mid];
+            }
+            
+        
+    }
+}
+
+    
+
+
+
 /*
 https://www.youtube.com/watch?v=LPFhl65R7ww&t=230s
 */
