@@ -1,3 +1,118 @@
+class LRUCache {
+
+    class ListNode {
+        
+        ListNode next;
+        ListNode prev;
+        int key;
+        int value;
+        
+        public ListNode(int key, int value) {
+            this.key = key;
+            this.value = value;
+            this.next = null;
+            this.prev = null;
+        }
+        
+        
+    }
+    
+    int currentCapacity;
+    int maxCapacity;
+    ListNode head;
+    ListNode tail;
+    Map<Integer,ListNode> cache = new HashMap<>();
+    
+    public LRUCache(int capacity) {
+        
+       this.head = new  ListNode(-1, -1);
+       this.tail = new  ListNode(-1, -1);
+       head.next = tail;
+       head.prev = null;
+       tail.prev = head;
+       tail.next = null;
+       this.maxCapacity = capacity;
+       this.currentCapacity = 0;
+    }
+    
+    public void appendNodeBehindTail(ListNode node) {
+        
+        ListNode prevNode = tail.prev;
+        prevNode.next = node;
+        node.prev = prevNode;
+        node.next = tail;
+        tail.prev = node;
+        
+    }
+    
+    public void detachNode(ListNode node) {
+        
+        ListNode prevNode = node.prev;
+        ListNode nextNode = node.next;
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+        node.next = null;
+        node.prev = null;
+        
+    }
+    public int get(int key) {
+        
+        if(!cache.containsKey(key)) {
+            return -1;
+        }
+        
+        ListNode currentNode = cache.get(key);
+        detachNode(currentNode);
+        appendNodeBehindTail(currentNode);
+        
+        return currentNode.value;
+    }
+    
+    public void put(int key, int value) {
+        
+        if(cache.containsKey(key)) {
+            
+            ListNode currentNode = cache.get(key);
+            currentNode.value = value;
+            detachNode(currentNode);
+            appendNodeBehindTail(currentNode);
+            
+        } else {
+            
+            
+            if(currentCapacity == maxCapacity) {
+                ListNode leastRecentNode = head.next;
+                cache.remove(leastRecentNode.key);
+                detachNode(leastRecentNode);
+                currentCapacity--;
+            }
+            
+            ListNode node = new ListNode(key, value);
+            appendNodeBehindTail(node);
+            cache.put(key, node);
+            
+            
+            currentCapacity++;
+        }
+        
+        
+    }
+}
+
+/**
+
+
+["LRUCache","put","put","get","put","get","put","get","get"]
+[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3]]
+
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+
+
+
 /*
 Solution 2: Using linkedlist + hashmap, in this solution, we will make a double linklst and insert keep the least recently used element on the left hand side and remove if hashmap reaches the capacity, and if insert elements always at the tail. if we want to update a value we reach to that node and remove it and update the value in it and appended it to the tail and similarly if we get the element from the linked list.
 
