@@ -1,3 +1,216 @@
+class Solution {
+    public List<Integer> countSmaller(int[] A) {
+        int len = A.length; 
+        Item[] items = new Item[len]; 
+  
+        for (int i = 0; i < len; i++) { 
+            items[i] = new Item(A[i], i); 
+        } 
+  
+        int[] count = new int[len]; 
+        mergeSort(items, 0, len - 1, count); 
+        ArrayList<Integer> res = new ArrayList<>(); 
+  
+        for (int i : count) { 
+            res.add(i); 
+        } 
+        return res; 
+    }
+    
+    
+    class Item { 
+  
+        int val; 
+        int index; 
+  
+        public Item(int val, int index) 
+        { 
+            this.val = val; 
+            this.index = index; 
+        } 
+    } 
+    
+    
+    // Function for Merge Sort 
+    private void mergeSort(Item[] items, 
+                           int low, int high, 
+                           int[] count) 
+    { 
+  
+        if (low >= high) { 
+            return; 
+        } 
+  
+        int mid = low + (high - low) / 2; 
+        mergeSort(items, low, mid, count); 
+        mergeSort(items, mid + 1, high, count); 
+        merge(items, low, mid, mid + 1, high, count); 
+    } 
+  
+    // Utility function that merge the array 
+    // and count smaller element on right side 
+    private void merge(Item[] items, int low, 
+                       int lowEnd, int high, 
+                       int highEnd, int[] count) 
+    { 
+        int m = highEnd - low + 1; 
+        Item[] sorted = new Item[m]; 
+        int rightCounter = 0; 
+        int lowPtr = low, highPtr = high; 
+        int index = 0; 
+  
+        // Loop to store the count of smaller 
+        // Elements on right side when both 
+        // Array have some elements 
+        while (lowPtr <= lowEnd && highPtr <= highEnd) { 
+            if (items[lowPtr].val > items[highPtr].val) { 
+                rightCounter++; 
+                sorted[index++] = items[highPtr++]; 
+            } 
+            else { 
+                count[items[lowPtr].index] += rightCounter; 
+                sorted[index++] = items[lowPtr++]; 
+            } 
+        } 
+  
+        // Loop to store the count of smaller 
+        // elements in right side when only 
+        // left array have some element 
+        while (lowPtr <= lowEnd) { 
+            count[items[lowPtr].index] += rightCounter; 
+            sorted[index++] = items[lowPtr++]; 
+        } 
+  
+        // Loop to store the count of smaller 
+        // elements in right side when only 
+        // right array have some element 
+        while (highPtr <= highEnd) { 
+            sorted[index++] = items[highPtr++]; 
+        } 
+  
+        System.arraycopy(sorted, 0, items, low, m); 
+    } 
+    
+    
+}
+
+/*class Solution {
+    int[] counts;
+    
+    class Pair {
+        
+        int index;
+        int value;
+        
+        public Pair(int index, int value) {
+            this.value = value;
+            this.index = index;
+        }
+        
+        public String toString() {
+            return " value: "+value+" index: "+index;
+        }
+    }
+    
+    public void divide(Pair[] nums, int start, int end) {
+        if(start >= end) {
+            return;
+        }
+        
+        int mid = start + (end - start) / 2;
+        divide(nums, start, mid);
+        divide(nums, mid + 1, end);
+        findSmallerCount(nums, start, mid, mid + 1, end);
+        
+    }
+    
+    public void findSmallerCount(Pair[] nums, int start1, int end1, int start2, int end2) {
+        
+        Pair[] arr1 = new Pair[end1 - start1 + 1];
+        Pair[] arr2 = new Pair[end2 - start2 + 1];
+        Pair[] mergedArr = new Pair[arr1.length + arr2.length];
+        int index = 0;
+        for(int i=start1; i <= end1; i++) {
+            arr1[index] = new Pair(nums[i].index, nums[i].value);
+                index++;
+        }
+        
+        index = 0;
+        for(int i=start2; i <= end2; i++) {
+            arr2[index] = new Pair(nums[i].index, nums[i].value);
+                index++;
+        }
+        
+      //  System.out.println("arr1: "+Arrays.toString(arr1));
+      //  System.out.println("arr2: "+Arrays.toString(arr2));
+        
+        int index1 = 0;
+        int index2 = 0;
+        index = 0;
+        while(index1 < arr1.length && index2 < arr2.length) {
+            
+            if(arr1[index1].value < arr2[index2].value) {
+            int idx = arr1[index1].index;
+            counts[idx] += index2;
+            mergedArr[index] = new Pair(arr1[index1].index, arr1[index1].value);
+            index1++;
+                
+            } else if(arr1[index1].value >= arr2[index2].value) {
+                mergedArr[index] = new Pair(arr2[index2].index, arr2[index2].value);
+                index2++;
+                
+            }
+                      
+            index++;
+        }
+        
+       // System.out.println("before counts: "+Arrays.toString(counts));
+        
+        while(index1 < arr1.length) {
+      //      System.out.println("arr1[index1]: "+arr1[index1]);
+            int idx = arr1[index1].index;
+            if(arr1[index1].value != arr2[arr2.length - 1].value){
+            counts[idx] += arr2.length;
+            }
+            mergedArr[index] = new Pair(arr1[index1].index, arr1[index1].value);
+            index1++;
+            index++;
+        }
+       
+        while(index2 < arr2.length) {
+            mergedArr[index] = new Pair(arr2[index2].index, arr2[index2].value);
+            index2++;
+            index++;
+        }
+        
+        index = 0;
+        for(int i=start1; i<=end2; i++) {
+            nums[i] = mergedArr[index];
+            index++;
+        }
+        
+      //  System.out.println("mergedArr: "+Arrays.toString(mergedArr));
+      //  System.out.println("after counts: "+Arrays.toString(counts));
+        
+    }
+    public List<Integer> countSmaller(int[] nums) {
+        this.counts = new int[nums.length];
+        Pair[] tempNums = new Pair[nums.length];
+        
+        for(int i=0; i<tempNums.length; i++) {
+            tempNums[i] = new Pair(i, nums[i]);
+        }
+        divide(tempNums, 0, nums.length - 1);
+        List<Integer> result = new ArrayList<Integer>();
+        
+        for(int num : counts) {
+            result.add(num);
+        }
+        
+        return result;
+    }
+}*/
+
 //https://www.youtube.com/watch?v=JGN-7q-PUVM&t=1888s
 class Solution {
     Pair[] numbers;
