@@ -1,3 +1,123 @@
+/*
+
+For next permutation: we always see right to left as we want to make swaps towards the right to reach next permutation
+Case 1: the whole number is increasing right to left, so this last number, we can just reverse/sort nums and that is the result
+
+Case2: 
+iterate from right to left check the index at which order stops becoming increasing
+    b
+   /\c
+  /  \
+ /
+a
+
+We can see that from a to b it was increasing that means its permutation has been completed, since b to c where c is at index start is not increasing, we should find next Greater number to replace c and that number is between a to b. We find the next greater number and put the rest nunbers between a to b in sorted order from start + 1 to nums.length - 1
+
+*/
+/*
+class Solution {
+    public void nextPermutation(int[] nums) {
+        
+        int index = -1;
+        for(int i=nums.length - 2; i >= 0; i--) {
+            
+            if(nums[i] < nums[i + 1]) {
+                index = i;
+                break;
+            }
+        }
+        
+        if(index == -1) { //nums is the last number in permutation
+            Arrays.sort(nums); //conver it to first number
+            return;
+        } else {
+            
+        TreeMap<Integer,Integer> tm = new TreeMap<>();
+        
+        for(int i=index; i<nums.length; i++) {
+            
+            if(!tm.containsKey(nums[i])) {
+                tm.put(nums[i], 0);
+            }
+            
+            tm.put(nums[i], tm.get(nums[i]) + 1);
+            
+        }
+            
+            Integer nextNum = tm.higherKey(nums[index]);
+            
+            int start = index;
+            tm.put(nextNum, tm.get(nextNum) - 1);
+            nums[index] = nextNum;
+            start++;
+            
+            for(int num : tm.keySet()) {
+                
+                int count = tm.get(num);
+                
+                while(count > 0) {
+                    nums[start] = num;
+                    start++;
+                    count--;
+                }
+            }
+        }
+    }
+}*/
+ 
+
+class Solution {
+    
+    public void reverse(int[] nums, int start, int end) {
+        
+        while(start < end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+    
+    public void swap(int[] nums, int i, int j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+    }
+    
+    
+    public void nextPermutation(int[] nums) {
+        
+        int index = -1;
+        for(int i=nums.length - 2; i >= 0; i--) {
+            
+            if(nums[i] < nums[i + 1]) {
+                index = i;
+                break;
+            }
+        }
+        
+        if(index == -1) { //nums is the last number in permutation
+            reverse(nums, 0, nums.length - 1);
+            return;
+        } else {
+        
+            int swapIndex = index;
+            for(int i=index + 1; i<nums.length; i++) {
+                
+                if(nums[i] > nums[index]) {
+                    swapIndex = i;
+                }
+            }
+            
+            swap(nums, index, swapIndex);
+            
+            reverse(nums, index + 1, nums.length - 1);
+        }
+    }
+}
+
+
+
+
 public class Solution {
     /*
     https://www.youtube.com/watch?v=quAS1iydq7U
