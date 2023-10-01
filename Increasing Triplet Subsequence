@@ -1,0 +1,40 @@
+/*
+Keep track of least number from left and max from right and at index i we know less number towards and higher number towards right
+
+[1,5,0,4,1,3]
+
+*/
+class Solution {
+    public boolean increasingTriplet(int[] nums) {
+        
+        int[] leastNumLeftToRight = new int[nums.length];
+        int[] maxNumRightToLeft = new int[nums.length];
+        
+        Arrays.fill(leastNumLeftToRight, Integer.MAX_VALUE);
+        Arrays.fill(maxNumRightToLeft, Integer.MIN_VALUE);
+        
+        leastNumLeftToRight[0] = nums[0];
+        maxNumRightToLeft[nums.length - 1] = nums[nums.length - 1];
+        
+        for(int i=1; i<nums.length; i++) {
+            leastNumLeftToRight[i] = Math.min(leastNumLeftToRight[i - 1], nums[i]);
+        }
+        
+        for(int i=nums.length - 2; i >=0; i--) {
+            maxNumRightToLeft[i] = Math.max(maxNumRightToLeft[i + 1], nums[i]);
+        }
+        
+        for(int i=0; i< nums.length; i++) {
+            
+            int num1 = leastNumLeftToRight[i];
+            int num2 = nums[i];
+            int num3 = maxNumRightToLeft[i];
+            
+            if(num1 < num2 && num2 < num3) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+}
