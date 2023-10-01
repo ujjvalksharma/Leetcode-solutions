@@ -1,0 +1,101 @@
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int left = matrix[0][0];
+        int right = matrix[n-1][n-1];
+        int result = matrix[n-1][n-1];
+        
+        while(left <= right){
+            
+            int mid = left + (right - left)/2;
+            int count = seachMatrix(matrix,mid); 
+            //find how many numbers are smaller than mid element
+            if(count < k){
+                left = mid+1;
+            } else if(count > k){
+                right = mid - 1;
+            } else if(count == k) {
+                result = Math.min(result, mid);
+                right = mid - 1;
+            }
+        }
+        return left;
+    }
+    
+    //leetcode 240
+    public int seachMatrix(int[][] matrix, int target) {
+        //start from last column of first row.
+        int count = 0;
+        int row = 0;
+        int col = matrix[0].length-1;
+        
+        //move down or left to find the element
+        while(row >=0 && row < matrix.length && col >= 0 && col < matrix[0].length ){
+            if(matrix[row][col] > target){
+                col--;
+            } 
+            else {
+                count += col + 1;
+                row++;
+            }
+        }
+        
+        return count;
+    }
+}
+
+
+/*class Solution {
+    
+    public int kthSmallest(int[][] matrix, int k) {
+        
+        //binary search to find the rowIndex the element would be in and then reach the specific column
+        int low = matrix[0][0];
+        int high = matrix[matrix.length - 1][matrix[0].length - 1];
+        int result = 0;
+        while(low <= high) {
+            
+            int mid = low + (high - low) / 2;
+           // System.out.println("low: "+low+" high: "+high+" mid: "+mid);
+            int count = searchMatrix(matrix, mid);
+            
+            if(count < k) {
+                low = mid + 1;
+            } else if(count > k) {
+                high = mid - 1;
+            } else if(count == k) {
+                result = low;
+                high = mid - 1;
+            }
+            
+        }
+        
+        return result;
+    }
+    
+    
+    public int searchMatrix(int[][] matrix, int target) {
+        
+        int row = 0;
+        int col = matrix[0].length - 1;
+        int count = 0;
+        
+        while(row >=0 && row < matrix.length && col >= 0 && col < matrix[0].length ) {
+            
+            int num = matrix[row][col];
+            
+             if(num <= target ) {
+                count += (col + 1);
+                row++;
+            } else if(num > target) {
+                
+                col--;
+            }
+            
+        }
+        
+        return count;
+        
+    }
+    
+}*/
