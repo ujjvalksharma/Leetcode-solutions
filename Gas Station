@@ -1,0 +1,82 @@
+/*
+
+The if we find a starting point at i  where i < j. then that starting point to better than j as it was able to reach j with some fuel and when it gets out of j it will more fuel that what we would have if we started from j. So basically we take a greedy approach to find the first starting point from i=0 to n. then we verify if that points works otherwise we return -1.
+
+*/
+class Solution {
+    
+    public boolean isStartingPointValid(int startPoint, int[] gas, int[] cost) {
+        
+        int endPoint = startPoint;
+        int totalGas = 0;
+        int prevCost = 0;
+        do{
+            
+            totalGas += (gas[startPoint] - prevCost);
+         //   System.out.println("startPoint: "+startPoint+" totalGas: "+totalGas);
+            if(totalGas <= 0) {
+           //     System.out.println("I am here");
+                return false;
+            }
+            prevCost = cost[startPoint];
+            startPoint++;
+            
+            if(startPoint >= gas.length) {
+                startPoint = 0;
+            }
+            
+        }while(startPoint != endPoint);
+        
+        return true;
+        
+    }
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        
+        
+        int totalGas = 0;
+        int totalCost = 0;
+        for(int fuel: gas) {
+            totalGas += fuel;
+        }
+        
+        for(int c: cost) {
+            totalCost += c;
+        }
+        
+        if(totalGas < totalCost) {
+            return -1;
+        }
+        
+        
+        int startingPoint = -1;
+        int currentGas = 0;
+        
+        for(int i=0; i<gas.length; i++) {
+            
+            currentGas += (gas[i] - cost[i]);
+            
+            if(currentGas >= 0 && startingPoint == -1) {
+                startingPoint = i;
+            }
+            
+            if(currentGas < 0) {
+                currentGas = 0;
+                startingPoint = -1;
+            }
+            
+            
+            
+        }
+        
+        if(startingPoint == -1) {
+            return -1;
+        }
+        
+        if(isStartingPointValid(startingPoint, gas, cost)) {
+            return startingPoint;
+        }
+        
+        return -1;
+    }
+}
+    
