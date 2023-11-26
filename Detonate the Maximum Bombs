@@ -1,0 +1,132 @@
+/*class Solution {
+    
+    public Map<Integer,List<Integer>> buildGraph(int[][] bombs) {
+        
+        Map<Integer,List<Integer>> graph = new HashMap<>();
+        
+        for(int i=0; i < bombs.length; i++) {
+            graph.put(i, new ArrayList<Integer>());
+            for(int j=0; j < bombs.length; j++) {
+                
+                if(i != j && canDetonate(bombs[i], bombs[j])) {
+                    graph.get(i).add(j);
+                }
+            }
+        }
+        
+        return graph;
+        
+    }
+    
+    public boolean canDetonate(int[] sourceBomb, int[] destBomb) {
+    
+        int xDiff = sourceBomb[0] - destBomb[0];
+        int yDiff = sourceBomb[1] - destBomb[1];
+        
+        return xDiff*xDiff + yDiff*yDiff <= sourceBomb[2] * sourceBomb[2]; //*(x1-x2)^ + (y1-y2)^2 <= r1^2
+        
+    }
+    
+    public int getTotalBombsThatCanDetonate(int source, Map<Integer,List<Integer>> graph) {
+        
+        Set<Integer> visited = new HashSet<Integer>(); 
+        Queue<Integer> bfs = new LinkedList<Integer>();
+        bfs.add(source);
+        visited.add(source);
+        int totalBombs = 0;
+        
+        while(!bfs.isEmpty()) {
+            
+            int currentBomb = bfs.poll();
+            totalBombs++;
+            
+            List<Integer> neighbours = graph.get(source);
+            
+            for(int neighbour : neighbours) {
+                
+                if(!visited.contains(neighbour)) {
+                    visited.add(neighbour);
+                    bfs.add(neighbour);
+                }
+            }
+            
+        }
+        
+        return totalBombs;
+        
+    }
+    public int maximumDetonation(int[][] bombs) {
+        
+        
+        Map<Integer,List<Integer>> graph = buildGraph(bombs);
+        System.out.println("graph: "+graph);
+        int maxDetonationPossible = 0;
+        
+        for(int i=0; i<bombs.length; i++) {
+            int count = getTotalBombsThatCanDetonate(i, graph);
+            maxDetonationPossible = Math.max(maxDetonationPossible, count);
+        }
+        
+        return maxDetonationPossible;
+        
+    
+        
+    }
+}*/
+
+class Solution {
+    public int maximumDetonation(int[][] bombs) {
+        HashMap<Integer,List<Integer>> graph=buildGraph(bombs);
+        int maxCount=0;
+        
+        for(int i=0;i<bombs.length;i++){
+            int count=getCount(bombs,graph,i);
+            maxCount=Math.max(maxCount,count);
+        }
+        return maxCount;
+    }
+    
+    public HashMap<Integer,List<Integer>> buildGraph(int[][]bombs){
+        HashMap<Integer,List<Integer>> graph=new HashMap<>();
+        
+        for(int i=0;i<bombs.length;i++){
+            List<Integer> list=new ArrayList<>();
+            long x1=bombs[i][0];
+            long y1=bombs[i][1];
+            long r1=bombs[i][2];
+            
+            for(int j=0;j<bombs.length;j++){
+                long x2=bombs[j][0];
+                long y2=bombs[j][1];
+                
+                if(i!=j){
+                    if(((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2))<=r1*r1){
+                        list.add(j);
+                    }
+                }
+            }
+            graph.put(i,list);
+        }
+        return graph;
+    }
+    
+    public int getCount(int[][]bombs,HashMap<Integer,List<Integer>> map,int index){
+        Queue<Integer> q=new LinkedList<>();
+        q.add(index);
+        Set<Integer> vis=new HashSet<>();
+        vis.add(index);
+        while(!q.isEmpty()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                int cur=q.poll();
+                for(int j:map.get(cur)){
+                    if(!vis.contains(j)){
+                        q.add(j);
+                        vis.add(j);
+                    }
+                }
+            }
+        }
+        return vis.size();
+    }
+} 
