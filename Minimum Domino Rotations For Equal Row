@@ -1,0 +1,83 @@
+class Solution {
+    
+    public int findFrequency(int[] arr, int value) {
+        int freq = 0;
+        
+        for(int i=0; i<arr.length; i++) {
+            if(arr[i] == value) {
+                freq++;
+            }
+        }
+        
+        return freq;
+    }
+    
+    public int getMinSwapCount(int[] targetArr, int[] sourceArr, int value) {
+        
+        int swapCount = 0;
+        
+        for(int i=0; i<sourceArr.length; i++) {
+            
+            if(sourceArr[i] == value && targetArr[i] != value) {
+                swapCount++;
+                targetArr[i] = value;
+            }
+        }
+        
+        for(int i=0; i<targetArr.length; i++) {
+            if(targetArr[i] != value) {
+                return -1;
+            }
+        }
+        
+        return swapCount;
+    }
+    public int minDominoRotations(int[] tops, int[] bottoms) {
+        
+        int[] digitCount = new int[7];
+        
+        for(int i=0; i<tops.length; i++) {
+            digitCount[tops[i]]++;
+        }
+        
+        for(int i=0; i<bottoms.length; i++) {
+            digitCount[bottoms[i]]++;
+        }
+        
+        System.out.println("digitCount: "+Arrays.toString(digitCount));
+        
+        boolean isMinDominoRotationsPossible = false;
+        int sameDigitValue = -1;
+        
+        for(int i=0; i<digitCount.length; i++) {
+            if(digitCount[i] >= tops.length) {
+                sameDigitValue = i;
+                isMinDominoRotationsPossible = true;
+                break;
+            }
+        }
+        
+        
+        
+        if(!isMinDominoRotationsPossible) {
+            return -1;
+        }
+        
+        int frequencyInTop = findFrequency(tops, sameDigitValue);
+        int frequencyInBottom = findFrequency(bottoms, sameDigitValue);
+        if(frequencyInTop >= frequencyInBottom) {
+            return getMinSwapCount(tops, bottoms, sameDigitValue);
+        } else {
+            return getMinSwapCount(bottoms, tops, sameDigitValue);
+        }
+        
+    }
+}
+
+/*
+there has be a digit whose total occurance is tops.length
+*/
+/*
+Now we have to find frequency of that digit in top and bottom to know the direction of swap
+Then we verify top or bottom
+*/
