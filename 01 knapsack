@@ -1,0 +1,43 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class knapSack01 {
+  static Map<String,Integer> dp = new HashMap<>();
+  public static void main(String[] args) {
+    int profit[] = new int[] { 60, 100, 120, 60, 100, 120, 60, 100, 120, 60, 100, 120 };
+    int weight[] = new int[] { 10, 20, 30, 10, 20, 30, 10, 20, 30, 10, 20, 30 };
+    int W = 150;
+    int maxProfit = findMaxProfit(0, 0, W, profit, weight);
+    System.out.println("max Profit: "+maxProfit);
+  }
+
+  private static int findMaxProfit(int index, int currentWeight, int W, int[] profit, int[] weight) {
+
+    if(index >= profit.length) {
+      return 0;
+    }
+
+    if(currentWeight + weight[index] > W) {
+      return 0;
+    }
+
+    String key = index+","+currentWeight;
+
+    if(dp.containsKey(key)){
+      System.out.println("memo is called");
+      return dp.get(key);
+    }
+
+    //pick
+    int profit1 = findMaxProfit(index + 1, currentWeight + weight[index], W, profit, weight) + profit[index];
+    //no pick
+    int profit2 = findMaxProfit(index + 1, currentWeight, W, profit, weight);
+
+    int maxProfit =  Math.max(profit1, profit2);
+
+    dp.put(key, maxProfit);
+
+    return maxProfit;
+
+  }
+}
