@@ -1,0 +1,54 @@
+package org.example;
+
+import java.util.Arrays;
+
+public class MaximumTime {
+
+  static int currentMaxTime = 0;
+  public static void main(String[] args) {
+    String input = "??:??";
+    System.out.println("maximum time: "+findMaximumTime(input));
+  }
+
+  private static String findMaximumTime(String input) {
+
+    char[] hour = new char[] {input.charAt(0), input.charAt(1)};
+    char[] minute = new char[] {input.charAt(3), input.charAt(4)};
+    int hourInt = 0;
+    int mintueInt = 0;
+    findMaxTime(hour, 0, "", 23);
+    hourInt = currentMaxTime;
+    currentMaxTime = 0;
+
+    findMaxTime(minute, 0, "", 59);
+    mintueInt = currentMaxTime;
+
+    String hourStr = hourInt < 10 ? "0"+hourInt : ""+hourInt;
+    String mintueStr = mintueInt < 10 ? "0"+mintueInt : ""+mintueInt;
+
+    return hourStr+":"+mintueStr;
+
+  }
+
+  private static void findMaxTime(char[] time, int index ,String currentTime, int maxTime) {
+
+    if(index >= 2) {
+      int timeInt = Character.getNumericValue(currentTime.charAt(0)) * 10 + Character.getNumericValue(currentTime.charAt(1));
+
+      if(timeInt >= 0 && timeInt <= maxTime) {
+        currentMaxTime = Math.max(currentMaxTime, timeInt);
+      }
+      return;
+    }
+
+    if(time[index] == '?') {
+
+      for(int i=0; i < 10; i++) {
+        findMaxTime(time, index + 1, currentTime + i, maxTime);
+      }
+    } else {
+      findMaxTime(time, index + 1, currentTime + time[index], maxTime);
+    }
+
+  }
+}
