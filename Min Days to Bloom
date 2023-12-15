@@ -34,8 +34,7 @@ public class MinDaysToBloom {
         start = mid + 1;
       }
     }
-
-
+    return minDay;
   }
   public static void main(String[] args) {
     MinDaysToBloom obj = new MinDaysToBloom();
