@@ -1,0 +1,27 @@
+import java.util.Arrays;
+import java.util.TreeSet;
+
+public class DecreasingSubsequences {
+
+    public int findMinDecreasingSequence(int[] sequences) {
+        TreeSet<Integer> ts = new TreeSet<>();
+        System.out.println("sequences: "+ Arrays.toString(sequences));
+        for(int sequence : sequences) {
+            if(ts.ceiling(sequence) == null) {
+                ts.add(sequence);
+            } else {
+                int higherNumInSequence = ts.ceiling(sequence);
+                ts.remove(higherNumInSequence);
+                ts.add(sequence);
+            }
+            System.out.println("ts: "+ts);
+        }
+        return ts.size();
+    }
+    public static void main(String[] args) {
+        DecreasingSubsequences obj = new DecreasingSubsequences();
+        int[] sequences = new int[]{2, 9, 12, 13, 4, 7, 6, 5, 10};
+        int minSequenceCount = obj.findMinDecreasingSequence(sequences);
+        System.out.println("minSequenceCount: "+minSequenceCount);
+    }
+}
