@@ -1,3 +1,43 @@
+//recursion to take out element 1 by 1
+class Solution {
+    
+    int minDiff = Integer.MAX_VALUE;
+    
+    public void findMinDiff(int[] nums, int start, int end, int totalRemoval) {
+        
+        if(totalRemoval >= 4) {
+            return;
+        }
+        
+        if(start > end) {
+            return;
+        }
+        
+        if(start == end) {
+            minDiff = 0;
+            return;
+        }
+        
+        minDiff = Math.min(minDiff, nums[end] - nums[start]);
+        
+        findMinDiff(nums, start + 1, end, totalRemoval + 1);
+        findMinDiff(nums, start, end - 1, totalRemoval + 1);
+        
+    }
+    public int minDifference(int[] nums) {
+        
+        Arrays.sort(nums);
+        findMinDiff(nums, 0, nums.length -1, 0);
+        return minDiff;
+        
+    }
+}
+
+
+
+
+
+
 //make top 3 larger values equal to top 3 samller values.
 //you will have rougly 9 combination of answer
 class Solution {
