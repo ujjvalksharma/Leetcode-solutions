@@ -1,0 +1,47 @@
+package org.example;
+
+import java.util.Arrays;
+
+public class MinDaysToBloom {
+
+  public int getBouquets(int[] roses, int day, int k){
+
+    int totalBouquets = 0;
+    int currentBouquets = 0;
+    for(int i=0; i<roses.length; i++) {
+
+      if(roses[i] > day) {
+        totalBouquets += (currentBouquets%k);
+        currentBouquets = 0;
+      } else {
+        currentBouquets++;
+      }
+    }
+
+    return totalBouquets;
+  }
+  public int findMinDaysToBloom(int[] roses, int k, int n) {
+
+    int start = Arrays.stream(roses).min().getAsInt();
+    int end = Arrays.stream(roses).max().getAsInt();
+    int minDay = end;
+    while(start <= end) {
+      int mid = start + (end - start)/2;
+      if(getBouquets(roses, mid, k) >= n) {
+        minDay = Math.min(minDay, mid);
+        end = mid - 1;
+      } else {
+        start = mid + 1;
+      }
+    }
+
+
+  }
+  public static void main(String[] args) {
+    MinDaysToBloom obj = new MinDaysToBloom();
+    int[] roses = new int[]{1, 2, 4, 9, 3, 4, 1};
+    int k = 2;
+    int n = 2;
+    System.out.println("min days to bloom: "+obj.findMinDaysToBloom(roses, k, n));
+  }
+}
