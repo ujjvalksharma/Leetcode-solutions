@@ -1,0 +1,15 @@
+class Solution {
+    public List<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
+        List<Boolean> result = new ArrayList<Boolean>();
+        int maxCandy = Integer.MIN_VALUE;
+        for(int i=0; i<candies.length; i++) {
+            maxCandy = Math.max(candies[i], maxCandy);
+        }
+        for(int i=0; i<candies.length; i++) {
+            boolean isPossibleMax = candies[i] + extraCandies >= maxCandy ? true : false;
+            result.add(isPossibleMax);
+        }
+        return result;
+ 
+    }
+}
