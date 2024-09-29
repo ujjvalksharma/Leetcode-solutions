@@ -1,0 +1,44 @@
+class Solution {
+    int indexOfVowel = 0;
+    Set<Character> vowels = new HashSet<Character>();
+    
+    private char findNextVowel(String s) {
+        
+        while(indexOfVowel >= 0) {
+            
+            if(vowels.contains(s.charAt(indexOfVowel))) {
+                char vowel = s.charAt(indexOfVowel);
+                indexOfVowel--;
+                return vowel;
+            }
+            
+            indexOfVowel--;
+        }
+        
+        return 'X'; //this should not be executed
+    }
+    
+    public String reverseVowels(String s) {
+        indexOfVowel = s.length() - 1;
+        StringBuilder result = new StringBuilder("");
+        vowels.addAll(Arrays.asList(new Character[] { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' }));
+        for(int indexOfConstant = 0; indexOfConstant < s.length(); indexOfConstant++) {
+            if(!vowels.contains(s.charAt(indexOfConstant))) {
+                result.append(s.charAt(indexOfConstant));
+            } else {
+                char vowel = findNextVowel(s);
+                result.append(vowel);
+            }
+        }
+        return result.toString();
+        
+    }
+}
+
+/*
+
+
+  p     v     
+I c e C r e A m
+
+*/
