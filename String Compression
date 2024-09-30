@@ -1,0 +1,54 @@
+class Solution {
+    public int compress(char[] chars) {
+        
+        if(chars.length == 1) {
+            return 1;
+        }
+        int length = 0;
+        char prevChar = chars[0];
+        int currentLength = 1;
+        
+        for(int i=1; i<chars.length; i++) {
+            
+            if(chars[i] == prevChar) {
+                currentLength++;
+            } else {
+                if(currentLength == 1) {
+                    chars[length] = prevChar;
+                    length++;
+                } else {
+                    chars[length] = prevChar;
+                    int tempIndex = i - 1;
+                    length++;
+                    String number = "" + currentLength;
+                    for(int j=0;j<number.length();j++) {
+                        chars[length] = number.charAt(j);
+                        length++;
+                    }
+                    
+                    
+                }
+                currentLength = 1;
+                prevChar = chars[i];
+            }
+        }
+        
+        int i = chars.length - 1;
+        if(currentLength == 1) {
+            chars[length] = prevChar;
+            length++;
+        } else {
+            chars[length] = prevChar;
+            int tempIndex = i - 1;
+            length++;
+            String number = "" + currentLength;
+            for(int j=0;j<number.length();j++) {
+                chars[length] = number.charAt(j);
+                length++;
+            }
+        }
+                    
+        
+        return length;
+    }
+}
