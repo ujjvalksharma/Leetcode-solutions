@@ -1,4 +1,47 @@
 class Solution {
+    /**
+    Shift element to the start, so all the zeros automatically move behind
+    
+    **/
+    private int findFirstZeroThIndex(int[] nums) {
+        
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] == 0) {
+                return i;
+            }
+        }
+        
+        return -1;
+    }
+    
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    public void moveZeroes(int[] nums) {
+        
+        int pointerToZeroIndex = Integer.MAX_VALUE;
+        pointerToZeroIndex = findFirstZeroThIndex(nums);
+        if(pointerToZeroIndex == -1) {
+            return;
+        }
+        int start = 0;
+        for(int i=0; i < nums.length; i++) {
+            if(nums[i] != 0){
+                swap(nums,i,start);
+                start++;
+            }
+        }
+        
+        
+    }
+}
+
+
+
+
+class Solution {
     
     public int findFirstZeroIndex(int[] nums) {
         
