@@ -1,3 +1,17 @@
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        
+        int j=0; 
+        for(int i=0; i<t.length(); i++) {
+            if(j < s.length() && t.charAt(i) == s.charAt(j)) {
+                j++;
+            }
+        }
+        return j >= s.length();
+    }
+}
+
+
 /*
 recurisve soltuion we increment the index of s when there is match else we don't but we always increment the index of T and if we reach the end of S that means we found all previous character of T thus we return true.
 
