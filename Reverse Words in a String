@@ -1,0 +1,39 @@
+class Solution {
+    public String reverseWords(String s) {
+        
+        int start = -1;
+        int end = 0;
+        StringBuilder result = new StringBuilder("");
+        while(end<s.length()) {
+            
+            if(start == -1 && s.charAt(end) != ' ') {
+                start = end;
+            }
+        
+            
+            if((s.charAt(end) == ' ' || end == s.length() - 1) && start != -1) {
+                
+              String word = "";
+              if(s.charAt(end) == ' ') {
+                  word = s.substring(start, end);
+              } else if(end == s.length() - 1) {
+                  word = s.substring(start, end + 1);
+              }
+              
+              if(result.length() == 0) {
+                  result.append(word);
+              } else {
+                  String temp = result.toString();
+                  result.setLength(0);
+                  result.append(word).append(" ").append(temp);
+              }
+              start = -1;  
+            }
+            
+            end++;
+        }
+        
+        return result.toString();
+        
+    }
+}
