@@ -1,5 +1,51 @@
 class Solution {
     public int maxOperations(int[] nums, int k) {
+        
+        HashMap<Integer,Integer> numToCount = new HashMap<Integer,Integer>();
+        
+        for(int num : nums) {
+            if(!numToCount.containsKey(num)) {
+                numToCount.put(num, 0);
+            }
+            numToCount.put(num, numToCount.get(num) + 1);
+        }
+        
+        int totalOperations = 0;
+        
+          Set<Integer> uniqueNumbers = new HashSet<>(numToCount.keySet());
+        System.out.println("uniqueNumbers : " + uniqueNumbers);
+        for(int uniqueNumber : uniqueNumbers) {
+            
+            int otherNum = k - uniqueNumber;
+            
+            if(!numToCount.containsKey(otherNum) || !numToCount.containsKey(uniqueNumber)) {
+                continue;
+            }
+            
+            if(otherNum == uniqueNumber) {
+                int count1 = numToCount.get(otherNum);
+                count1 = count1 / 2;
+                totalOperations += count1;
+                numToCount.remove(otherNum);
+            } else {
+               
+                int count1 = numToCount.get(uniqueNumber);
+                int count2 = numToCount.get(otherNum);
+                
+                totalOperations += Math.min(count1, count2);
+                
+                numToCount.remove(otherNum);
+                numToCount.remove(uniqueNumber);
+            }
+        }
+        
+        return totalOperations;
+        
+    }
+}
+
+class Solution {
+    public int maxOperations(int[] nums, int k) {
         int totalNumberOfOperations=0;
         
         int start=0;
