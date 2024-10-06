@@ -1,4 +1,42 @@
 class Solution {
+    //sliding window
+    public int longestOnes(int[] nums, int k) {
+        
+        int totalOnes = 0;
+        int totalZeros = 0;
+        int start = 0;
+        int longestOnesSize = 0;
+        for(int end = 0; end < nums.length; end++) {
+            
+            if(nums[end] == 1) {
+                totalOnes++;
+            }
+            
+            if(nums[end] == 0) {
+                totalZeros++;
+            }
+            
+            while(totalZeros > k) {
+              if(nums[start] == 1) {
+                totalOnes--;
+              }
+            
+            if(nums[start] == 0) {
+                totalZeros--;
+            }
+                start++;
+                
+            }
+            
+           longestOnesSize = Math.max(longestOnesSize, totalOnes + totalZeros); 
+        }
+        
+        return longestOnesSize;
+    }
+}
+
+
+class Solution {
     public int longestOnes(int[] nums, int k) {
         //sliding window with start and end and maintain totalZero = k
         
