@@ -1,0 +1,40 @@
+class Solution {
+    //sliding window
+    public int longestSubarray(int[] nums) {
+        
+        int start = 0;
+        int end = 0;
+        int longestSubarrayWindow = 0;
+        int totalOnes = 0;
+        int totalZeros = 0;
+        while(end < nums.length) {
+            
+            if(nums[end] == 1) {
+                totalOnes++;
+            }
+            
+            if(nums[end] == 0) {
+                totalZeros++;
+            }
+            
+            while(totalZeros > 1) {
+                if(nums[start] == 0) {
+                    totalZeros--;
+                }
+                if(nums[start] == 1) {
+                    totalOnes--;
+                }
+                start++;
+            }
+            
+            if(totalOnes > 0) {
+                int subArraySize = totalZeros == 0 ? totalOnes - 1: totalOnes;
+                longestSubarrayWindow = 
+                    Math.max(longestSubarrayWindow, subArraySize);
+            }
+            
+            end++;
+        }
+        return longestSubarrayWindow;
+    }
+}
