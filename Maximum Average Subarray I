@@ -1,0 +1,21 @@
+class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        
+        int start = 0;
+        double maxAverage = (double) Integer.MIN_VALUE;
+        int currentsum = 0;
+        for(int end=0; end<nums.length; end++) {
+            
+            currentsum = currentsum + nums[end];
+            if(end - start + 1 == k) {
+                double numerator = (double) currentsum;
+                double denominator = (double) k;
+                double currentAvg = numerator/denominator;
+                maxAverage = Double.max(currentAvg, maxAverage);
+                currentsum = currentsum - nums[start];
+                start++;
+            }
+        }
+        return maxAverage;
+    }
+}
