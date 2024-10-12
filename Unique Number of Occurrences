@@ -1,0 +1,23 @@
+class Solution {
+    public boolean uniqueOccurrences(int[] arr) {
+        
+        Map<Integer,Integer> numToCount = new HashMap<>();
+        Set<Integer> uniqueFreq = new HashSet<>();
+        for(int num :  arr) {
+            if(!numToCount.containsKey(num)) {
+                numToCount.put(num, 0);
+            }
+            numToCount.put(num, numToCount.get(num) + 1);
+        }
+        
+        for(int freq : numToCount.values()) {
+            if(uniqueFreq.contains(freq)) {
+                return false;
+            }
+               uniqueFreq.add(freq);
+        }
+        return true;
+        
+        
+    }
+}
