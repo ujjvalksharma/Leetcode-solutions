@@ -1,0 +1,25 @@
+//we can have a stack/queue from remove element from top/front
+class RecentCounter {
+    Queue<Integer> queue;
+    int timePeriod;
+    public RecentCounter() {
+        queue = new LinkedList<>();
+        timePeriod = 3000;
+    }
+    
+    public int ping(int t) {
+        queue.add(t);
+        int minTime = t - timePeriod;
+        while(!queue.isEmpty() && queue.peek() < minTime) {
+            queue.remove();
+        }
+        return queue.size();
+    }
+}
+
+/**
+ * Your RecentCounter object will be instantiated and called as such:
+ * RecentCounter obj = new RecentCounter();
+ * int param_1 = obj.ping(t);
+ */
+
