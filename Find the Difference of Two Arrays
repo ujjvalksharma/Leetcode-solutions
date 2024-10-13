@@ -1,0 +1,21 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
+class Solution {
+    public List<List<Integer>> findDifference(int[] nums1, int[] nums2) {
+        
+        List<List<Integer>> result = new ArrayList<>();
+        
+        // Convert primitive int arrays to sets of Integer
+        Set<Integer> setOfNums1 = Arrays.stream(nums1).boxed().collect(Collectors.toSet());
+        Set<Integer> setOfNums2 = Arrays.stream(nums2).boxed().collect(Collectors.toSet());
+        
+        // Find elements in nums1 that are not in nums2
+        result.add(setOfNums1.stream().filter(num -> !setOfNums2.contains(num)).collect(Collectors.toList()));
+        
+        // Find elements in nums2 that are not in nums1
+        result.add(setOfNums2.stream().filter(num -> !setOfNums1.contains(num)).collect(Collectors.toList()));
+        
+        return result;
+    }
+}
