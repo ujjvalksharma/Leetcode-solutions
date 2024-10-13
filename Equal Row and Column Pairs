@@ -1,0 +1,32 @@
+class Solution {
+    public int equalPairs(int[][] grid) {
+        
+        Map<String,Integer> arrayToRowCount = new HashMap<String,Integer>();
+        int count = 0;
+        for(int i=0; i<grid.length; i++) {
+            StringBuilder sb = new StringBuilder("");
+            for(int j=0; j<grid[0].length; j++) {
+                sb.append(grid[i][j]).append(",");
+            }
+            String temp = sb.toString();
+            if(!arrayToRowCount.containsKey(temp)) {
+                arrayToRowCount.put(temp, 0);
+            }
+            arrayToRowCount.put(temp, arrayToRowCount.get(temp) + 1);
+        }
+        
+        for(int j=0; j<grid[0].length; j++) {
+            StringBuilder sb = new StringBuilder("");
+            for(int i=0; i<grid.length; i++) {
+                sb.append(grid[i][j]).append(",");
+            }
+            String temp = sb.toString();
+            if(arrayToRowCount.containsKey(temp)) {
+                count += arrayToRowCount.get(temp);
+            }
+        }
+        
+        return count;
+        
+    }
+}
