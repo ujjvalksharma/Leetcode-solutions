@@ -8,6 +8,85 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+class Solution {
+    ListNode reverseLinkListHead = null;
+    
+    public ListNode reverseListHelper(ListNode node) {
+        
+        if(node == null) {
+            return null;
+        }
+        reverseLinkListHead = node;
+        ListNode nextNode = reverseListHelper(node.next);
+        if(nextNode != null) {
+            nextNode.next = node;
+        }
+        node.next = null;
+        return node;
+    }
+    public ListNode reverseList(ListNode head) {
+        reverseListHelper(head);
+        return reverseLinkListHead;
+    }
+}
+
+
+
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        
+        ListNode prev = null;
+        ListNode current = head;
+        
+        while(current != null) {
+            ListNode next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        
+        return prev;
+        
+    }
+}
+
+
+/*
+
+
+
+1 -> 2 -> 3 -> 4 -> 5
+
+
+
+
+
+*/
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
 
 /*
 In this question, we traverse the linklist ahead and if we find a next node is null we node it is the end of linklist and that must be the head, so we return it. now we are backtracking, so, during post order traversal a node has itself and front node. so we if fronNode points to back node then we do similary for every node. the linklist is reversed.
