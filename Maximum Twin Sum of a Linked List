@@ -8,6 +8,42 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+class Solution {
+    public int pairSum(ListNode head) {
+        
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prevToSlow = null;
+        int maxTwinSum = 0;
+        while(fast != null && fast.next != null) {
+            fast = fast.next.next;
+            ListNode nextToSlow = slow.next;
+            slow.next = prevToSlow;
+            prevToSlow = slow;
+            slow = nextToSlow;
+        }
+        
+        while(prevToSlow != null) {
+            maxTwinSum = Math.max(maxTwinSum, prevToSlow.val + slow.val);
+            prevToSlow = prevToSlow.next;
+            slow = slow.next;
+        }
+        
+        return maxTwinSum;
+    }
+}
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
 
 /*
 
