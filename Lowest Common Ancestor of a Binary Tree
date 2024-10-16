@@ -9,6 +9,82 @@
  */
 class Solution {
     
+    TreeNode lowestCommonAncestorNode = null;
+    
+    public void setLowestCommonAncestorNode(TreeNode node) {
+        if(lowestCommonAncestorNode == null) {
+            lowestCommonAncestorNode = node;
+        }
+    }
+    public char lowestCommonAncestorHelper(TreeNode root, TreeNode p, TreeNode q) {
+        
+        if(root == null) {
+            return 'n';
+        }
+        
+        char v1 = lowestCommonAncestorHelper(root.left, p, q);
+        char v2 = lowestCommonAncestorHelper(root.right, p, q);
+        
+        if (v1 == 'p' && root == q) {
+            setLowestCommonAncestorNode(root);
+        } else if (v1 == 'q' && root == p) {
+            setLowestCommonAncestorNode(root);
+        } else if(v2 == 'p' && root == q) {
+            setLowestCommonAncestorNode(root);
+        } else if (v2 == 'q' && root == p) {
+            setLowestCommonAncestorNode(root);
+        }else if((v1 == 'p' && v2 == 'q') || (v1 == 'q' && v2 == 'p')) {
+            setLowestCommonAncestorNode(root);
+        }
+        
+        if(v1 == 'p' || v1 == 'q') {
+            return v1;
+        }
+        
+        if(v2 == 'q' || v2 == 'p') {
+            return v2;
+        }
+        
+        
+        if(root == p) {
+            return 'p';
+        }
+        
+        if(root == q) {
+            return 'q';
+        }
+        
+        
+        return 'n';
+    }
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(p == q) {
+            return p;
+        }
+        lowestCommonAncestorHelper(root, p, q);
+        return lowestCommonAncestorNode;
+    }
+}
+
+/*
+the left side of recursion will tell if p,q is found
+or if the node is p/q and their left or right branch tells where p,q is found
+if the node is p and q then the node is the answer
+
+*/
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    
     TreeNode lowestAncester = null;
     public String lowestCommonAncestorHelper(TreeNode root, TreeNode p, TreeNode q){
         
