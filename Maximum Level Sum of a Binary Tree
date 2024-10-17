@@ -15,6 +15,52 @@
  */
 class Solution {
     public int maxLevelSum(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        int maxSum = Integer.MIN_VALUE;
+        int minLevel = Integer.MAX_VALUE;
+        int currentLevel = 1;
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            int currentSum = 0;
+            while(size > 0) {
+                TreeNode node = queue.poll();
+                currentSum += node.val;
+                if(node.left != null) {
+                    queue.add(node.left);
+                }
+                if(node.right != null) {
+                    queue.add(node.right);
+                }
+                size--;
+            }
+            if(currentSum > maxSum) {
+                maxSum = currentSum;
+                minLevel = currentLevel;
+            }
+            currentLevel++;
+        }
+        return minLevel; 
+    }
+}
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int maxLevelSum(TreeNode root) {
         
         Queue<TreeNode> levelOrder = new LinkedList<TreeNode>();
         levelOrder.add(root);
