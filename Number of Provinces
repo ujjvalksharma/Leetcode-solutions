@@ -1,3 +1,53 @@
+/* union and find incorrect solution*/
+class Solution {
+    int[] parent;
+    Map<Integer, Integer> cityToConnectedCitiesCount = new HashMap<Integer,Integer>();
+    
+    public int find(int index) {
+        if(parent[index] == -1) {
+            return index;
+        }
+        return find(parent[index]);
+    }
+    
+    public void union(int city1, int city2) {
+        parent[city2] = city1;
+        
+    }
+    
+    public int findCircleNum(int[][] isConnected) {
+       
+        int totalNumberOfCities = isConnected.length;
+        
+        for(int i=0; i<totalNumberOfCities; i++) {
+            cityToConnectedCitiesCount.put(i, 0);
+        }
+        parent = new int[totalNumberOfCities];
+        Arrays.fill(parent, -1);
+        int totalNumberOfProvince = 0;
+        for(int i=0; i<isConnected.length; i++) {
+            for(int j=0; j<isConnected[0].length; j++) {
+                int city1 = i;
+                int city2 = j;
+                if(isConnected[i][j] == 1 && i != j) {
+                    int parent1 = find(city1);
+                    int parent2 = find(city2);
+                    if(parent1 != parent2)
+                        union(city1, city2);
+                }
+            }
+        }
+        
+        
+        for(int i=0; i<parent.length; i++) {
+            if(parent[i] == -1) {
+                totalNumberOfProvince++;
+            }
+        }
+        return totalNumberOfProvince;
+    }
+}
+
 /*
 
 Simple DFS solution
