@@ -1,0 +1,65 @@
+class Solution {
+    int[][] directions = new int[][]{{0,1},{1,0},{0,-1},{-1,0}};
+    Set<String> visited = new HashSet<String>();
+    
+    public String getMazeKey(int x, int y) {
+        return x + "," + y;
+    }
+    
+    public boolean isValid(int x, int y, Set<String> visited, char[][] maze) {
+        return 
+            x >=0 &&
+            y >=0 &&
+            x < maze.length &&
+            y < maze[0].length &&
+            maze[x][y] == '.' &&
+            !visited.contains(getMazeKey(x,y));
+    }
+    
+    public boolean isBoundary(int x, int y, char[][] maze) {
+        for(int[] direction : directions) {
+            int newX = direction[0] + x;
+            int newY = direction[1] + y;
+            if(newX < 0 || newY < 0 || newX >= maze.length || newY >= maze[0].length) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public int nearestExit(char[][] maze, int[] entrance) {
+        
+        if(maze[entrance[0]][entrance[1]] == '+') {
+            return -1;
+        }
+        
+        Queue<int[]> bfsQueue = new LinkedList<int[]>();
+        bfsQueue.add(entrance);
+        visited.add(getMazeKey(entrance[0], entrance[1]));
+        int distance = 0;
+        while(!bfsQueue.isEmpty()) {
+            int size = bfsQueue.size();
+            distance++;
+            for(int i=0; i<size; i++) {
+                int[] node = bfsQueue.poll();
+                //System.out.println("node: " + Arrays.toString(node));
+                for(int[] direction : directions) {
+                    int newX = direction[0] + node[0];
+                    int newY = direction[1] + node[1];
+                    if(isValid(newX, newY, visited, maze)) {  
+                        //System.out.println("newX: " + newX + " newY: " + newY);
+                        if(isBoundary(newX, newY, maze)) {
+                            return distance;
+                        }
+                        visited.add(getMazeKey(newX, newY));
+                        bfsQueue.add(new int[]{newX, newY});
+                    }
+                    
+                }
+                
+            }
+        }
+        return -1;
+        
+    }
+}
