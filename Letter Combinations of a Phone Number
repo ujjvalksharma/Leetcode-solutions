@@ -1,3 +1,51 @@
+class Solution {
+    List<String> result = new ArrayList<>();
+    Map<Integer,String> digitToLetters = new HashMap<>();
+    public void letterCombinationsHelper(String digits, int index, StringBuilder temp) {
+        
+        if(index >= digits.length() && temp.length() > 0) {
+            result.add(temp.toString());
+            return;
+        }
+        
+        if(index >= digits.length()) {
+            return;
+        }
+        
+        int digit = Character.getNumericValue(digits.charAt(index));
+        String letters = digitToLetters.get(digit);
+        for(int i=0 ; i<letters.length(); i++) {
+            char letter = letters.charAt(i);
+            temp.append(letter);
+            letterCombinationsHelper(digits, index + 1, temp);
+            temp.setLength(temp.length() - 1);
+        }
+        
+    }
+    public List<String> letterCombinations(String digits) {
+        
+        if(digits.length() == 0) {
+            return new ArrayList<String>();
+        }
+        
+        digitToLetters.put(2, "abc");
+        digitToLetters.put(3, "def");
+        digitToLetters.put(4, "ghi");
+        digitToLetters.put(5, "jkl");
+        digitToLetters.put(6, "mno");
+        digitToLetters.put(7, "pqrs");
+        digitToLetters.put(8, "tuv");
+        digitToLetters.put(9, "wxyz");
+        letterCombinationsHelper(digits, 0, new StringBuilder(""));
+        return result;
+        
+        
+    }
+}
+
+
+
+
 //simple dfs
 class Solution {
     
