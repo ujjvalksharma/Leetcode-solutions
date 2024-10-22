@@ -1,0 +1,29 @@
+class Solution {
+    
+    List<List<Integer>> result = new ArrayList<>();
+    public void combinationSum3Helper(int k, int n, List<Integer> numbers, int currentNumber) {
+        
+        if(n == 0 && k == 0) {
+            List<Integer> temp = new ArrayList<Integer>();
+            temp.addAll(numbers);
+            result.add(temp);
+            return;
+        }
+        
+        if(n <= 0 || k <= 0 || currentNumber > 9) {
+            return;
+        }
+        
+        numbers.add(currentNumber);
+        combinationSum3Helper(k-1, n-currentNumber, numbers, currentNumber + 1);
+        numbers.remove(numbers.size() - 1);
+        combinationSum3Helper(k, n, numbers, currentNumber + 1);
+        
+        
+    }
+    
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        combinationSum3Helper(k, n, new ArrayList<Integer>(), 1);
+        return result;   
+    }
+}
