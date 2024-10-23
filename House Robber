@@ -1,4 +1,28 @@
 class Solution {
+    
+    int[] dp;
+    public int robHelper(int[] nums, int index) {
+        if(index >= nums.length) {
+            return 0;
+        }
+        if(dp[index] != -1) {
+           return dp[index]; 
+        }
+        int money1 = nums[index] + robHelper(nums, index + 2);
+        int money2 = robHelper(nums, index + 1);
+        int maxMoney = Math.max(money1, money2);
+        dp[index] = maxMoney;
+        return maxMoney;
+    }
+    public int rob(int[] nums) {
+        dp = new int[nums.length];
+        Arrays.fill(dp, - 1);
+        return robHelper(nums, 0);
+    }
+}
+
+
+class Solution {
     /*
     recursion+memorization
     In question we track of maximum amount we can get by leaving a house (go to next house) and robbing a house (go to 2nd next house). we will the same position again, so we memorize it in hashmap then we don't iterate the sub-tree.
