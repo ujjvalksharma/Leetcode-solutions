@@ -1,4 +1,40 @@
 class Solution {
+    int MAX_COLUMN_SIZE = 0;
+    int MAX_ROW_SIZE = 0;
+    int[][] dp;
+    public int uniquePathsHelper(int i, int j) {
+        
+        if(i == MAX_ROW_SIZE - 1 && j == MAX_COLUMN_SIZE - 1) {
+            return 1;
+        }
+        
+        if(i < 0 || j < 0 || i >= MAX_ROW_SIZE || j >= MAX_COLUMN_SIZE) {
+            return 0;
+        }
+        
+        if(dp[i][j] != -1) {
+            return dp[i][j];
+        }
+        
+        int totalWays1 = uniquePathsHelper(i + 1, j);
+        int totalWays2 = uniquePathsHelper(i, j + 1);
+        int totalWays = totalWays1 + totalWays2;
+        dp[i][j] = totalWays;
+        return totalWays; 
+    }
+    public int uniquePaths(int m, int n) {
+        MAX_ROW_SIZE = m;
+        MAX_COLUMN_SIZE = n;
+        dp = new int[m][n];
+        for(int i=0; i<m; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return uniquePathsHelper(0, 0);
+    }
+}
+
+
+class Solution {
     
     Map<String,Integer> map = new HashMap<>();
     public int uniquePathsHelper(int x, int y, int m, int n) {
