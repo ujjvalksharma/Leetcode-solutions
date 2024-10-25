@@ -1,4 +1,28 @@
 class Solution {
+    int[] dp;
+    public int minCostClimbingStairsHelper(int[] cost, int index) {
+        if(index >= cost.length) {
+            return 0;
+        }
+        
+        if(dp[index] != -1) {
+            return dp[index];
+        }
+        int cost1 = cost[index] + minCostClimbingStairsHelper(cost, index + 1);
+        int cost2 = cost[index] + minCostClimbingStairsHelper(cost, index + 2);
+        int minCost = Math.min(cost1, cost2);
+        dp[index] = minCost;
+        return minCost;
+    }
+    public int minCostClimbingStairs(int[] cost) {
+        dp = new int[cost.length];
+        Arrays.fill(dp , -1);
+        return Math.min(minCostClimbingStairsHelper(cost, 0) , minCostClimbingStairsHelper(cost, 1));
+    }
+}
+
+
+class Solution {
     HashMap<Integer,Integer> hmPositionToMinCost=new HashMap<>();
     /*
     We find the minimum steps by taking 1 step and 2 step and add current cost and we will visit the same sub-tree with the same position/index in array so we will memroize it.
