@@ -1,3 +1,34 @@
+class Solution {
+    int[][] dp;
+    public int longestCommonSubsequenceHelper(String text1, String text2, int index1, int index2) {
+        if(index1 >= text1.length() || index2 >= text2.length()) {
+            return 0 ;
+        }
+        if(dp[index1][index2] != -1) {
+            return dp[index1][index2];
+        }
+        int maxCount = 0;
+        if(text1.charAt(index1) == text2.charAt(index2)) {
+            maxCount = 1 + longestCommonSubsequenceHelper(text1, text2, index1 + 1, index2 + 1);
+        } else {
+            int count1 = longestCommonSubsequenceHelper(text1, text2, index1, index2 + 1);
+            int count2 = longestCommonSubsequenceHelper(text1, text2, index1 + 1, index2);
+            maxCount = Math.max(count1, count2);
+        }
+        dp[index1][index2] = maxCount;
+        return maxCount; 
+    }
+    public int longestCommonSubsequence(String text1, String text2) {
+        dp = new int[text1.length()][text2.length()];
+        
+        for(int i=0; i<dp.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return longestCommonSubsequenceHelper(text1, text2, 0, 0);
+    }
+}
+
+
 /*
 recursion+memeory
 In this question, we increment index1 and index2 if there is match as we need to move ahead else we increment either index1 or index2 to find possibility of a match. we store their indexs in memory/hashmap as it will affect further matches that we are about to see and we can avoid re-iteration over the sub-tree.
