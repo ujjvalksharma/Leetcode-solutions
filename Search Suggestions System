@@ -1,3 +1,63 @@
+class Solution {
+    class Node {
+        char c;
+        List<String> words;
+        Node children[];
+        public Node(char c) {
+            this.c = c;
+            this.children = new Node[26];
+            this.words = new ArrayList<String>();
+        }
+        
+        public void appendWord(String word) {
+            this.words.add(word);
+        }
+    }
+    Node head;
+    public int getIndex(char c) {
+        return (int)(c - 'a');
+    }
+    
+    public void addProduct(Node node, String product) {
+        for(int i=0; i<product.length(); i++) {
+            int index = getIndex(product.charAt(i));
+            if(node.children[index] == null) {
+                node.children[index] = new Node(product.charAt(i));
+            }
+            node.children[index].appendWord(product);
+            node = node.children[index];
+        }
+    }
+    
+    public List<String> getTop3Result(char c, Node node) {
+        return node.words.stream()
+                .limit(3)
+                .collect(Collectors.toList());
+    }
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        this.head = new Node('H');
+        Arrays.sort(products);
+        List<List<String>> result = new ArrayList<>();
+        for(String product :  products) {
+            addProduct(head, product);
+        }
+        
+        for(int i=0; i<searchWord.length(); i++) {
+            int index = getIndex(searchWord.charAt(i));
+            if(head.children[index] == null) {
+                for (int j = 0; j < searchWord.length() - i; j++) {
+                    result.add(new ArrayList<>());
+                }
+                return result;
+            }
+            head = head.children[index];
+            result.add(getTop3Result(searchWord.charAt(i), head));
+        }
+        return result;
+    }
+}
+
+
 /** My Solution--------> Using Trie data structure----------class Solution {
     
     HashMap<Integer,Character> hm= new HashMap<Integer,Character>();
