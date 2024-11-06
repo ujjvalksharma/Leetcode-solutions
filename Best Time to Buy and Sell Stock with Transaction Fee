@@ -1,0 +1,33 @@
+class Solution {
+    
+    Map<String,Integer> mem = new HashMap<>();
+    public int maxProfitHelper(int[] prices, int index, int fee, boolean canBuy) {
+        
+        if(index >= prices.length) {
+            return 0;
+        }
+        
+        String key = index + "-" + canBuy;
+        
+        if(mem.containsKey(key)) {
+            return mem.get(key);
+        }
+        
+        int profit = Integer.MIN_VALUE;
+        if(canBuy) {
+            int profitFromBuying = maxProfitHelper(prices, index + 1, fee, false) - prices[index];
+            int profitFromSkipping = maxProfitHelper(prices, index + 1, fee, canBuy);
+            profit = Math.max(profitFromBuying, profitFromSkipping);
+            
+        } else {
+            int profitFromSelling = maxProfitHelper(prices, index + 1, fee, true) + prices[index] - fee;
+            int profitFromSkipping = maxProfitHelper(prices, index + 1, fee, canBuy);
+            profit = Math.max(profitFromSelling, profitFromSkipping);
+        }
+        mem.put(key, profit);
+        return profit;
+    }
+    public int maxProfit(int[] prices, int fee) {
+       return maxProfitHelper(prices, 0, fee, true); 
+    }
+}
