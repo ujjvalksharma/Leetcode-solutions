@@ -1,4 +1,91 @@
 class Solution {
+    
+    class Edge {
+        int source;
+        int weight;
+        int destination;
+        public Edge(int source, int destination, int weight) {
+            this.source = source;
+            this.weight = weight;
+            this.destination = destination;
+        }
+    }
+    
+    class Node {
+        int id;
+        int distanceFromK;
+        public Node(int id, int distanceFromK) {
+            this.id = id;
+            this.distanceFromK = distanceFromK;
+        }
+    }
+    
+    public void buildGraph(Map<Integer,List<Edge>> graph, int[][] times) {
+        
+        for(int[] time : times) {
+            if(!graph.containsKey(time[0])) {
+                graph.put(time[0], new ArrayList<Edge>());
+            }
+            graph.get(time[0]).add(new Edge(time[0], time[1], time[2]));
+        }
+    }
+    public int networkDelayTime(int[][] times, int n, int k) {
+        
+        Map<Integer,List<Edge>> graph = new HashMap<>();
+        buildGraph(graph, times);
+        PriorityQueue<Node> unSeenNodes = new PriorityQueue<Node>((a,b) -> a.distanceFromK - b.distanceFromK);
+        int[] distanceFromK = new int[n + 1];
+        for(int i = 1; i <= n; i++) {
+            Node node;
+            if( i == k) {
+               node = new Node(i, 0);
+            } else {
+                node = new Node(i, Integer.MAX_VALUE);
+            }
+            distanceFromK[i] = node.distanceFromK;
+            unSeenNodes.add(node);
+        }
+        
+        while(!unSeenNodes.isEmpty()) {
+            Node node = unSeenNodes.poll();
+            
+            if(node.distanceFromK > distanceFromK[node.id]) {
+                continue;
+            }
+            
+            List<Edge> neighbours = graph.getOrDefault(node.id, new ArrayList<>());
+            
+            for(Edge neighbour : neighbours) {
+                int currentDistance = distanceFromK[neighbour.destination];
+                int newDistance = distanceFromK[node.id] + neighbour.weight;
+                if(newDistance < currentDistance) {
+                    distanceFromK[neighbour.destination] = newDistance;
+                    unSeenNodes.add(new Node(neighbour.destination, newDistance));
+                }
+            }
+            
+        }
+        
+        int minTime = -1;
+        for(int i = 1; i <= n; i++) {
+            
+            if(distanceFromK[i] == Integer.MAX_VALUE) {
+                return -1;
+            } else {
+                minTime = Math.max(minTime, distanceFromK[i]);
+            }
+        }
+        return minTime;
+    }
+}
+
+
+
+
+
+
+
+class Solution {
     //bellman-ford algo
     //visit all edges and mark desitination of an edje with minimum distance and mark the source edges distance=0 
     // visit all edges n-1 times
@@ -152,3 +239,4 @@ class Solution {
         
     }
 }
+
