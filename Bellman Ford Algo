@@ -1,0 +1,74 @@
+package org.example;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class BellmanFordAlgorithm {
+
+  class Edge {
+    int id;
+    int weight;
+
+    public Edge(int id, int weight) {
+      this.id = id;
+      this.weight = weight;
+    }
+  }
+  Map<Integer, List<Edge>> graph;
+
+  public BellmanFordAlgorithm() {
+    this.graph = new HashMap<>();
+  }
+
+  private void execute() {
+    buildGraph();
+    int totalNodes = 7;
+    int source = 0;
+    int[] distancesFromSource = implementBellmanFord(source, graph, totalNodes);
+    System.out.println("distances from the source: " + Arrays.toString(distancesFromSource));
+  }
+
+  private int[] implementBellmanFord(int source, Map<Integer, List<Edge>> graph, int totalNodes) {
+    int[] distancesFromSource = new int[totalNodes];
+    Arrays.fill(distancesFromSource, Integer.MAX_VALUE);
+    distancesFromSource[source] = 0;
+    while(totalNodes - 1 > 0) {
+      Set<Integer> nodes = graph.keySet();
+      for(int node : nodes) {
+        List<Edge> neighbours = graph.get(node);
+        for(Edge neighbour : neighbours) {
+          int currentDistance = distancesFromSource[neighbour.id];
+          int newDistance = distancesFromSource[node] + neighbour.weight;
+          if(newDistance < currentDistance) {
+            distancesFromSource[neighbour.id] = newDistance;
+          }
+
+        }
+      }
+      totalNodes--;
+    }
+    return distancesFromSource;
+  }
+
+  private void buildGraph() {
+
+    graph.put(0, Arrays.asList(new Edge(1, 2), new Edge(2, 6)));
+    graph.put(1, Arrays.asList(new Edge(0, 2), new Edge(3, 5)));
+    graph.put(2, Arrays.asList(new Edge(0, 6), new Edge(3, 8)));
+    graph.put(3, Arrays.asList(new Edge(1, 5), new Edge(2, 8), new Edge(4, 10), new Edge(5, 15)));
+    graph.put(4, Arrays.asList(new Edge(3, 10), new Edge(6, 2)));
+    graph.put(5, Arrays.asList(new Edge(3, 15), new Edge(6, 6)));
+    graph.put(6, Arrays.asList(new Edge(4, 2), new Edge(5, 6)));
+
+  }
+
+  public static void main(String[] args) {
+    BellmanFordAlgorithm bellmanFordAlgorithm = new BellmanFordAlgorithm();
+    bellmanFordAlgorithm.execute();
+  }
+
+
+}
