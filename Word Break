@@ -1,4 +1,36 @@
 class Solution {
+    Boolean[] dp;
+    public boolean wordBreakHelper(String s, int start, Set<String> dictionary) {
+        if(start >= s.length()) {
+            return true;
+        }
+
+        if(dp[start] != null) {
+            return dp[start];
+        }
+        boolean result = false;
+        for(int i = start + 1; i <= s.length(); i++) {
+            String prefix = s.substring(start, i);
+            System.out.println("prefix: " + prefix);
+            if(dictionary.contains(prefix)) {
+                result = result | wordBreakHelper(s, i, dictionary);
+            }
+        }
+        dp[start] = result;
+        return result;
+    }
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> dictionary = new HashSet<>();
+        dictionary.addAll(wordDict);
+        dp = new Boolean[s.length()];
+        Arrays.fill(dp, null);
+        return wordBreakHelper(s, 0, dictionary);
+    }
+}
+
+
+
+class Solution {
     /* reucursion + memorization
     In this question, we divide string at each point recursively and check the if divison of string are present in hashmap and if they are present that means whole string is present too. We will use memory to store string and its presence value in hashmap.
     
