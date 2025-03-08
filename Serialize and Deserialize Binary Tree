@@ -9,6 +9,69 @@
  */
 public class Codec {
 
+    // Encodes a tree to a single string.
+    public void serializeHelper(TreeNode root, Queue<String> serilizeTree) {
+        if(root == null) {
+            serilizeTree.add("null");
+            return;
+        }
+        serilizeTree.add(""+root.val);
+        serializeHelper(root.left, serilizeTree);
+        serializeHelper(root.right, serilizeTree);
+    }
+    public String serialize(TreeNode root) {
+        Queue<String> serilizeTree = new LinkedList<>();
+        serializeHelper(root, serilizeTree);
+        String str = serilizeTree.toString();
+        return str.substring(1, str.length() - 1);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] splittedData = data.split(",");
+        Queue<String> queue = new LinkedList<>();
+        for(int i = 0; i < splittedData.length; i++) {
+            queue.add(splittedData[i]);
+        }
+        
+        return deserializeHelper(queue);
+    }
+
+    public TreeNode deserializeHelper(Queue<String> queue) {
+        if(queue.isEmpty()) {
+            return null;
+        }
+
+        String  nodeVal = queue.poll();
+        nodeVal = nodeVal.trim();
+        if("null".equals(nodeVal)) {
+            return null;
+        } else {
+            TreeNode root = new TreeNode(Integer.parseInt(nodeVal));
+            root.left = deserializeHelper(queue);
+            root.right = deserializeHelper(queue);
+            return root;
+        }
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// TreeNode ans = deser.deserialize(ser.serialize(root));
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
     public void serializeHelper(TreeNode root, StringBuilder serializeSb) {
         
         if(root.left != null) {
