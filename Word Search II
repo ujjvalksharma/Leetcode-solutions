@@ -1,3 +1,103 @@
+class Solution {
+    class Node {
+        char c;
+        Map<Character, Node> children;
+        boolean doesWordEnd;
+        String endWord;
+        public Node(char c) {
+            this.c = c;
+            this.doesWordEnd = false;
+            this.children = new HashMap<>();
+            this.endWord = null;
+        }
+    }
+    int[][] directions = new int[][]{{0,1},{1,0},{-1,0},{0,-1}};
+    public Node constructTrie(List<String> words) {
+        Node head = new Node('/');
+        for(String word :  words) {
+            Node tempHead = head;
+            for(int i = 0; i < word.length(); i++) {
+                if(!tempHead.children.containsKey(word.charAt(i))) {
+                    tempHead.children.put(word.charAt(i), new Node(word.charAt(i)));
+                }
+                tempHead = tempHead.children.get(word.charAt(i));
+            }
+            tempHead.doesWordEnd = true;
+            tempHead.endWord = word;
+
+        }
+        return head;
+    }
+    public List<String> findWords(char[][] board, String[] words) {
+        Set<String> result = new HashSet<>();
+        Node trieHead = constructTrie(Arrays.stream(words).toList());
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[0].length; j++) {
+                if(trieHead.children.containsKey(board[i][j])) {
+                    dfs(board, i, j, trieHead.children.get(board[i][j]), result, trieHead);
+                }
+            }
+        }
+        return new ArrayList<>(result);
+    }
+
+    public void dfs(char[][] board, int x, int y, Node node, Set<String> result, Node parent) {
+
+        char currentChar = board[x][y];
+        board[x][y] = '$';
+        if(node.doesWordEnd) {
+            result.add(node.endWord);
+            if(node.children.size() == 0) {
+                parent.children.remove(currentChar);
+            }
+        }
+
+        for(int[] direction : directions) {
+            int newX = direction[0] + x;
+            int newY = direction[1] + y;
+            if(!isValid(newX, newY, board, node)) {
+                continue;
+            }
+            dfs(board, newX, newY, node.children.get(board[newX][newY]), result, node);
+        }
+
+        if(node.children.size() == 0) {
+           node.children.remove(board[x][y]); 
+        }
+
+        board[x][y] = currentChar;
+
+    }
+
+    public boolean isValid(int x, int y, char[][] board, Node node) {
+        if(x < 0 || y < 0 || x >= board.length || y >= board[0].length) {
+            return false;
+        }
+
+        if(!node.children.containsKey(board[x][y]) || board[x][y] == '#') {
+            return false;
+        }
+
+        return true;
+
+    }
+}
+
+/*
+Approach1 :
+for each word in words perform DFS on board
+
+Approach2 :
+for each word in words perform DFS on (row,col) where first character is present and this can be found from hasmap
+
+Approach3:
+DFS + trie + puring leaf nodes
+
+
+*/
+
+
+
 /*
 Make a tire data strucutre of all the words,
 loop through each i,j in board and then perform a search in trie and board parallel Node.isLeaf is true. Insert in set 
