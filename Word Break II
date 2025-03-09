@@ -1,3 +1,37 @@
+class Solution {
+    
+    Map<Integer, List<String>> dp;
+    public List<String> constructSentences(String s, int start, Set<String> dictionary) {
+        if(start >= s.length()) {
+            return List.of("");
+        }
+
+        if(dp.containsKey(start)) {
+            return dp.get(start);
+        }
+        List<String> combinedSentences = new ArrayList<>();
+        for(int i = start + 1; i <= s.length(); i++) {
+            String prefix = s.substring(start,i);
+            if(dictionary.contains(prefix)) {
+                List<String> sentences = constructSentences(s, i, dictionary);
+                for(String sentence : sentences) {
+                   String str = prefix + " " + sentence;
+                   combinedSentences.add(str.trim()); 
+                }
+            }
+        }
+        dp.put(start, combinedSentences);
+        return combinedSentences;
+    }
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        Set<String> dictionary = new HashSet<>();
+        dictionary.addAll(wordDict);
+        dp = new HashMap<>();
+        return constructSentences(s, 0, dictionary);        
+    }
+}
+
+
 /*
 This is like word break 1, but in this problem we when we brack track we use a new data structure SentenceResult to store the boolean isValid to know if we reached the end of string and sentences to keep track of suffix sentences from an index and use them for memorization
 
