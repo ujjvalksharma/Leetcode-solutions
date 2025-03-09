@@ -1,3 +1,59 @@
+class Solution {
+    
+    // Check if placing char 'c' at board[row][col] is valid.
+    private boolean isValidPlacement(char[][] board, int row, int col, char c) {
+        // Check row, column, and the 3x3 sub-box
+        for (int i = 0; i < 9; i++) {
+            if (board[row][i] == c) return false;
+            if (board[i][col] == c) return false;
+            // Calculate indices for the 3x3 sub-box.
+            int boxRow = 3 * (row / 3) + i / 3;
+            int boxCol = 3 * (col / 3) + i % 3;
+            if (board[boxRow][boxCol] == c) return false;
+        }
+        return true;
+    }
+    
+    // Helper method to solve the board using backtracking.
+    private boolean solveSudokuHelper(char[][] board, int row, int col) {
+        // If we've reached past the last row, the board is solved.
+        if (row == board.length) {
+            return true;
+        }
+        
+        // Determine the next row and column.
+        int nextRow = row, nextCol = col + 1;
+        if (nextCol == board[0].length) {
+            nextRow = row + 1;
+            nextCol = 0;
+        }
+        
+        // If the cell is already filled, move to the next cell.
+        if (board[row][col] != '.') {
+            return solveSudokuHelper(board, nextRow, nextCol);
+        }
+        
+        // Try placing digits '1' through '9'
+        for (char c = '1'; c <= '9'; c++) {
+            if (isValidPlacement(board, row, col, c)) {
+                board[row][col] = c;
+                if (solveSudokuHelper(board, nextRow, nextCol)) {
+                    return true;
+                }
+                // Backtrack if placing c didn't lead to a solution.
+                board[row][col] = '.';
+            }
+        }
+        // If no digit leads to a solution, return false.
+        return false;
+    }
+    
+    public void solveSudoku(char[][] board) {
+        solveSudokuHelper(board, 0, 0);
+    }
+}
+
+
 
 //https://www.youtube.com/watch?v=JzONv5kaPJM
 class Solution{
