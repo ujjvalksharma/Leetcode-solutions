@@ -1,3 +1,93 @@
+/*
+1) sort jobs
+2) pick and unpick job.  Pick next job based on binary search
+
+*/
+class Solution {
+    class Job {
+        int startTime;
+        int endTime;
+        int profit;
+        public Job(int startTime, int endTime, int profit) {
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.profit = profit;
+        }
+
+        @Override
+        public String toString() {
+            return "startTime: " + startTime + " endTime: " + endTime + " profit: " + profit;
+        }
+    }
+    Map<Integer,Integer> cache = new HashMap<>();
+    public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+
+        Job[] jobs = new Job[startTime.length];
+        for(int i = 0; i < startTime.length; i++) {
+            jobs[i] = new Job(startTime[i], endTime[i], profit[i]);
+        }
+        Arrays.sort(jobs, (a,b) -> {
+            if(a.startTime == b.startTime) {
+                return a.endTime - b.endTime;
+            }
+            return a.startTime - b.startTime;
+        });
+
+        return finMaxProfit(jobs, 0);
+    }
+
+    public int finMaxProfit(Job[] jobs, int index) {
+        if(index >= jobs.length) {
+            return 0;
+        }
+
+        if(cache.containsKey(index)) {
+            return cache.get(index);
+        }
+        //skip job
+        int totalProfit1 = finMaxProfit(jobs, index + 1);
+        //pick the job
+        Job currentJob = jobs[index];
+        int totalProfit2 = currentJob.profit;
+        //instead of forloop, do binary search
+        // for(int i = index + 1; i < jobs.length; i++) {
+        //     if(jobs[i].startTime >= currentJob.endTime) {
+        //         totalProfit2 += finMaxProfit(jobs, i + 1);
+        //     }
+        // }
+        int nextJobIndex = binarysearch(jobs, currentJob, index + 1, jobs.length - 1);
+        totalProfit2 += finMaxProfit(jobs, nextJobIndex);
+        int maxJob = Math.max(totalProfit1, totalProfit2);
+        cache.put(index, maxJob);
+        return maxJob;
+    }
+
+    public int binarysearch(Job[] jobs, Job currentJob, int start, int end) {
+        int index = jobs.length;
+        while(start <= end) {
+            int mid = start + (end - start)/2;
+            if(jobs[mid].startTime >= currentJob.endTime) {
+                index = Math.min(index, mid);
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+
+        }
+        return index;
+
+    }
+}
+/*
+
+[1, 2,  3,  4,  6]
+[3, 5,  10, 6,  9]
+[20,20, 100,70, 60]
+
+
+*/
+
+
 class Solution {
     
         class Job {
