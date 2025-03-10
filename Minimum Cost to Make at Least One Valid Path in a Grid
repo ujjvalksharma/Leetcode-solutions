@@ -1,0 +1,62 @@
+class Solution {
+    class Node {
+        int x;
+        int y;
+        int cost;
+
+        public Node(int x, int y, int cost) {
+            this.x = x;
+            this.y = y;
+            this.cost = cost;
+        }
+    }
+    public int minCost(int[][] grid) {
+
+        PriorityQueue<Node> pq = new PriorityQueue<Node>((a,b) -> a.cost - b.cost);
+        int[][] gridCost = new int[grid.length][grid[0].length];
+        for(int i = 0; i < gridCost.length; i++) {
+            Arrays.fill(gridCost[i], Integer.MAX_VALUE);
+        }
+        pq.add(new Node(0,0,0));
+        int[][] directions = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
+
+        while(!pq.isEmpty()) {
+            Node curr = pq.poll();
+
+            int newCost = curr.cost;
+            int oldCost = gridCost[curr.x][curr.y];
+
+            if(newCost >= oldCost) {
+                continue;
+            }
+
+            gridCost[curr.x][curr.y] = newCost;
+
+            if(curr.x == grid.length - 1 && curr.y == grid[0].length - 1) {
+                return newCost;
+            }
+
+            int currentDirection = grid[curr.x][curr.y];
+
+            for(int i = 0; i < directions.length; i++) {
+                int newX = curr.x + directions[i][0];
+                int newY = curr.y + directions[i][1];
+
+                if(newX < 0 || newX >= grid.length || newY < 0 || newY >= grid[0].length) {
+                    continue;
+                }
+
+                if(i == currentDirection - 1) {
+                    pq.add(new Node(newX, newY, curr.cost));
+                } else {
+                    pq.add(new Node(newX, newY, curr.cost + 1));
+                }
+            }
+        }
+
+
+        return gridCost[grid.length - 1][grid[0].length - 1];
+
+        
+    }
+}
