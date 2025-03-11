@@ -13,6 +13,62 @@
  *     }
  * }
  */
+
+ /*
+1) keep a prevNode node to track previous node visited in preorder traversal.
+3) For every node mark in traversal mark root.left = null and root.right = null;
+3) Attach prevNode.right to current node in traversal
+
+ */
+class Solution {
+    TreeNode prevNode = null;
+    public void flattenHelper(TreeNode root) {
+        if(root == null) {
+            return;
+        }
+        TreeNode leftTree = root.left;
+        TreeNode rightTree = root.right;
+        root.left = null;
+        root.right = null;
+        if(prevNode == null) {
+            prevNode = root;
+        } else {
+            prevNode.right = root;
+            prevNode = root;
+        }
+        
+        flattenHelper(leftTree);
+        flattenHelper(rightTree);
+
+    }
+    public void flatten(TreeNode root) {
+        flattenHelper(root);
+    }
+}
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+ /*
+1) Use stack of implementing preorder 
+2) Keep tracking of previous pop element in traversal using prevNode
+3) For each node in traversal left and right pointer to null
+4) Make prevNode.right = currentNode (while maintaing traversal)
+
+ */
 class Solution {
 
     public void flatten(TreeNode root) {
