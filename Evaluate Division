@@ -1,0 +1,71 @@
+class Solution {
+    Map<String,Double> fractionToValue = new HashMap<>();
+    Map<String, List<String>> graph = new HashMap<>();
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        double[] result = new double[queries.size()];
+        buildGraph(equations, values);
+        answerQueries(queries, result);
+        return result;
+    }
+
+    public void buildGraph(List<List<String>> equations, double[] values) {
+        for(int i = 0; i < equations.size(); i++) {
+            String num = equations.get(i).get(0);
+            String deno = equations.get(i).get(1);
+            double value = values[i];
+            fractionToValue.put(num+"/"+deno, value);
+            fractionToValue.put(deno+"/"+num, 1/value);
+            if(!graph.containsKey(num)) {
+                graph.put(num, new ArrayList<>());
+            }
+            if(!graph.containsKey(deno)) {
+                graph.put(deno, new ArrayList<>());
+            }
+            graph.get(num).add(deno);
+            graph.get(deno).add(num);
+        }
+    }
+
+    public void answerQueries(List<List<String>> queries, double[] result) {
+        int index = 0;
+        System.out.println("fractionToValue: " + fractionToValue);
+        for(List<String> query : queries) {
+            String num = query.get(0);
+            String deno = query.get(1);
+            if(graph.containsKey(num) && graph.containsKey(deno)) {
+                result[index] = dfs(num, deno, new HashSet<String>());
+            } else {
+                result[index] = -1;
+            }
+            index++;
+        }
+    }
+
+    public double dfs(String curr, String end, Set<String> visited) {
+     if (visited.contains(curr)) {
+            return -1.0; // Return -1 if already visited (prevents cycles)
+        }
+
+        if (curr.equals(end)) {
+            return 1.0; // Found the target, return multiplication identity
+        }
+
+        visited.add(curr);
+
+        for (String neighbour : graph.get(curr)) {
+            String key = curr + "/" + neighbour;
+            if (!fractionToValue.containsKey(key)) {
+                continue;
+            }
+
+            double multiplier = fractionToValue.get(key);
+            double result = dfs(neighbour, end, visited);
+
+            if (result != -1.0) { // Valid path found
+                return result * multiplier;
+            }
+        }
+
+        return -1.0; // No valid path found
+    }
+}
