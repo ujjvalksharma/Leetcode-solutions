@@ -1,0 +1,55 @@
+class Solution {
+    int[][] directions = new int[][]{{0,1},{1,0},{-1,0},{0,-1}};
+    Set<String> visited = new HashSet<String>();
+
+
+    public void markNodes(char[][] board, int x, int y, char mark) {
+
+        if(x < 0 || x >= board.length || y < 0 || y >= board[0].length ||  board[x][y] != 'O') {
+            return;
+        }
+
+        board[x][y] = mark;
+
+        for(int[] direction : directions) {
+            int newX = direction[0] + x;
+            int newY= direction[1] + y;
+            markNodes(board, newX, newY, mark);
+        }
+
+    }
+    public void solve(char[][] board) {
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[0].length; j++) {
+                if((i == 0 || 
+                    i == board.length - 1 || 
+                    j == 0 || 
+                    j == board[0].length - 1) && board[i][j] == 'O') {
+                    markNodes(board, i, j, 'Y');
+                }
+            }
+        }
+
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[0].length; j++) {
+                if(board[i][j] == 'O') {
+                    markNodes(board, i, j, 'X');
+                }
+            }
+        }
+
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[0].length; j++) {
+                if(board[i][j] == 'Y') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+}
+/*
+[["X","O","X"],
+["O","X","O"],
+["X","O","X"]]
+
+*/
