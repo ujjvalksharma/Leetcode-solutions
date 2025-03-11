@@ -1,4 +1,49 @@
 class Solution {
+    public String simplifyPath(String path) {
+
+        StringBuilder sb = new StringBuilder("/");
+        char prevChar = '/';
+        StringBuilder result = new StringBuilder("/");
+        Deque<String> deque = new ArrayDeque<String>();
+        //remove repeated '/'
+        for(int i = 1; i < path.length(); i++) {
+            if(prevChar == '/' && path.charAt(i) == '/') {
+                continue;
+            }
+            sb.append(path.charAt(i));
+            prevChar = path.charAt(i);
+        }
+
+        String[] splitted = sb.toString().split("/");
+        System.out.println(" splitted: " + Arrays.toString(splitted));
+        for(String content : splitted) { 
+            if("..".equals(content)) {
+                if(deque.size() > 0) {
+                    deque.removeLast();
+                }
+            } else if(".".equals(content)) {
+                //continue
+            } else if(content.length() > 0) {
+                deque.add(content);
+            }
+        }
+
+        System.out.println("deque: " + deque);
+
+        while(!deque.isEmpty()) {
+            result.append(deque.peekFirst()).append("/");
+            deque.removeFirst();
+        }
+        
+        if(result.length() > 1) {
+            result.setLength(result.length() - 1);
+        }
+        return result.toString();
+    }
+}
+
+
+class Solution {
     /*
     Split the string on the basis of "/" and the new splitted string should not empty or ".". "." (DOT) does not play any role, so we can avoid it. if we find ".." we just remove the last  element in the arraylist
     */
