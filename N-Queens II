@@ -1,0 +1,74 @@
+/*
+How to check diagionals
+
+P1: X - K1, Y + K1
+
+                
+                    P2: X + K2, Y - K2
+
+
+Let say p1 and p2 are on the same diagnal, where X,Y be some middle point in the diagonal. Therefore adding and subtrating two points means they share a diagnol.
+
+for P1 X - K1 + Y + K1 = X + Y
+for P2 X + K2 + Y - K2 = X +Y
+*/
+class Solution {
+    List<List<String>> result = new ArrayList<>();
+    public void placeAllQueen(
+    int row, 
+    int n, 
+    char[][] currentPuzzle, 
+    Set<Integer> cols, 
+    Set<Integer> diagonals,
+    Set<Integer> antiDiagonals) {
+        if(row >= n) {
+            result.add(generateList(currentPuzzle));
+        }
+
+        for(int col = 0; col < n; col++) {
+            int currDiagonal = row - col;
+            int currAntiDiagonal = row + col;
+            if (
+                cols.contains(col) ||
+                diagonals.contains(currDiagonal) ||
+                antiDiagonals.contains(currAntiDiagonal)
+            ) {
+                continue;
+            }
+            cols.add(col);
+            diagonals.add(currDiagonal);
+            antiDiagonals.add(currAntiDiagonal);
+            currentPuzzle[row][col] = 'Q';
+            placeAllQueen(row + 1, n, currentPuzzle, cols, diagonals, antiDiagonals);
+            currentPuzzle[row][col] = '.';
+            cols.remove(col);
+            diagonals.remove(currDiagonal);
+            antiDiagonals.remove(currAntiDiagonal);
+        }
+    }
+
+    public char[][] generateEmptyPuzzle(int n) {
+        char[][] emptyPuzzle = new char[n][n];
+        for(int i = 0; i < n ; i++) {
+            Arrays.fill(emptyPuzzle[i], '.');
+        }
+        return emptyPuzzle;
+    }
+
+    public List<String> generateList(char[][] puzzle) {
+        List<String> puzzleInList = new ArrayList<>();
+        for(int i = 0; i < puzzle.length; i++) {
+            StringBuilder sb = new StringBuilder("");
+            for(int j = 0; j < puzzle[0].length; j++) {
+                sb.append(puzzle[i][j]);
+            }
+            puzzleInList.add(sb.toString());
+        }
+        return puzzleInList;
+    }
+    public int totalNQueens(int n) {
+        char[][] emptyPuzzle = generateEmptyPuzzle(n);
+        placeAllQueen(0, n, emptyPuzzle, new HashSet<>(), new HashSet<>(), new HashSet<>());
+        return result.size();
+    }
+}
