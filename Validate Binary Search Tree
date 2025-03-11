@@ -14,6 +14,61 @@
  * }
  */
 class Solution {
+    boolean isValid = true;
+    public int[] isValidBSTHelper(TreeNode root) {
+        if(root == null) {
+            return null;
+        }
+
+        int rootVal = root.val;
+        int[] ranges = new int[]{root.val, root.val};
+        int[] leftNode = isValidBSTHelper(root.left);
+        int[] rightNode = isValidBSTHelper(root.right);
+        if(leftNode != null) {
+            if(leftNode[0] >= rootVal || leftNode[1] >= rootVal) {
+                isValid = false;
+            }
+            ranges[0] = Math.min(ranges[0], leftNode[0]);
+            ranges[0] = Math.min(ranges[0], leftNode[1]);
+            ranges[1] = Math.max(ranges[1], leftNode[0]);
+            ranges[1] = Math.max(ranges[1], leftNode[1]);
+        }
+
+        if(rightNode != null) {
+            if(rightNode[0] <= rootVal || rightNode[1] <= rootVal) {
+                isValid = false;
+            }
+            ranges[0] = Math.min(ranges[0], rightNode[0]);
+            ranges[0] = Math.min(ranges[0], rightNode[1]);
+            ranges[1] = Math.max(ranges[1], rightNode[0]);
+            ranges[1] = Math.max(ranges[1], rightNode[1]);
+        }
+
+        return ranges;
+    }
+    public boolean isValidBST(TreeNode root) {
+        isValidBSTHelper(root);
+        return isValid;
+    }
+}
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
     
     boolean isValidBst;
     
