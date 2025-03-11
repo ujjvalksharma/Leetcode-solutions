@@ -1,4 +1,39 @@
 class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public void permuteHelper(int[] nums, int index) {
+        if(index >= nums.length) {
+            result.add(convertList(nums));
+            return;
+        }
+        for(int i = index; i < nums.length; i++) {
+            swap(nums, index, i);
+            permuteHelper(nums, index + 1);
+            swap(nums, index, i);
+        }
+    }
+
+    public void swap(int[] nums, int index1, int index2) {
+        int temp = nums[index2];
+        nums[index2] = nums[index1];
+        nums[index1] = temp;
+    }
+
+    public List<Integer> convertList(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for(int num : nums) {
+            list.add(num);
+        }
+        return list;
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        permuteHelper(nums, 0);
+        return result;
+    }
+}
+
+
+class Solution {
     
     List<List<Integer>> result = new ArrayList<>();
     
