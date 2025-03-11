@@ -1,0 +1,63 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> neighbors;
+    public Node() {
+        val = 0;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val) {
+        val = _val;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val, ArrayList<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+
+class Solution {
+    Map<Integer, Node> idToNode = new HashMap<>();
+    Map<Integer, Set<Integer>> nodeToNeighbour = new HashMap<>();
+    Set<Integer> visited = new HashSet<>();
+    public void dfs(Node node) {
+        if(node == null) {
+            return;
+        }
+
+        if(visited.contains(node.val)) {
+            return;
+        }
+        visited.add(node.val);
+        Node cloneNode = null;
+        if(!idToNode.containsKey(node.val)) {
+            idToNode.put(node.val, new Node(node.val));
+        }
+        if(!nodeToNeighbour.containsKey(node.val)) {
+            nodeToNeighbour.put(node.val, new HashSet<>());
+        }
+        cloneNode = idToNode.get(node.val);
+        List<Node> neighbours = node.neighbors;
+        for(Node neighbour : neighbours) {
+            Node clonedNeighbourNode = null;
+            if(!idToNode.containsKey(neighbour.val)) {
+                idToNode.put(neighbour.val, new Node(neighbour.val));
+            }
+            clonedNeighbourNode = idToNode.get(neighbour.val);
+            if(!nodeToNeighbour.get(node.val).contains(neighbour.val)) {
+                cloneNode.neighbors.add(clonedNeighbourNode);
+                nodeToNeighbour.get(node.val).add(neighbour.val);
+            }
+            
+        }
+        for(Node neighbour : neighbours) {
+            dfs(neighbour);
+        }
+    }
+    public Node cloneGraph(Node node) {
+        dfs(node);
+        return idToNode.get(1);
+    }
+}
