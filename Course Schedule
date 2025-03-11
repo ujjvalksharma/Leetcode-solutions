@@ -1,4 +1,53 @@
 class Solution {
+    Map<Integer, Set<Integer>> graph = new HashMap<>();
+    Set<Integer> globalVisited = new HashSet<Integer>();
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        for(int i =0; i < numCourses; i++) {
+            graph.put(i, new HashSet<>());
+        }
+
+        for(int[] prerequisite : prerequisites) {
+            int c1 = prerequisite[0];
+            int c2 = prerequisite[1];
+            graph.get(c1).add(c2);
+        }
+
+        for(int i =0; i < numCourses; i++) {
+            if(globalVisited.contains(i)) {
+                continue;
+            }
+            if(isCyclePresent(i, new HashSet<>())) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+
+    public boolean isCyclePresent(int course, Set<Integer> seenCourses) {
+        if(seenCourses.contains(course)) {
+            return true;
+        }
+        if(globalVisited.contains(course)) {
+            return false;
+        }
+        seenCourses.add(course);
+        globalVisited.add(course);
+        Set<Integer> neighbours = graph.get(course);
+        for(int neighbour : neighbours) {
+            if (isCyclePresent(neighbour, seenCourses)) {
+                return true;
+            }
+        }
+        seenCourses.remove(course);
+        return false;
+
+    }
+ }
+
+
+class Solution {
     
     boolean[] visited;
     boolean isCycle=false;
