@@ -1,0 +1,45 @@
+class Solution {
+    public int minMutation(String startGene, String endGene, String[] bank) {
+        if(startGene.equals(endGene)) {
+            return 0;
+        }
+        Set<String> bankSet = new HashSet<>(Arrays.asList(bank));
+        if(!bankSet.contains(endGene)) {
+            return - 1;
+        }
+        int level = 0;
+        Queue<String> bfs = new LinkedList<String>();
+        Set<String> visited = new HashSet<String>();
+        bfs.add(startGene);
+        visited.add(startGene);
+        char[] validChar = new char[]{'A','C','G','T'};
+        while(!bfs.isEmpty()) {
+            int size = bfs.size();
+            while(size > 0) {
+                String gene = bfs.poll();
+                StringBuilder temp = new StringBuilder(gene);
+                if(endGene.equals(temp.toString())) {
+                    return level;
+                }
+                for(int i = 0; i < temp.length(); i++) {
+                    for(char c : validChar) {
+                        if(c == temp.charAt(i)) {
+                            continue;
+                        }
+                        char prevChar = temp.charAt(i);
+                        temp.setCharAt(i, c);
+                        if(!visited.contains(temp.toString()) && bankSet.contains(temp.toString())) {
+                            bfs.add(temp.toString());
+                            visited.add(temp.toString());
+                        }
+                        temp.setCharAt(i, prevChar);
+                    }
+                }
+                size--;
+            }
+            level++;
+        }
+        return -1;
+
+    }
+}
