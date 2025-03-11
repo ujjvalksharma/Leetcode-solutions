@@ -1,3 +1,89 @@
+/*
+Why do we push to stack at the end of dfs call ?
+Let say 1 -> 2 - > 3 -> 4 -> 5
+Now you started dfs at 3,
+so will insert 5,4,3 in stack 
+Now you start at 1
+you will keep 5,4,3,2,1 -> this helps in maintaining order using stack
+
+if you keep in start
+3,4,5 if you start from 3
+then you start from 1 so you will keep 3,4,5,1,2 -> This doesn't maintain order of itmes
+*/
+class Solution {
+    Map<Integer, Set<Integer>> graph = new HashMap<>();
+    Set<Integer> globalVisited = new HashSet<Integer>();
+    Stack<Integer> stk = new Stack<Integer>();
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        for(int i =0; i < numCourses; i++) {
+            graph.put(i, new HashSet<>());
+        }
+
+        for(int[] prerequisite : prerequisites) {
+            int c1 = prerequisite[0];
+            int c2 = prerequisite[1];
+            graph.get(c2).add(c1);
+        }
+
+        for(int i =0; i < numCourses; i++) {
+            if(globalVisited.contains(i)) {
+                continue;
+            }
+            if(isCyclePresent(i, new HashSet<>())) {
+                return new int[]{}; //empty array
+            }
+        }
+        globalVisited.clear();
+        for(int i =0; i < numCourses; i++) {
+            if(globalVisited.contains(i)) {
+                continue;
+            }
+            dfs(i);
+        }
+        int[] result = new int[stk.size()];
+        int index = 0;
+        while(!stk.isEmpty()) {
+            int item = stk.pop();
+            result[index] = item;
+            index++;
+        }
+        return result;
+    }
+
+    public void dfs(int course) {
+        if(globalVisited.contains(course)) {
+            return;
+        }
+        globalVisited.add(course);
+        Set<Integer> neighbours = graph.get(course);
+        for(int neighbour : neighbours) {
+            dfs(neighbour);
+        }
+        stk.push(course);
+    }
+
+    public boolean isCyclePresent(int course, Set<Integer> seenCourses) {
+        if(seenCourses.contains(course)) {
+            return true;
+        }
+        if(globalVisited.contains(course)) {
+            return false;
+        }
+        seenCourses.add(course);
+        globalVisited.add(course);
+        Set<Integer> neighbours = graph.get(course);
+        for(int neighbour : neighbours) {
+            if (isCyclePresent(neighbour, seenCourses)) {
+                return true;
+            }
+        }
+        seenCourses.remove(course);
+        return false;
+
+    }
+}
+
+
 class Solution {
     
     public boolean findCycle(int node, Map<Integer,List<Integer>> graph, int[] visiteded) {
