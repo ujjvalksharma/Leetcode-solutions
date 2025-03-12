@@ -1,0 +1,86 @@
+/*
+// Definition for a QuadTree node.
+class Node {
+    public boolean val;
+    public boolean isLeaf;
+    public Node topLeft;
+    public Node topRight;
+    public Node bottomLeft;
+    public Node bottomRight;
+
+    
+    public Node() {
+        this.val = false;
+        this.isLeaf = false;
+        this.topLeft = null;
+        this.topRight = null;
+        this.bottomLeft = null;
+        this.bottomRight = null;
+    }
+    
+    public Node(boolean val, boolean isLeaf) {
+        this.val = val;
+        this.isLeaf = isLeaf;
+        this.topLeft = null;
+        this.topRight = null;
+        this.bottomLeft = null;
+        this.bottomRight = null;
+    }
+    
+    public Node(boolean val, boolean isLeaf, Node topLeft, Node topRight, Node bottomLeft, Node bottomRight) {
+        this.val = val;
+        this.isLeaf = isLeaf;
+        this.topLeft = topLeft;
+        this.topRight = topRight;
+        this.bottomLeft = bottomLeft;
+        this.bottomRight = bottomRight;
+    }
+}
+*/
+
+class Solution {
+
+    public Node constructQuadTree(int[][] grid, int startRow, int endRow, int startCol, int endCol) {
+        if(startRow > endRow || startCol > endCol ) {
+            return null;
+        }
+
+        int totalCount = 0;
+        int totalOnes = 0;
+        int totalZeros = 0;
+
+        for(int i = startRow; i <= endRow; i++) {
+            for(int j = startCol; j <= endCol; j++) {
+                if(grid[i][j] == 1) {
+                    totalOnes++;
+                } else {
+                    totalZeros++;
+                }
+                totalCount++;
+            }
+        }
+
+        Node node = new Node();
+        if(totalCount == totalOnes) {
+            node.val = true;
+            node.isLeaf = true;
+        } else if(totalCount == totalZeros) {
+            node.val = false;
+            node.isLeaf = true;
+        }
+
+        if(node.isLeaf == false) {
+            int midRow = startRow + (endRow - startRow)/2; //binary search way of calculating mid
+            int midCol = startCol + (endCol - startCol)/2; //binary search way of calculating mid
+            node.topLeft = constructQuadTree(grid, startRow, midRow, startCol, midCol);
+            node.topRight = constructQuadTree(grid, startRow, midRow, midCol + 1, endCol);
+            node.bottomLeft = constructQuadTree(grid, midRow + 1, endRow, startCol, midCol);
+            node.bottomRight = constructQuadTree(grid, midRow + 1, endRow, midCol + 1, endCol);
+        }
+
+        return node;
+    }
+    public Node construct(int[][] grid) {
+        return constructQuadTree(grid, 0, grid.length - 1, 0, grid[0].length - 1);
+    }
+}
