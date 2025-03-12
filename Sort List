@@ -9,6 +9,70 @@
  * }
  */
 class Solution {
+
+    public ListNode divide(ListNode node) {
+        if(node == null || node.next == null) {
+            return node;
+        }
+        ListNode slow = node;
+        ListNode fast = node;
+        while(fast != null && fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode list2 = slow.next;
+        slow.next = null;
+        ListNode l1 = divide(node);
+        ListNode l2 = divide(list2);
+        ListNode mergedlist =  merge(l1, l2);
+        return mergedlist;
+    }
+
+    public ListNode merge(ListNode list1, ListNode list2) {
+        ListNode head = new ListNode(0);
+        ListNode tempHead = head;
+        while(list1 != null && list2 != null) {
+            if(list1.val <= list2.val) {
+                tempHead.next = list1;
+                list1 = list1.next;
+            } else {
+                tempHead.next = list2;
+                list2 = list2.next;
+            }
+            tempHead = tempHead.next;
+        }
+
+        while(list1 != null) {
+            tempHead.next = list1;
+            tempHead = tempHead.next;
+            list1 = list1.next;
+        }
+
+        while(list2 != null) {
+            tempHead.next = list2;
+            tempHead = tempHead.next;
+            list2 = list2.next;
+        }
+
+        return head.next;
+    }
+    public ListNode sortList(ListNode head) {
+    return divide(head);    
+    }
+}
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
     
     public ListNode findMiddleNode(ListNode head) {
         
