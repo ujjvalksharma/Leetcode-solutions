@@ -1,0 +1,119 @@
+/*
+Solution 1
+1) Keep operators and numbers stack
+2) If numbers finish, then we evaluate if previous operator in stack is / or * and pop 2 pervious numbers using evaluateOperator
+3) At the end, add all numbers while poping operator, line 48 to 51
+
+Solution 2:
+1) Add  and subtract numbers as you.
+2) When you see a operator '/' or '*'. Then you perform reverse operation of '+' or '-' 
+and perform '+'/'-' and again perform operation '+'/'-'
+
+*/
+
+class Solution {
+    public int calculate(String s) {
+        int result = 0;
+        int lastNumber = 0;
+        int currentNumber = 0;
+        char operator = '+';  // Assume a '+' before the first number
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if(c == ' ' && i < s.length() - 1 ) {
+                continue;
+            }
+
+            if (Character.isDigit(c)) {
+                currentNumber = (currentNumber * 10) + (c - '0');
+            }
+
+            if (!Character.isDigit(c) || i == s.length() - 1) {
+                if (operator == '+') {
+                    result += lastNumber;
+                    lastNumber = currentNumber;
+                } else if (operator == '-') {
+                    result += lastNumber;
+                    lastNumber = -currentNumber;
+                } else if (operator == '*') {
+                    lastNumber *= currentNumber;
+                } else if (operator == '/') {
+                    lastNumber /= currentNumber;
+                }
+
+                operator = c;  // Update the operator
+                currentNumber = 0;  // Reset current number
+            }
+        }
+
+        result += lastNumber;  // Add the last number to result
+        return result;
+    }
+}
+
+
+class Solution {
+    public String removeSpaces(String s) {
+        StringBuilder sb = new StringBuilder("");
+        for(int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) == ' ') {
+                continue;
+            }
+            sb.append(s.charAt(i));
+        }
+        return sb.toString();
+    }
+    public int calculate(String s) {
+        s = removeSpaces(s);
+        Stack<Integer> numbers = new Stack<>();
+        Stack<Character> operators = new Stack<Character>();
+        operators.push('+'); // add + operator in the begining
+        StringBuilder currentNumber = new StringBuilder("");
+        for(int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) == '+') {
+                operators.push('+');
+            } else if(s.charAt(i) == '-') {
+                operators.push('-');
+            } else if(s.charAt(i) == '/') {
+                operators.push('/');
+            } else if(s.charAt(i) == '*') {
+                operators.push('*');
+            } else {
+                currentNumber.append(s.charAt(i));
+                if((i+1) < s.length() && !Character.isDigit(s.charAt(i+1))) {
+                    numbers.push(Integer.parseInt(currentNumber.toString()));
+                    evaluateOperator(numbers, operators);
+                    currentNumber.setLength(0);
+                }
+            }
+        }
+        if(currentNumber.length() > 0) {
+            numbers.push(Integer.parseInt(currentNumber.toString()));
+            evaluateOperator(numbers, operators);
+        }
+        int totalSum = 0;
+        while(!numbers.isEmpty()) {
+            int operator =  operators.pop() == '+' ? 1 : -1;
+            totalSum += operator*numbers.pop();
+        }
+        return totalSum;
+    }
+
+    public void evaluateOperator(Stack<Integer> numbers, Stack<Character> operators) {
+        if(!operators.isEmpty() && numbers.size() >= 2) {
+            if(operators.peek() == '/') {
+                operators.pop();
+                int denominator = numbers.pop();
+                int numerator = numbers.pop();
+                numbers.push(numerator/denominator);
+            } else if(operators.peek() == '*') {
+                operators.pop();
+                int num1 = numbers.pop();
+                int num2 = numbers.pop();
+                numbers.push(num1*num2);
+            }
+
+        }
+    }
+}
