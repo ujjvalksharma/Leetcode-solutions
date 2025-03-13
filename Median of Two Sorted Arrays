@@ -1,172 +1,95 @@
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        
-        if(nums1.length < nums2.length) {
+        // Ensure nums1 is the smaller array.
+        if(nums1.length > nums2.length) {
             return findMedianSortedArrays(nums2, nums1);
         }
         
-        if(nums1.length == 0) {
-            
-            if(nums2.length == 1) {
-                return nums2[0];
-            }
-            
-            if(nums2.length%2 == 0) {
-                int mid = (nums2.length - 1)/2;
-                double result = (double) (nums2[mid] + nums2[mid + 1]);
-                return result/2;
-            }
-            
-            int mid = nums2.length/2;
-                
-            return nums2[mid];
-        }
+        int m = nums1.length;
+        int n = nums2.length;
+        int total = m + n;
+        int half = (total + 1) / 2;
         
+        int start = 0;
+        int end = m;
         
-        if(nums2.length == 0) {
+        while (start <= end) {
+            int i = start + (end - start) / 2;
+            int j = half - i;
             
-            if(nums1.length == 1) {
-                return nums1[0];
-            }
+            int left1 = i == 0 ? Integer.MIN_VALUE : nums1[i - 1];
+            int right1 = i == m ? Integer.MAX_VALUE : nums1[i];
+            int left2 = j == 0 ? Integer.MIN_VALUE : nums2[j - 1];
+            int right2 = j == n ? Integer.MAX_VALUE : nums2[j];
             
-            if(nums1.length%2 == 0) {
-                int mid = (nums1.length - 1)/2;
-                double result = (double) (nums1[mid] + nums1[mid + 1]);
-                return result/2;
-            }
-            
-            int mid = nums1.length/2;
-                
-            return nums1[mid];
-        }
-        
-        
-        int totalSize = nums1.length + nums2.length;
-        int halfSize = totalSize/2;
-        boolean isTotalElementEven = true;
-        if(totalSize%2 != 0) {
-            isTotalElementEven = false;
-            halfSize++;
-        }
-        
-        //taking atleast 1 element of nums1
-        for(int i=-1; i<nums1.length; i++) {
-            
-            
-            int num1Left = i >= 0 ? nums1[i] : Integer.MIN_VALUE;
-            int num1Right = ((i + 1) < nums1.length && (i + 1 ) >= 0 )? nums1[i + 1] : Integer.MAX_VALUE;
-            int totalElementsNeededOnLeftSide = halfSize;
-            
-            if(i >= 0) {
-                totalElementsNeededOnLeftSide = halfSize - (i + 1);
-                if(totalElementsNeededOnLeftSide < 0) {
-                    totalElementsNeededOnLeftSide = 0;
-                }
-            }
-            
-            if(totalElementsNeededOnLeftSide >= 0 && totalElementsNeededOnLeftSide <= nums2.length) {
-                
-                int indexOfNums2= totalElementsNeededOnLeftSide - 1;
-                
-                int num2Left = (indexOfNums2 < nums2.length && indexOfNums2 >= 0)  ? nums2[indexOfNums2] : Integer.MIN_VALUE;
-                int num2right = (indexOfNums2 + 1) < nums2.length ? nums2[indexOfNums2 + 1] : Integer.MAX_VALUE;
-                
-                if(num1Left <= num2right && num2Left <= num1Right) {
-                    System.out.println("I am here1");
-                    int maxOfLeft = Math.max(num2Left, num1Left);
-                    int minOfLeft = Math.min(num1Right, num2right);
-                    
-                    double result = (double) (maxOfLeft + minOfLeft);
-                    
-                    if(isTotalElementEven) {
-                    return result/2;
-                    }
-                    
-                    return maxOfLeft;
-                    
-                }
-            
-            }
-            
-        }
-            //all of num1 on left and all of nums2 on right
-            
-            if(nums1.length == nums2.length && nums1[nums1.length - 1] <= nums2[0]) {
-            //    System.out.println("I am here2");
-                int maxOfLeft = nums1[nums1.length - 1];
-                int minOfLeft = nums2[0];
-                double result = (double) (maxOfLeft + minOfLeft);
-              
-                if(isTotalElementEven) {
-                return result/2;
-                }
-                
-                return maxOfLeft;
-                
-            } else {
-                int mid = totalSize/2;
-                
-                if(isTotalElementEven) {
-                    mid--;
-                    int maxOfLeft = nums1[mid];
-                    int minOfLeft = nums1[mid + 1];
-                    double result = (double) (maxOfLeft + minOfLeft);
-                    return result/2;
-                }
-                
-                return nums1[mid];
-            }
-            
-        
-    }
-}
-
-    
-
-
-
-/*
-https://www.youtube.com/watch?v=LPFhl65R7ww&t=230s
-*/
-class Solution {
-    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        
-              if (nums1.length > nums2.length) {
-            return findMedianSortedArrays(nums2, nums1);
-        }
-        int x = nums1.length;
-        int y = nums2.length;
-
-        int low = 0;
-        int high = x;
-        while (low <= high) {
-            int partitionX = (low + high)/2;
-            int partitionY = (x + y + 1)/2 - partitionX;
-
-            //if partitionX is 0 it means nothing is there on left side. Use -INF for maxLeftX
-            //if partitionX is length of input then there is nothing on right side. Use +INF for minRightX
-            int maxLeftX = (partitionX == 0) ? Integer.MIN_VALUE : nums1[partitionX - 1];
-            int minRightX = (partitionX == x) ? Integer.MAX_VALUE : nums1[partitionX];
-
-            int maxLeftY = (partitionY == 0) ? Integer.MIN_VALUE : nums2[partitionY - 1];
-            int minRightY = (partitionY == y) ? Integer.MAX_VALUE : nums2[partitionY];
-
-            if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
-                //We have partitioned array at correct place
-                // Now get max of left elements and min of right elements to get the median in case of even length combined array size
-                // or get max of left for odd length combined array size.
-                if ((x + y) % 2 == 0) {
-                    return ((double)Math.max(maxLeftX, maxLeftY) + Math.min(minRightX, minRightY))/2;
+            if (left1 <= right2 && left2 <= right1) {
+                // Correct partition found.
+                if (total % 2 == 0) {
+                    int maxLeft = Math.max(left1, left2);
+                    int minRight = Math.min(right1, right2);
+                    return (maxLeft + minRight) / 2.0;
                 } else {
-                    return (double)Math.max(maxLeftX, maxLeftY);
+                    return Math.max(left1, left2);
                 }
-            } else if (maxLeftX > minRightY) { //we are too far on right side for partitionX. Go on left side.
-                high = partitionX - 1;
-            } else { //we are too far on left side for partitionX. Go on right side.
-                low = partitionX + 1;
+            } else if (left1 > right2) {
+                end = i - 1;
+            } else {
+                start = i + 1;
             }
         }
         
-        return -1;
+        return -1.0;
     }
 }
+
+
+// class Solution {
+//     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+//         if(nums2.length > nums1.length) {
+//             return findMedianSortedArrays(nums2, nums1);
+//         }
+
+//         int start = 0;
+//         int end = nums1.length;
+//         int size = nums1.length + nums2.length;
+//         int paritionSize = size/2;
+//         while(true) {
+//             int mid1 = start + (end - start)/2;
+//             int mid2 = (paritionSize - 1) - (mid1 + 1);
+//             int leftOfNum1 = mid1 < 0 ? Integer.MIN_VALUE : nums1[mid1];
+//             int rightOfNum1 = mid1 + 1 >= nums1.length ? Integer.MAX_VALUE : nums1[mid1 + 1];
+//             int leftOfNum2 = mid2 < 0 ? Integer.MIN_VALUE : nums2[mid2];
+//             int rightOfNum2 = mid2 + 1 >= nums2.length ? Integer.MAX_VALUE : nums2[mid2 + 1];
+
+//             if(leftOfNum1 <= rightOfNum2 && leftOfNum2 <= rightOfNum1) {
+//                 if(size %2 == 0) {
+//                     int max1 = Math.max(leftOfNum1, leftOfNum2);
+//                     int min1 = Math.min(rightOfNum1, rightOfNum2);
+//                     double result = (double) (max1 + min1);
+//                     return result/2;
+//                 } else {
+//                     double result = (double) Math.min(rightOfNum1, rightOfNum2);
+//                     return result;
+//                 }
+//             } else if(leftOfNum1 > rightOfNum2) {
+//                 end = mid1 - 1;
+//             } else {
+//                 start = mid1 + 1;
+//             }
+
+//         }
+//     }
+// }
+// /*
+
+// arr1 = [x1,x2,x3|x4,x5,x6,x7]
+// arr2 = [y1,y2,y3,y4,y5|y6,y7]
+
+// 1,2
+// 3,4
+
+// 1,2,3,4 
+
+// 1) binary search on m
+
+// */
