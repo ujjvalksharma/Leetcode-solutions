@@ -1,0 +1,63 @@
+class Solution {
+    public int numSubseq(int[] nums, int target) {
+        int mod = 1_000_000_007;
+        int n = nums.length;
+        Arrays.sort(nums);
+        
+        // Precompute powers of 2 modulo mod
+        int[] power = new int[n];
+        power[0] = 1;
+        for (int i = 1; i < n; i++) {
+            power[i] = (power[i - 1] * 2) % mod;
+        }
+        
+        int count = 0;
+        int start = 0, end = n - 1;
+        
+        while (start <= end) {
+            if (nums[start] + nums[end] <= target) {
+                // Use precomputed power with current start and end
+                count = (count + power[end - start]) % mod;
+                start++;  // Increment start after counting
+            } else {
+                end--;
+            }
+        }
+        return count;
+    }
+}
+
+/*
+In the context of the problem, once the array is sorted, for any valid pair of indices (left, right) such that:
+nums[left] + nums[right] <target
+all numbers between these indices can either be chosen or not chosen in forming a subsequence. This gives us 2(right-left) possible combinations (each number has two choices: included or excluded). The precomputed array power allows you to quickly look up these values without recomputing the power every time.
+
+Let you have an array [2,3,4,5]
+Now you have you want to start a subsequence starting from 2, so
+2 is fixed
+3,4,5 are optional (included/not-included). Therefore possiabilites are 2^n
+*/
+// class Solution {
+//     public int numSubseq(int[] nums, int target) {
+        
+//         int start = 0;
+//         int end = nums.length - 1;
+//         int count = 0;
+//         //calculate power here
+//         int MOD = 1000000000 + 7;
+
+//         while(start <= end) {
+//             int sum = nums[start] + nums[end];
+//             if(sum <= target) {
+//                 count += (Math.pow(2, end - start)%MOD);
+//                 count %= MOD;
+//                 start++;
+//             } else {
+//                 end--;
+//             }
+//         }
+//         return count;
+
+//     }
+// }
+
