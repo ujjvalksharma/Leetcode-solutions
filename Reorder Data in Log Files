@@ -1,0 +1,43 @@
+import java.util.*;
+
+class Solution {
+    public String[] reorderLogFiles(String[] logs) {
+        String[] result = new String[logs.length];
+        List<Map.Entry<String, String>> letterLog = new ArrayList<>();
+        List<String> digitLog = new ArrayList<>();
+
+        for (String log : logs) {
+            String[] wordsInLog = log.split(" ");
+            if (Character.isDigit(wordsInLog[1].charAt(0))) {
+                digitLog.add(log);
+            } else {
+                StringBuilder letters = new StringBuilder();
+                for (int i = 1; i < wordsInLog.length - 1; i++) {
+                    letters.append(wordsInLog[i]).append(" ");
+                }
+                letters.append(wordsInLog[wordsInLog.length - 1]);
+                letterLog.add(new AbstractMap.SimpleEntry<>(wordsInLog[0], letters.toString()));
+            }
+        }
+
+        // Sort letter logs
+        Collections.sort(letterLog, (p1, p2) -> {
+            if (p1.getValue().equals(p2.getValue())) {
+                return p1.getKey().compareTo(p2.getKey());
+            } else {
+                return p1.getValue().compareTo(p2.getValue());
+            }
+        });
+
+        // Combine letter logs and digit logs
+        int index = 0;
+        for (Map.Entry<String, String> entry : letterLog) {
+            result[index++] = entry.getKey() + " " + entry.getValue();
+        }
+        for (String log : digitLog) {
+            result[index++] = log;
+        }
+
+        return result;
+    }
+}
