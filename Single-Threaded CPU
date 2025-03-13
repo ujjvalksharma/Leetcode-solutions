@@ -1,0 +1,65 @@
+class Solution {
+    class Task {
+        int index;
+        int processingTime;
+        int enqueueTime;
+        public Task(int index, int enqueueTime, int processingTime) {
+            this.index = index;
+            this.processingTime = processingTime;
+            this.enqueueTime = enqueueTime;
+        }
+
+        @Override
+        public String toString() {
+            return " enqueueTime : " + enqueueTime;
+        }
+    }
+    public int[] getOrder(int[][] tasks) {
+        List<Task> listOfTask = new ArrayList<Task>();
+        for(int i = 0; i < tasks.length; i++) {
+            listOfTask.add(new Task(i, tasks[i][0],tasks[i][1]));
+        }
+        Collections.sort(listOfTask,(a,b) -> {
+            if(a.enqueueTime == b.enqueueTime) {
+                return a.processingTime - b.processingTime;
+            }
+            return a.enqueueTime - b.enqueueTime;
+        });
+        PriorityQueue<Task> taskToProcess = new PriorityQueue<Task>((t1,t2)->{
+            if(t1.processingTime == t2.processingTime) {
+                return t1.index - t2.index;
+            }
+            return t1.processingTime - t2.processingTime;
+        });
+        int index = 0;
+        int[] result = new int[tasks.length];
+        int resultIndex = 0;
+        int currentTime = 0;
+        // Process tasks until all are scheduled.
+        while (index < listOfTask.size() || !taskToProcess.isEmpty()) {
+            // If the queue is empty and the next task hasn't arrived, jump the time.
+            if (taskToProcess.isEmpty() && listOfTask.get(index).enqueueTime > currentTime) {
+                currentTime = listOfTask.get(index).enqueueTime;
+            }
+            // Enqueue all tasks available at the current time.
+            while (index < listOfTask.size() && listOfTask.get(index).enqueueTime <= currentTime) {
+                taskToProcess.add(listOfTask.get(index));
+                index++;
+            }
+            // Process the next task.
+            if (!taskToProcess.isEmpty()) {
+                Task task = taskToProcess.poll();
+                result[resultIndex++] = task.index;
+                currentTime += task.processingTime;
+            }
+        }
+
+        return result;
+    }
+}
+/*
+
+25
+
+19 + 13 = 32
+*/
