@@ -1,0 +1,67 @@
+/*
+Use logic of basic calculator 2, and if you see an opening bracket apply recurive and on closing do break
+
+*/
+
+class Solution {
+    int index = 0;
+    public int calculate(String s) {
+        Stack<Integer> numbers = new Stack<Integer>();
+        Stack<Character> operators = new Stack<>();
+        StringBuilder currentNum = new StringBuilder("");
+        operators.push('+');
+        System.out.println("index: " + index);
+        while(index < s.length()) {
+            if(s.charAt(index) == '+') {
+                operators.add('+');
+            } else if(s.charAt(index) == '-') {
+                operators.add('-');
+            } else if(s.charAt(index) == '/') {
+                operators.add('/');
+            } else if(s.charAt(index) == '*') {
+                operators.add('*');
+            } else if(s.charAt(index) == '(') {
+                index++;
+                numbers.add(calculate(s));
+                evaluateOperator(numbers, operators);
+            } else if(s.charAt(index) == ')') {
+                break; 
+            } else {
+                while(index < s.length() && Character.isDigit(s.charAt(index))) {
+                    currentNum.append(s.charAt(index));
+                    index++;
+                }
+                index--;
+                numbers.push(Integer.parseInt(currentNum.toString()));
+                currentNum.setLength(0);
+                evaluateOperator(numbers, operators);
+            }
+            index++;
+        }
+        System.out.println("numbers: " + numbers + "operator: " + operators);
+        int totalSum = 0;
+        while(!numbers.isEmpty()) {
+            int operator =  operators.pop() == '+' ? 1 : -1;
+            totalSum += operator*numbers.pop();
+        }
+        return totalSum;
+    }
+
+        public void evaluateOperator(Stack<Integer> numbers, Stack<Character> operators) {
+        if(!operators.isEmpty() && numbers.size() >= 2) {
+            if(operators.peek() == '/') {
+                operators.pop();
+                int denominator = numbers.pop();
+                int numerator = numbers.pop();
+                numbers.push(numerator/denominator);
+            } else if(operators.peek() == '*') {
+                operators.pop();
+                int num1 = numbers.pop();
+                int num2 = numbers.pop();
+                numbers.push(num1*num2);
+            }
+
+        }
+    }
+}
+
