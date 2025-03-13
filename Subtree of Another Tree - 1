@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+ /*
+Solution1:
+1) On every if root == subRoot, then check is both trees are same
+Solution2
+seriliza the trees and perform kmp algorithm on it
+
+
+ */
+class Solution {
+
+    public boolean isTreeSame(TreeNode node1, TreeNode node2) {
+        if(node1 == null && node2 == null) {
+            return true;
+        }
+
+        if((node1 != null && node2 == null )|| (node1 == null && node2 != null )) {
+            return false;
+        }
+        if(node1.val != node2.val) {
+            return false;
+        }
+        return isTreeSame(node1.left, node2.left) & 
+        isTreeSame(node1.right, node2.right);
+    }
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        if(root == null && subRoot != null) {
+            return false;
+        }
+        boolean result = false;
+        if(root.val == subRoot.val) {
+            boolean temp = isTreeSame(root, subRoot);
+            System.out.println("temp : " + temp);
+            result = result | temp;
+        }
+        result = result | isSubtree(root.left, subRoot);
+        result = result | isSubtree(root.right, subRoot);
+        return result;
+    }
+}
