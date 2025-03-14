@@ -1,3 +1,71 @@
+/*
+Maintain a monotonic decreasing queue
+
+A monotonic deque is a powerful tool for sliding window problems where you want to efficiently query the minimum or maximum in a window. The idea is to maintain a deque (double-ended queue) that stores elements (or their indices) in a strictly increasing or decreasing order. This way, the first element of the deque is always the minimum (for increasing order) or maximum (for decreasing order).
+
+Here’s how to use a deque for monotonic order effectively:
+
+Key Concepts
+Store Indices or Values:
+It’s often useful to store indices rather than values. This helps you easily check if the element at the front is out of the current window.
+
+Maintaining Monotonicity:
+
+For a Monotonic Increasing Deque (for minimums):
+When adding a new element, remove all elements from the back of the deque that are greater than the new element. This ensures that the smallest element is always at the front.
+
+For a Monotonic Decreasing Deque (for maximums):
+When adding a new element, remove all elements from the back of the deque that are less than the new element. This ensures that the largest element is always at the front.
+
+Window Management:
+As your window slides, check if the element at the front of the deque has an index that is outside the current window. If it is, remove it from the front.
+
+
+
+How the Monotonic Deque Works
+Where to Add New Items:
+New items are always added to the back of the deque.
+
+Maintaining Decreasing Order:
+When adding a new item (i.e. its index), you remove all indices from the back whose corresponding values are less than the new value. This ensures that the largest value remains at the front.
+
+Window Maintenance:
+Before processing the current element, if the index at the front is outside the current window, remove it from the front.
+
+Final Takeaway
+New items are added at the back of the deque after you remove all smaller elements from the back.
+Removal from the front occurs when the index is out-of-window.
+This process ensures that the element at the front of the deque is always the maximum (for a decreasing deque) within the current window.
+
+*/
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        Deque<Integer> deque = new ArrayDeque<Integer>();
+        int[] result = new int[nums.length - k + 1];
+        int index = 0;
+        for(int i = 0; i < nums.length; i++) {
+            if(i >= k) {
+                while(!deque.isEmpty() && deque.peekFirst() <= (i - k)) {
+                    deque.removeFirst();
+                }
+            }
+            while(!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+                deque.removeLast();
+            }
+            deque.add(i);
+            if( (i+1) >= k) {
+                result[index] = nums[deque.peekFirst()]; // increasing number at front of the queue
+                index++;
+            }
+            
+            
+        }
+        return result;
+    }
+}
+
+
+
 class Solution {
     
     class Num {
