@@ -1,0 +1,28 @@
+class Solution {
+    public int longestSubarray(int[] nums, int limit) {
+        int start = 0;
+        int end = 0;
+        int maxSize = 0;
+        TreeMap<Integer,Integer> treemap = new TreeMap<Integer,Integer>();
+        while(end < nums.length) {
+            treemap.put(nums[end], treemap.getOrDefault(nums[end],0) + 1);
+            int min = treemap.firstKey();
+            int max = treemap.lastKey();
+            int diff = Math.abs(max - min);
+            while(diff > limit && start < end) {
+                treemap.put(nums[start], treemap.get(nums[start]) - 1);
+                if(treemap.get(nums[start]) == 0) {
+                    treemap.remove(nums[start]);
+                }
+                start++;
+                min = treemap.firstKey();
+                max = treemap.lastKey();
+                diff = Math.abs(max - min);
+            }
+            maxSize = Math.max(maxSize, end - start + 1);
+            end++;
+        }
+        return maxSize;
+        
+    }
+}
