@@ -1,0 +1,45 @@
+//Add a extra for loop in 3 sum
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Integer prev = null;
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        for(int i = 0; i < nums.length; i++) {
+            if(prev != null && prev == nums[i]) {
+                continue;
+            }
+            int num1 = nums[i];
+            threeSum(nums, i + 1, target, result, num1);
+            prev = nums[i];
+        }
+        return result;
+    }
+
+    public List<List<Integer>> threeSum(int[] nums, int index, int target, List<List<Integer>> result, int num1) {
+        Integer prev = null;
+        for(int i = index; i < nums.length; i++) {
+            if(prev != null && nums[i] == prev) {
+                continue;
+            }
+            int num2 = nums[i];
+            int start = i +1;
+            int end = nums.length - 1;
+            while(start < end) {
+                long sum = (long) nums[start] + nums[end] + num1 + num2;
+                if(sum == target) {
+                    result.add(List.of(num1, num2, nums[start], nums[end]));
+                    int temp = nums[start];
+                    while(start < end && nums[start] == temp) {
+                        start++;
+                    }
+                } else if(sum < target) {
+                    start++;
+                } else {
+                    end--;
+                }
+            }
+            prev = nums[i];
+        }
+        return result;
+    }
+}
