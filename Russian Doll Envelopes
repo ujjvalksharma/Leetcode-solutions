@@ -1,3 +1,61 @@
+class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+
+        Arrays.sort(envelopes, (e1,e2) -> {
+            if(e1[0] == e2[0]) {
+                return e2[1] - e1[1];
+            }
+            return e1[0] - e2[0];
+        });
+        List<Integer> sequence = new ArrayList<>();
+        List<Integer> heights = new ArrayList<Integer>();
+        Integer prevNum = null;
+        //filter heights
+        for(int[] envelope : envelopes) {
+            heights.add(envelope[1]);
+        }
+        System.out.println("heights: " + heights);
+        for(int height :  heights) {
+            if(sequence.size() == 0) {
+                sequence.add(height);
+            } else if(height > sequence.get(sequence.size() - 1)) {
+                sequence.add(height);
+            } else {
+           //     System.out.println("sequence: " + sequence);
+                int index = greatestNumGreaterThanTarget(sequence, height);
+                sequence.set(index, height);
+            }
+        }
+        return sequence.size();
+
+        
+    }
+    public int greatestNumGreaterThanTarget(List<Integer> list, int target) {
+        int start = 0;
+        int end = list.size() - 1;
+        int result = list.size() - 1;
+        while(start < end) {
+            int mid = start + (end - start)/2;
+            if(list.get(mid) == target) {
+                return mid;
+            } else if(list.get(mid) > target) {
+                result = Math.min(result, mid);
+                end = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return result;
+    }
+}
+/*
+[[4,5],[4,6],[6,7],[2,3],[1,1]]
+
+[1,1], [2,3], [4,5], [4,6]
+
+*/
+
+
 //sort element by weight, so we know that weight is increasing
 // then we just need heights in increasing order, so now we cal longest increasing subsequence on height array to find the longest increasing subsequence of heights while weights are increasing.
 class Solution {
