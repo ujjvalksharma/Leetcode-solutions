@@ -1,0 +1,54 @@
+class Solution {
+    Map<Integer,List<Integer>> graph;
+    Integer[] nodeColor;
+    Set<Integer> visited = new HashSet<>();
+    public boolean isGraphBiparte(int node) {
+        if(visited.contains(node)) {
+            return true;
+        }
+
+        visited.add(node);
+
+        if(nodeColor[node] == null) {
+            nodeColor[node] = 1;
+        }
+
+        List<Integer> children = graph.get(node);
+
+        for(int child : children) {
+            if(nodeColor[child] == null) {
+                nodeColor[child] = -1*nodeColor[node];
+            } else if(nodeColor[child] == nodeColor[node]) {
+                return false;
+            }
+            if(!isGraphBiparte(child)) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+    public boolean possibleBipartition(int n, int[][] dislikes) {
+
+        this.nodeColor = new Integer[n + 1];
+        this.graph = new HashMap<>();
+        Arrays.fill(nodeColor, null);
+
+        for(int i = 1; i <= n; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+
+        for(int[] dislike : dislikes) {
+            graph.get(dislike[0]).add(dislike[1]);
+            graph.get(dislike[1]).add(dislike[0]);
+        }
+
+        for(int i = 1; i <= n; i++) {
+            if(!isGraphBiparte(i)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
