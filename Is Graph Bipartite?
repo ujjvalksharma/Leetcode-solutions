@@ -1,0 +1,55 @@
+class Solution {
+    Map<Integer,List<Integer>> graph;
+    Integer[] color;
+    Set<Integer> visited = new HashSet<>();
+
+    public boolean isBipartiteHelper(int node) {
+        if(visited.contains(node)) {
+            return true;
+        }
+
+        visited.add(node);
+        if(color[node] == null) {
+            color[node] = 1;
+        }
+
+        List<Integer> children = graph.get(node);
+
+        for(int child : children) {
+
+            if(color[child] == null) {
+                color[child] = -1*color[node];
+            } else if(color[child] == color[node]) {
+                return false;
+            }
+            if(!isBipartiteHelper(child)) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+    public boolean isBipartite(int[][] graph) {
+
+        this.graph = new HashMap<Integer, List<Integer>>();
+        this.color = new Integer[graph.length];
+
+
+        this.graph = new HashMap<>();
+        for(int i = 0; i < graph.length; i++) {
+            this.graph.put(i, new ArrayList<>());
+            for(int neighbor : graph[i]) {
+                this.graph.get(i).add(neighbor);
+            }
+        }
+
+        for(int i = 0; i < graph.length; i++) {
+            if(!isBipartiteHelper(i)) {
+                return false;
+            }
+        }
+        return true;
+        
+    }
+}
