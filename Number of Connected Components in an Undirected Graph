@@ -1,3 +1,34 @@
+class Solution {
+    public int findParent(int node, int[] parent) {
+        if(parent[node] == node) {
+            return node;
+        }
+        return findParent(parent[node], parent);
+    }
+
+    public int countComponents(int n, int[][] edges) {
+        int[] parent = new int[n];
+        for(int i = 0; i < parent.length; i++) {
+            parent[i] = i;
+        }
+        for(int i = 0; i < edges.length; i++) {
+            int parent1 = findParent(edges[i][0], parent);
+            int parent2 = findParent(edges[i][1], parent);
+            parent[parent2] = parent1;
+        }
+        int totalComponents = 0;
+        for(int i = 0; i < parent.length; i++) {
+            if(parent[i] == i) {
+                totalComponents++;
+            }
+        }
+        return totalComponents;
+
+        
+    }
+}
+
+
 /*
 Union and find we know that if there are two parent vertix that means all nodes aren't connected and we know parent vertix as their parent value is -1, so we can return the count of total -1.
 
