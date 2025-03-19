@@ -1,0 +1,51 @@
+import java.util.*;
+
+class Solution {
+    List<Integer> result = new ArrayList<>();
+
+    public void goRight(int[][] matrix, int rowStart, int colStart, int colEnd) {
+        while (colStart <= colEnd) {
+            result.add(matrix[rowStart][colStart]);
+            colStart++;
+        }
+    }
+    public void goDown(int[][] matrix, int rowStart, int colStart, int rowEnd) {
+        while (rowStart <= rowEnd) {
+            result.add(matrix[rowStart][colStart]);
+            rowStart++;
+        }
+    }
+    public void goLeft(int[][] matrix, int rowStart, int colStart, int colEnd) {
+        while (colStart >= colEnd) {
+            result.add(matrix[rowStart][colStart]);
+            colStart--;
+        }
+    }
+    public void goUp(int[][] matrix, int rowStart, int colStart, int rowEnd) {
+        while (rowStart >= rowEnd) {
+            result.add(matrix[rowStart][colStart]);
+            rowStart--;
+        }
+    }
+    public void spiralOrderHelper(int[][] matrix, int rowStart, int colStart, int rowEnd, int colEnd) {
+        if (rowStart > rowEnd || colStart > colEnd) {  // Fixed base case
+            return;
+        }
+
+        goRight(matrix, rowStart, colStart, colEnd);
+        goDown(matrix, rowStart + 1, colEnd, rowEnd);  // Fixed rowStart + 1
+        if (rowStart < rowEnd) {  // Ensure it's a valid row before moving left
+            goLeft(matrix, rowEnd, colEnd - 1, colStart);  // Fixed colEnd - 1
+        }
+        if (colStart < colEnd) {  // Ensure it's a valid column before moving up
+            goUp(matrix, rowEnd - 1, colStart, rowStart + 1);  // Fixed rowEnd - 1
+        }
+
+        spiralOrderHelper(matrix, rowStart + 1, colStart + 1, rowEnd - 1, colEnd - 1);
+    }
+    public List<Integer> spiralOrder(int[][] matrix) {
+        result.clear();  // Ensure no stale data from previous runs
+        spiralOrderHelper(matrix, 0, 0, matrix.length - 1, matrix[0].length - 1);
+        return result;
+    }
+}
