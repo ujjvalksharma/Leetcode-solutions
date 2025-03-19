@@ -1,3 +1,59 @@
+import java.util.*;
+
+class Solution {
+    public void nextPermutation(int[] nums) {
+        if (nums.length == 1) {
+            return;
+        }
+
+        int index1 = -1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {  // Fix: Compare with the next element instead of using `prev`
+                index1 = i;
+                break;
+            }
+        }
+
+        if (index1 == -1) {
+            reverse(nums, 0, nums.length - 1);
+            return;
+        }
+
+        int index2 = -1;
+        for (int i = nums.length - 1; i > index1; i--) {
+            if (nums[i] > nums[index1]) {
+                index2 = i;
+                break;
+            }
+        }
+
+        swap(index1, index2, nums);
+        reverse(nums, index1 + 1, nums.length - 1); // Fix: Reverse instead of sorting
+    }
+
+    public void swap(int index1, int index2, int[] nums) {
+        int temp = nums[index2];
+        nums[index2] = nums[index1];
+        nums[index1] = temp;
+    }
+
+    public void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            swap(start, end, nums);
+            start++;
+            end--;
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] nums = {1, 2, 3};
+        sol.nextPermutation(nums);
+        System.out.println(Arrays.toString(nums)); // Output: [1, 3, 2]
+    }
+}
+
+
 /*
 
 For next permutation: we always see right to left as we want to make swaps towards the right to reach next permutation
