@@ -1,0 +1,56 @@
+class Solution {
+    int num = 1;
+    public void goRight(int[][] matrix, int rowStart, int colStart, int colEnd) {
+        while (colStart <= colEnd) {
+            matrix[rowStart][colStart] = num;
+            num++;
+            colStart++;
+        }
+    }
+    public void goDown(int[][] matrix, int rowStart, int colStart, int rowEnd) {
+        while (rowStart <= rowEnd) {
+            matrix[rowStart][colStart] = num;
+            num++;
+            rowStart++;
+        }
+    }
+    public void goLeft(int[][] matrix, int rowStart, int colStart, int colEnd) {
+        while (colStart >= colEnd) {
+            matrix[rowStart][colStart] = num;
+            num++;
+            colStart--;
+        }
+    }
+    public void goUp(int[][] matrix, int rowStart, int colStart, int rowEnd) {
+        while (rowStart >= rowEnd) {
+            matrix[rowStart][colStart] = num;
+            num++;
+            rowStart--;
+        }
+    }
+    public void spiralOrderHelper(int[][] matrix, int rowStart, int colStart, int rowEnd, int colEnd) {
+        if (rowStart > rowEnd || colStart > colEnd) {  // Fixed base case
+            return;
+        }
+
+        goRight(matrix, rowStart, colStart, colEnd);
+        goDown(matrix, rowStart + 1, colEnd, rowEnd);  // Fixed rowStart + 1
+        if (rowStart < rowEnd) {  // Ensure it's a valid row before moving left
+            goLeft(matrix, rowEnd, colEnd - 1, colStart);  // Fixed colEnd - 1
+        }
+        if (colStart < colEnd) {  // Ensure it's a valid column before moving up
+            goUp(matrix, rowEnd - 1, colStart, rowStart + 1);  // Fixed rowEnd - 1
+        }
+
+        spiralOrderHelper(matrix, rowStart + 1, colStart + 1, rowEnd - 1, colEnd - 1);
+    }
+    public void spiralOrder(int[][] matrix) {
+        spiralOrderHelper(matrix, 0, 0, matrix.length - 1, matrix[0].length - 1);
+    }
+
+    public int[][] generateMatrix(int n) {
+        int[][] matrix = new int[n][n];
+        spiralOrder(matrix);
+        return matrix;
+    }
+}
