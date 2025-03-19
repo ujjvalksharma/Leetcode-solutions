@@ -1,0 +1,35 @@
+/*
+Let say after sorting:
+
+[4,3,2,1,0] => [0,1,2,3,4]
+
+Now we can maintain a arr (indices) where we stored the index number of the number in the actual array
+
+Now try loop through from index = 0 and check what where was it 0 present in the array. let it was index1
+
+Now from index to index1 we need to sure every element has to be within this range otherwise index1 increases (Basically our chunck size would increase)
+
+
+*/
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+
+        int[] cloneArr = new int[arr.length];
+        int[] indices = new int[arr.length + 1];
+        for(int i = 0; i < arr.length; i++) {
+            indices[arr[i]] = i;
+        }
+
+        int index = 0;
+        int totalChunks = 0;
+        while(index < arr.length) {
+            int indexOfNumber = indices[index]; //index of the number
+            while(index <= indexOfNumber) {
+                indexOfNumber = Math.max(indexOfNumber, indices[index]);
+                index++;
+            }
+            totalChunks++;
+        }
+        return totalChunks;
+    }
+}
