@@ -1,0 +1,197 @@
+class Solution {
+    public int mostBooked(int n, int[][] meetings) {
+        var meetingCount = new int[n];
+        var usedRooms = new PriorityQueue<long[]>((a, b) -> a[0] != b[0] ? Long.compare(a[0], b[0]) : Long.compare(a[1], b[1]));
+        var unusedRooms = new PriorityQueue<Integer>();
+
+        for (int i = 0; i < n; i++) {
+            unusedRooms.offer(i);
+        }
+
+        Arrays.sort(meetings, (a, b) -> a[0] != b[0] ? Integer.compare(a[0], b[0]) : Integer.compare(a[1], b[1]));
+
+        for (int[] meeting : meetings) {
+            int start = meeting[0], end = meeting[1];
+
+            while (!usedRooms.isEmpty() && usedRooms.peek()[0] <= start) {
+                int room = (int) usedRooms.poll()[1];
+                unusedRooms.offer(room);
+            }
+
+            if (!unusedRooms.isEmpty()) {
+                int room = unusedRooms.poll();
+                usedRooms.offer(new long[]{end, room});
+                meetingCount[room]++;
+            } else {
+                long roomAvailabilityTime = usedRooms.peek()[0];
+                int room = (int) usedRooms.poll()[1];
+                usedRooms.offer(new long[]{roomAvailabilityTime + end - start, room});
+                meetingCount[room]++;
+            }
+        }
+
+        int maxMeetingCount = 0, maxMeetingCountRoom = 0;
+        for (int i = 0; i < n; i++) {
+            if (meetingCount[i] > maxMeetingCount) {
+                maxMeetingCount = meetingCount[i];
+                maxMeetingCountRoom = i;
+            }
+        }
+
+        return maxMeetingCountRoom;
+    }
+}
+
+// class Solution {
+
+//     class Meeting {
+//         int roomId;
+//         int startTime;
+//         int endTime;
+//         public Meeting(int roomId, int startTime, int endTime) {
+//             this.roomId = roomId;
+//             this.startTime = startTime;
+//             this.endTime = endTime;
+//         }
+//     }
+//     public int mostBooked(int n, int[][] meetings) {
+
+//         Arrays.sort(meetings, (a, b) -> {
+//             if(a[0] == b[0]) {
+//                 return a[1] - b[1];
+//             }
+//             return a[0] - b[0];
+//         });
+//         PriorityQueue<Integer> availableRooms = new PriorityQueue<>();
+//         for (int i = 0; i < n; i++) {
+//             availableRooms.add(i);
+//         }
+//         Map<Integer, Integer> meetingRoomToCount = new HashMap<>();
+//         PriorityQueue<Meeting> pq = new PriorityQueue<>((a, b) -> a.endTime - b.endTime);
+        
+//         // Schedule first meeting.
+//         int roomId = availableRooms.poll();
+//         pq.add(new Meeting(roomId, meetings[0][0], meetings[0][1]));
+//         meetingRoomToCount.put(roomId, 1);
+        
+//         int index = 1;
+//         while (index < meetings.length) {
+//             int[] currMeeting = meetings[index];
+//             // Free up rooms that have finished by currMeeting's start time.
+//             while (!pq.isEmpty() && pq.peek().endTime <= currMeeting[0]) {
+//                 Meeting finished = pq.poll();
+//                 availableRooms.add(finished.roomId);
+//             }
+            
+//             if (!availableRooms.isEmpty()) {
+//                 roomId = availableRooms.poll();
+//                 pq.add(new Meeting(roomId, currMeeting[0], currMeeting[1]));
+//                 meetingRoomToCount.put(roomId, meetingRoomToCount.getOrDefault(roomId, 0) + 1);
+//                 index++;
+//             } else {
+//                 // No room available at currMeeting[0], so delay it.
+//                 Meeting finished = pq.poll();
+//                 roomId = finished.roomId;
+//                 int duration = currMeeting[1] - currMeeting[0];
+//                 int newStart = finished.endTime;
+//                 int newEnd = newStart + duration;
+//                 pq.add(new Meeting(roomId, newStart, newEnd));
+//                 meetingRoomToCount.put(roomId, meetingRoomToCount.getOrDefault(roomId, 0) + 1);
+//                 index++; // Process this meeting now (with its delayed times)
+//             }
+//         }
+
+//         // Find room with max count (ties broken by lower room id).
+//         int maxCount = 0;
+//         int resultRoom = 0;
+//         for (int i = 0; i < n; i++) {
+//             int count = meetingRoomToCount.getOrDefault(i, 0);
+//             if (count > maxCount) {
+//                 maxCount = count;
+//                 resultRoom = i;
+//             }
+//         }
+//         return resultRoom;
+//     }
+// }
+
+
+// // class Solution {
+
+// //     class Meeting {
+// //         int roomId;
+// //         int startTime;
+// //         int endTime;
+// //         public Meeting(int roomId, int startTime, int endTime) {
+// //             this.roomId = roomId;
+// //             this.startTime = startTime;
+// //             this.endTime = endTime;
+// //         }
+
+// //     }
+// //     public int mostBooked(int n, int[][] meetings) {
+
+// //         Arrays.sort(meetings, (a,b) -> {
+// //             if(a[0] == b[0]) {
+// //                 return a[1] - b[1];
+// //             }
+// //             return a[0] - b[0];
+// //         });
+// //         PriorityQueue<Integer> availableRooms = new PriorityQueue<>();
+// //         for(int i = 0; i < n; i++) {
+// //             availableRooms.add(i);
+// //         }
+// //         Map<Integer,Integer> meetingRoomToCount = new HashMap<>();
+// //         PriorityQueue<Meeting> pq = new PriorityQueue<>((a,b) -> a.endTime - b.endTime);
+// //         pq.add(new Meeting(0, meetings[0][0], meetings[0][1]));
+// //         meetingRoomToCount.put(0 , 1);
+// //         availableRooms.remove(0);
+// //         int index = 1;
+// //         int delay = 0;
+// //         while(index < meetings.length) {
+// //        //     System.out.println("availableRooms: " + availableRooms + " index: " + index);
+// //             int[] currMeeting = meetings[index];
+// //             while(!pq.isEmpty() && pq.peek().endTime <= currMeeting[0]) {
+// //                 Meeting meet = pq.poll();
+// //                 availableRooms.add(meet.roomId);
+// //             }
+
+// //             if(!availableRooms.isEmpty()) {
+// //                 int roomId = availableRooms.poll();
+// //              //   System.out.println("roomId: " + roomId + " index: " + index);
+// //                 pq.add(new Meeting(roomId, currMeeting[0], currMeeting[1]));
+// //                 meetingRoomToCount.put(roomId , meetingRoomToCount.getOrDefault(roomId, 0 ) + 1);
+// //                 index++;
+// //             } else {
+// //                 Meeting meet = pq.poll();
+// //                 availableRooms.add(meet.roomId);
+// //                 //delay
+// //                 meetings[index] = new int[]{meet.endTime, meet.endTime + currMeeting[1] - currMeeting[0]};
+// //             }
+// //         }
+
+// //         Set<Integer> keys = meetingRoomToCount.keySet();
+// //         int count = 0;
+// //         int meetingId = n;
+// //         for(int roomId :  keys) {
+// //             if(meetingRoomToCount.get(roomId) > count) {
+// //                 count = meetingRoomToCount.get(roomId);
+// //                 meetingId = roomId;
+// //             }
+
+// //         }
+// //       //  System.out.println("meetingRoomToCount: " + meetingRoomToCount);
+// //         return meetingId;
+        
+// //     }
+// // }
+
+// // /*
+
+// // [[0,10],[1,5],[2,7],[3,4]]
+
+// // 0 -> [0,10]
+// // 1 -> [5,10]
+
+
+// // */
