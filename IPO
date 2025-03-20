@@ -1,0 +1,35 @@
+class Solution {
+    class Project {
+        int profit;
+        int capital;
+        public Project(int profit, int capital) {
+            this.profit = profit;
+            this.capital = capital;
+        }
+
+    }
+    public int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
+
+        Project[] projects = new Project[profits.length];
+        int totalProfit = 0;
+        for(int i = 0; i < profits.length; i++) {
+            projects[i] = new Project(profits[i], capital[i]);
+        }
+        Arrays.sort(projects, (a,b) -> a.capital - b.capital);
+        PriorityQueue<Project> pq = new PriorityQueue<Project>((a,b) -> b.profit - a.profit);
+        int currCapacital = w;
+        int index = 0;
+        for(int i = 0; i < k; i++) {
+
+            while(index < projects.length && projects[index].capital <= currCapacital) {
+                pq.add(projects[index]);
+                index++;
+            }
+
+            if(!pq.isEmpty()) {
+                currCapacital += pq.poll().profit;
+            }
+        }
+        return currCapacital;
+    }
+}
