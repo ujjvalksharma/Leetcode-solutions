@@ -1,0 +1,37 @@
+/*
+
+Solution 1
+case 1 [max profit from 0 to i] i [max profit from i + 1 to n]
+case 2 [max profit from 0 to i - 1] i [max profit from i to n]
+*/
+
+class Solution {
+    public int maxProfit(int[] prices) {
+
+        int[] rightProfits = new int[prices.length + 1];
+        int[] leftProfits = new int[prices.length];
+
+        int maxStock = prices[prices.length - 1];
+        int maxProfit = 0;
+        for(int i = prices.length - 2; i >= 0; i--) {
+            maxProfit = Math.max(maxProfit, maxStock - prices[i]);
+            maxStock = Math.max(maxStock, prices[i]);
+            rightProfits[i] = maxProfit;
+        }
+        //use solution from Best Time to Buy and Sell Stock from line 15
+        maxProfit = 0;
+        int currentBoughtStock = prices[0];
+        for(int i = 1; i < prices.length; i++) {
+            maxProfit = Math.max(maxProfit, prices[i] - currentBoughtStock);
+            currentBoughtStock = Math.min(currentBoughtStock, prices[i]);
+            leftProfits[i] = maxProfit;
+        }
+        int totalMaxProfit = 0;
+        for(int i = 0; i < prices.length; i++) {
+            totalMaxProfit = Math.max(totalMaxProfit,leftProfits[i] + rightProfits[i + 1]);
+        }
+      //  System.out.println("maxProfitFromRight: " +Arrays.toString(maxProfitFromRight));
+        return totalMaxProfit;
+    }
+}
+
