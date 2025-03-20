@@ -1,3 +1,82 @@
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+
+        List<String> result = new ArrayList<>();
+        boolean isSingleWordSentence = false; // not used, but kept as is
+        int lenWithoutSpace = 0;
+        StringBuilder sentence = new StringBuilder("");
+        int index = 0;
+        while (index < words.length) {
+            boolean sentenceIsCompleted = false;
+            if (sentence.length() == 0) {
+                sentence.append(words[index]); //add first word of the sentence without space
+                lenWithoutSpace += words[index].length();
+                index++;
+            } else {
+                int len = sentence.length();
+                sentence.append(" ").append(words[index]); //other words in sentence are added with space
+                if (sentence.length() == maxWidth) { //check if sentence is complete
+                    lenWithoutSpace += words[index].length();
+                    sentenceIsCompleted = true;
+                    index++;
+                } else if (sentence.length() > maxWidth) {
+                    sentence.setLength(len);
+                    sentenceIsCompleted = true;
+                } else {
+                    lenWithoutSpace += words[index].length();
+                    index++;
+                }
+            }
+
+            if (index == words.length) {
+                sentenceIsCompleted = true;
+            }
+
+            if (sentenceIsCompleted) {
+                String[] splitted = sentence.toString().split(" ");
+                // For the last line or if there's only one word, left-justify.
+                if (splitted.length == 1 || index == words.length) {
+                    StringBuilder temp = new StringBuilder();
+                    for (String str : splitted) {
+                        temp.append(str).append(" ");
+                    }
+                    // remove the extra trailing space
+                    temp.setLength(temp.length() - 1);
+                    // pad with spaces to reach maxWidth
+                    while (temp.length() < maxWidth) {
+                        temp.append(" ");
+                    }
+                    result.add(temp.toString());
+                } else {
+                    // Fully justify the current line.
+                    int gaps = splitted.length - 1;
+                    int totalSpaces = maxWidth - lenWithoutSpace;
+                    int spacePerGap = totalSpaces / gaps;
+                    int extraSpaces = totalSpaces % gaps;
+                    StringBuilder temp = new StringBuilder();
+                    for (int i = 0; i < splitted.length; i++) {
+                        temp.append(splitted[i]);
+                        if (i < gaps) { // add spaces after each word except the last one
+                            int spacesToAdd = spacePerGap + (i < extraSpaces ? 1 : 0);
+                            for (int s = 0; s < spacesToAdd; s++) {
+                                temp.append(" ");
+                            }
+                        }
+                    }
+                    result.add(temp.toString());
+                }
+
+                // Reset for the next line.
+                lenWithoutSpace = 0;
+                sentence.setLength(0);
+            }
+        }
+
+        return result;
+    }
+}
+
+
 //https://www.youtube.com/watch?v=GqXlEbFVTXY
 class Solution {
 public List<String> fullJustify(String[] words, int maxWidth) {
